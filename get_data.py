@@ -29,3 +29,14 @@ def get_data():
     with pd.ExcelWriter('final_stops.xls') as writer:
         df.to_excel(writer)
 
+
+def get_stops():
+
+    # Open file
+    df_stops = pd.ExcelFile("final_stops.xls")
+    df = df_stops.parse("Sheet1")
+
+    print(df.iloc[0])
+
+
+get_stops()

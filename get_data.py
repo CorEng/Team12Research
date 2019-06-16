@@ -31,14 +31,14 @@ def get_data():
 
 
 def get_stops():
-
+    """Get data from final xls file and put it in a list for each stop"""
     # Open file
     df_stops = pd.ExcelFile("final_stops.xls")
     df = df_stops.parse("Sheet1")
 
 
     final_list = []
-
+    # Iterate through data and add it to final_list
     for i, j in enumerate(df["Name"]):
         sub_list = []
         for k, value in enumerate(df):
@@ -46,6 +46,4 @@ def get_stops():
 
         final_list.append(sub_list)
 
-    print(final_list)
-
-get_stops()
+    return final_list

@@ -36,7 +36,16 @@ def get_stops():
     df_stops = pd.ExcelFile("final_stops.xls")
     df = df_stops.parse("Sheet1")
 
-    print(df.iloc[0])
 
+    final_list = []
+
+    for i, j in enumerate(df["Name"]):
+        sub_list = []
+        for k, value in enumerate(df):
+            sub_list.append(df.iloc[i][value])
+
+        final_list.append(sub_list)
+
+    print(final_list)
 
 get_stops()

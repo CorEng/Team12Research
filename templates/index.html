@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../static/style.css" rel="stylesheet" type="text/css"/>
+    <title>Title</title>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>var latLonStops = {{ lat_lon_stops | safe }};</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXUnw_66vWdVYo2Cj73v6ZwiIpyjZbdhM&libraries=places&callback=initMap">
+</script>
+<script src="../static/map.js"></script>
+
+<input id="autocomp" class="controls" placeholder="Search location" type="text"/>
+
+</body>
+</html>

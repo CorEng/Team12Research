@@ -36,7 +36,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.flaticon-baseball-ball:before { content: "\f100"; }
-.flaticon-helmet:before { content: "\f101"; }
-.flaticon-helmet-1:before { content: "\f102"; }
-.flaticon-baseball-bat:before { content: "\f103"; }
+.flaticon-bus-stop:before { content: "\f100"; }
+.flaticon-bus:before { content: "\f101"; }
+.flaticon-bus-1:before { content: "\f102"; }
+.flaticon-bus-2:before { content: "\f103"; }

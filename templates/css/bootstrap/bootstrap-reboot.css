@@ -222,14 +222,15 @@ fieldset {
 
 legend {
   display: block;
-  width: 100%;
+  width: auto;
   max-width: 100%;
   padding: 0;
-  margin-bottom: .5rem;
+  margin-bottom: none;
   font-size: 1.5rem;
   line-height: inherit;
   color: inherit;
-  white-space: normal; }
+  white-space: normal;
+}
 
 progress {
   vertical-align: baseline; }

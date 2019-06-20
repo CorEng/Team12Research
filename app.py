@@ -13,10 +13,17 @@ def index():
 def get_search():
     stopA = request.form.get("stopA")
     stopB = request.form.get("stopB")
+    route = request.form.get("route")
 
     a = Stops()
-    print(a.a_to_b(stopA, stopB))
-    return redirect('/')
+    b = a_to_b(stopA, stopB, route)
+    return redirect('/show_search', )
+
+@app.route('/show_search')
+def show_search():
+    a = Stops()
+
+    return render_template('index.html')
 
 
 if __name__ == '__main__':

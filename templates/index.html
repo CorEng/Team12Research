@@ -68,7 +68,7 @@
                 </div>
                 <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
                     <form class="form" style="background-color: black" action="/handle_search"
-                          enctype="multipart/form-data" method="POST">
+                          enctype="multipart/form-data" method="POST" autocomplete="on">
                         <h2 align="center" style="color: white;font-weight: 1000">Search Form</h2>
                         <fieldset class="border p-2">
                             <legend style="color: white">STOP</legend>
@@ -76,7 +76,7 @@
                                 <ul>
                                     <li><label for="bday" style="color: white">From:</label>
                                         <input type="text" class="form-control" placeholder="start" list="stops"
-                                               name="stopA">
+                                               name="stopA" required>
                                         <datalist id="stops">
                                             {% for stop in lat_lon_stops %}
                                             <option value={{ stop[3] }}>
@@ -85,7 +85,7 @@
                                     </li>
                                     <li> <label for="bday" style="color: white">To:</label>
                                         <input type="text" class="form-control" placeholder="end" list="stops"
-                                               name="stopB">
+                                               name="stopB" required>
                                         <datalist id="stops">
                                             {% for stop in lat_lon_stops %}
                                             <option value={{ stop[3] }}>
@@ -96,13 +96,13 @@
                             </div>
                         </fieldset>
                         <div class="form-group" style="padding-top: 15px">
-                                <input type="text" class="form-control" placeholder="route">
+                                <input type="text" class="form-control" placeholder="route" name="route">
                             </div>
                         <div class="form-group">
-                                <input type="text" class="form-control" placeholder="time">
+                                <input type="time" class="form-control" placeholder="time" name="time">
                             </div>
                         <div class="form-group">
-                                <input type="date" class="form-control" placeholder="date">
+                                <input type="date" class="form-control" placeholder="date" name="date">
                             </div>
 
                         <div align="center">

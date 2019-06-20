@@ -17,32 +17,43 @@ class Stops:
             for stop in read.keys():
                 lat = read[stop]["lat"]
                 lon = read[stop]["lon"]
+                stop_name = read[stop]["stop_name"]
+                routes = [key for key in read[stop]["routes"].keys()]
 
-                stops.append([lat, lon, read[stop]["stop_name"], stop, [key for key in read[stop]["routes"].keys()]])
+                stops.append([lat, lon, stop_name, stop, routes])
 
             read_file.close()
         # print(stops)
         return stops
 
 
-    def a_to_b(self, stopA, stopB):
+    def a_to_b(self, stopA, stopB, route):
         self.stopA = stopA
         self.stopB = stopB
+        self.route = route
+
 
         with open('stops.json', encoding="utf8") as read_file:
             read = json.load(read_file)
 
-        start = [route for i, route in enumerate(read[self.stopA]["routes"].keys())]
-        end = [route for i, route in enumerate(read[self.stopB]["routes"].keys())]
+        # If no bus route given by the user
+        if len(self.route) == 0:
+            start = [route for i, route in enumerate(read[self.stopA]["routes"].keys())]
+            end = [route for i, route in enumerate(read[self.stopB]["routes"].keys())]
 
-        final = {}
-        for i, route in enumerate(start):
-            if (route in end) and (read[self.stopA]["routes"][route]["dest"] == read[self.stopB]["routes"][route][
-                "dest"]):
-                final[route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
-                    route]["seq"] , "seqB": read[self.stopB]["routes"][route]["seq"]}
-            else:
-                continue
+            final = {}
+            for i, route in enumerate(start):
+                if (route in end) and (read[self.stopA]["routes"][route]["dest"] == read[self.stopB]["routes"][route][
+                    "dest"]):
+                    final[route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
+                        route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
+                else:
+                    continue
+        # If bus route given by the user
+        elif len(self.route) > 0:
+            final = {}
+            final[self.route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
+                route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
 
         final_routes = [route for i, route in enumerate(final.keys())]
 
@@ -110,7 +121,7 @@ class Stops:
 
 # a = Stops()
 # a.get_stops()
-# a.a_to_b("5171", "2979")
+# a.a_to_b("5171", "2979", "16")
 # a.a_to_b("7556", "7430")
 
 

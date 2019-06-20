@@ -18,10 +18,10 @@ class Stops:
                 lat = read[stop]["lat"]
                 lon = read[stop]["lon"]
 
-                stops.append([lat, lon, read[stop]["stop_name"], stop, read[stop]["routes"]])
+                stops.append([lat, lon, read[stop]["stop_name"], stop, [key for key in read[stop]["routes"].keys()]])
 
             read_file.close()
-
+        print(stops)
         return stops
 
 

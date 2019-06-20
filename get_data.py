@@ -1,6 +1,7 @@
 import csv
 import re
 import json
+import os
 
 
 class Stops:
@@ -48,8 +49,10 @@ class Stops:
         final_routes = [route for i, route in enumerate(final.keys())]
         print(final_routes)
 
-        stops = [self.stopA]
+        # stops = [self.stopA]
+        stops = {}
         for i, route in enumerate(final_routes):
+            stops[route] = []
             for k, key in enumerate(read.keys()):
                 try:
                     dest_search = read[key]["routes"][route]["dest"]
@@ -57,13 +60,13 @@ class Stops:
                     seqA = int(final[route]["seqA"])
                     seqB = int(final[route]["seqB"])
                     seq_search = int(read[key]["routes"][route]["seq"])
-                    print(seqA, seqB)
-                    if (dest_search == dest_given) and (seq_search > seqA) and (seq_search < seqB) and (key not in \
+
+                    if (dest_search == dest_given) and (seq_search >= seqA) and (seq_search <= seqB) and (key not in \
                             stops):
-                        stops.append(key)
+                        stops[route].append(key)
                 except:
                     continue
-        stops.append(self.stopB)
+        # stops.append(self.stopB)
         print(stops)
         read_file.close()
 
@@ -109,8 +112,9 @@ class Stops:
             json.dump(stop, outfile)
         outfile.close()
 
-# a = Stops()
-# a.a_to_b("2060", "2062")
+a = Stops()
+# a.get_stops()
+a.a_to_b("2060", "2062")
 # a.a_to_b("7556", "7430")
 
 

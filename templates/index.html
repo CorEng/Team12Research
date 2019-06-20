@@ -67,33 +67,48 @@
                     <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">WHOSE BUS</p>
                 </div>
                 <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
-                                                <form class="form" style="background-color: black">
-                                                    <h1 align="center" style="color: white;font-weight: 1000">Search Form</h1>
-                                                    <fieldset class="border p-2">
-                                                        <legend style="color: white">STOP</legend>
-                                                        <div>
-                                                            <ul>
-                                                                <li><label for="bday" style="color: white">From:</label>
-                                                                    <input type="text" class="form-control" placeholder="start"></li>
-                                                                <li> <label for="bday" style="color: white">To:</label>
-                                                                    <input type="text" class="form-control" placeholder="end"> </li>
-                                                            </ul>
-                                                        </div>
-                                                    </fieldset>
-                                                    <div class="form-group" style="padding-top: 15px">
-                                                            <input type="text" class="form-control" placeholder="route">
-                                                        </div>
-                                                    <div class="form-group">
-                                                            <input type="text" class="form-control" placeholder="time">
-                                                        </div>
-                                                    <div class="form-group">
-                                                            <input type="date" class="form-control" placeholder="date">
-                                                        </div>
+                    <form class="form" style="background-color: black" action="/handle_search"
+                          enctype="multipart/form-data" method="POST">
+                        <h2 align="center" style="color: white;font-weight: 1000">Search Form</h2>
+                        <fieldset class="border p-2">
+                            <legend style="color: white">STOP</legend>
+                            <div>
+                                <ul>
+                                    <li><label for="bday" style="color: white">From:</label>
+                                        <input type="text" class="form-control" placeholder="start" list="stops"
+                                               name="stopA">
+                                        <datalist id="stops">
+                                            {% for stop in lat_lon_stops %}
+                                            <option value={{ stop[3] }}>
+                                                {% endfor %}
+                                        </datalist>
+                                    </li>
+                                    <li> <label for="bday" style="color: white">To:</label>
+                                        <input type="text" class="form-control" placeholder="end" list="stops"
+                                               name="stopB">
+                                        <datalist id="stops">
+                                            {% for stop in lat_lon_stops %}
+                                            <option value={{ stop[3] }}>
+                                                {% endfor %}
+                                        </datalist>
+                                    </li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                        <div class="form-group" style="padding-top: 15px">
+                                <input type="text" class="form-control" placeholder="route">
+                            </div>
+                        <div class="form-group">
+                                <input type="text" class="form-control" placeholder="time">
+                            </div>
+                        <div class="form-group">
+                                <input type="date" class="form-control" placeholder="date">
+                            </div>
 
-                                                    <div align="center">
-                                                        <p> <button type="submit" onclick="print()">submit</button> </p>
-                                                    </div>
-                                                </form>
+                        <div align="center">
+                            <p> <button type="submit" value="Submit" class="inbutton">submit</button> </p>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -101,21 +116,21 @@
 
     </div>
 
-    <section class="ftco-section ftco-no-pt ftco-no-pb">
-        <div class="container-fluid px-0">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="game-wrap-1 ftco-animate">
+<!--    <section class="ftco-section ftco-no-pt ftco-no-pb">-->
+<!--        <div class="container-fluid px-0">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <div class="game-wrap-1 ftco-animate">-->
 
-                        <a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN" data-label_2="WEATHER" data-textcolor="#ffffff">DUBLIN WEATHER</a>
-                        <script>
-                            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-</script>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!--                        <a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN" data-label_2="WEATHER" data-textcolor="#ffffff">DUBLIN WEATHER</a>-->
+<!--                        <script>-->
+<!--                            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');-->
+<!--</script>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
 
 
 
@@ -135,33 +150,6 @@
                 <div class="col-md-5 py-md-5" style="padding-top: 100px">
                     <div class="row justify-content-start py-md-5">
                         <div class="col-md-12 heading-section heading-section-white ftco-animate">
-<!--                            <form class="form" style="background-color: black">-->
-<!--                                <h1 align="center" style="color: white;font-weight: 1000">Search Form</h1>-->
-<!--                                <fieldset class="border p-2">-->
-<!--                                    <legend style="color: white">STOP</legend>-->
-<!--                                    <div>-->
-<!--                                        <ul>-->
-<!--                                            <li><label for="bday" style="color: white">From:</label>-->
-<!--                                                <input type="text" class="form-control" placeholder="start"></li>-->
-<!--                                            <li> <label for="bday" style="color: white">To:</label>-->
-<!--                                                <input type="text" class="form-control" placeholder="end"> </li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                </fieldset>-->
-<!--                                <div class="form-group" style="padding-top: 15px">-->
-<!--                                        <input type="text" class="form-control" placeholder="route">-->
-<!--                                    </div>-->
-<!--                                <div class="form-group">-->
-<!--                                        <input type="text" class="form-control" placeholder="time">-->
-<!--                                    </div>-->
-<!--                                <div class="form-group">-->
-<!--                                        <input type="date" class="form-control" placeholder="date">-->
-<!--                                    </div>-->
-<!--                               -->
-<!--                                <div align="center">-->
-<!--                                    <p> <button type="submit" onclick="print()">submit</button> </p>-->
-<!--                                </div>-->
-<!--                            </form>-->
                         </div>
                     </div>
                 </div>

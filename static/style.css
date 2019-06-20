@@ -1,0 +1,22 @@
+/* Set the size of the div element that contains the map */
+#map {
+        height: 550px;
+        width: 100%;
+       }
+
+.infoWin {
+	width: 100px;
+	height: 50px;
+}
+
+.detail {
+	text-align: center;
+}
+
+#autocomp {
+	left: 8px !important;
+	top: 95px !important;
+	height: 25px !important;
+	width: 168px !important;
+	font-size: 12pt !important;
+}

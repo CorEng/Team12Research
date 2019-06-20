@@ -1,11 +1,12 @@
 from flask import Flask, redirect, render_template
+from get_data import *
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-
-    return render_template()
+    lat_lon_stops = get_stops()
+    return render_template('index.html', lat_lon_stops=lat_lon_stops)
 
 
 

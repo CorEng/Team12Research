@@ -33,30 +33,6 @@ function initMap() {
         //map.fitBounds(bounds);
      }
 
-    // AutoComplete------------------------------------------------------------
-    var input = document.getElementById('autocomp');
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-    // use bounds to narrow autocomplete search to the bounds given when placing station markers
-    var defaultBounds = {
-	bounds: bounds,
-	strictBounds: true
-	};
-
-    var autocomplete = new google.maps.places.Autocomplete(input, defaultBounds);
-
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
-      var place = autocomplete.getPlace();
-      var lat = place.geometry.location.lat();
-      var lng = place.geometry.location.lng();
-      var pos = {
-	lat: lat,
-	lng:lng
-	};
-      infoWindow.setPosition(pos);
-      infoWindow.setContent('Here is your search');
-    });
-
 
     // start the user's geolocations-------------------------------------------
     infoWindow = new google.maps.InfoWindow;

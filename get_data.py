@@ -1,7 +1,6 @@
 import csv
 import re
 import json
-import os
 
 
 class Stops:
@@ -19,7 +18,7 @@ class Stops:
                 lat = read[stop]["lat"]
                 lon = read[stop]["lon"]
 
-                stops.append([lat, lon, read[stop]["stop_name"], read[stop]["stop_no"], read[stop]["routes"]])
+                stops.append([lat, lon, read[stop]["stop_name"], stop, read[stop]["routes"]])
 
             read_file.close()
 
@@ -112,9 +111,9 @@ class Stops:
             json.dump(stop, outfile)
         outfile.close()
 
-a = Stops()
+# a = Stops()
 # a.get_stops()
-a.a_to_b("2060", "2062")
+# a.a_to_b("2060", "2062")
 # a.a_to_b("7556", "7430")
 
 

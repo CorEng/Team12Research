@@ -5,7 +5,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    lat_lon_stops = get_stops()
+    a = Stops()
+    lat_lon_stops = a.get_stops()
     return render_template('index.html', lat_lon_stops=lat_lon_stops)
 
 

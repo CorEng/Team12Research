@@ -21,7 +21,7 @@ class Stops:
                 stops.append([lat, lon, read[stop]["stop_name"], stop, [key for key in read[stop]["routes"].keys()]])
 
             read_file.close()
-        print(stops)
+        # print(stops)
         return stops
 
 
@@ -44,11 +44,8 @@ class Stops:
             else:
                 continue
 
-        print(final)
         final_routes = [route for i, route in enumerate(final.keys())]
-        print(final_routes)
 
-        # stops = [self.stopA]
         stops = {}
         for i, route in enumerate(final_routes):
             stops[route] = []
@@ -65,9 +62,9 @@ class Stops:
                         stops[route].append(key)
                 except:
                     continue
-        # stops.append(self.stopB)
-        print(stops)
         read_file.close()
+        # print(stops)
+        return stops
 
 
     def create_json(self):
@@ -113,7 +110,7 @@ class Stops:
 
 # a = Stops()
 # a.get_stops()
-# a.a_to_b("2060", "2062")
+# a.a_to_b("5171", "2979")
 # a.a_to_b("7556", "7430")
 
 

@@ -8,7 +8,7 @@ class Stops:
     def __init__(self):
         pass
 
-    def get_stops(self):
+    def get_all_stops(self):
 
         with open('stops.json', encoding="utf8") as read_file:
             read = json.load(read_file)
@@ -25,6 +25,28 @@ class Stops:
             read_file.close()
         # print(stops)
         return stops
+
+    def get_searched_stops(self, dict):
+
+        if len(dict.keys()) == 0:
+            print("No routes for the stops given")
+        else:
+            with open('stops.json', encoding="utf8") as read_file:
+                read = json.load(read_file)
+
+                stops = []
+                for route in dict.keys():
+                    for stop in dict[route]:
+                        lat = read[stop]["lat"]
+                        lon = read[stop]["lon"]
+                        stop_name = read[stop]["stop_name"]
+                        routes = [key for key in read[stop]["routes"].keys()]
+
+                        stops.append([lat, lon, stop_name, stop, routes])
+
+                read_file.close()
+
+                return stops
 
 
     def a_to_b(self, stopA, stopB, route):
@@ -60,7 +82,6 @@ class Stops:
             except:
                 pass
 
-
         final_routes = [route for i, route in enumerate(final.keys())]
 
         stops = {}
@@ -81,10 +102,7 @@ class Stops:
                     continue
         read_file.close()
 
-        if len(stops) == 0:
-            return "No route for stops given"
-        elif len(stops) > 0:
-            return stops
+        return stops
 
 
     def create_json(self):
@@ -128,11 +146,13 @@ class Stops:
             json.dump(stop, outfile)
         outfile.close()
 
+
 # a = Stops()
 # a.get_stops()
 # print(a.a_to_b("2062", "4727", "84X"))
+# b = a.a_to_b("2062", "4727", "84X")
+# a.get_searched_stops(b)
 # a.a_to_b("7556", "7430")
-
 
 
 

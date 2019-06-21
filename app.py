@@ -13,7 +13,7 @@ def index():
 def show_search():
     stopA = request.form.get("stopA")
     stopB = request.form.get("stopB")
-    route = request.form.get("route")
+    route = request.form.get("route").upper()
 
     a = Stops()
     b = a.a_to_b(stopA, stopB, route)

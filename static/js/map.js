@@ -5,9 +5,8 @@ function initMap() {
 
     // The map, centered at Ireland
     var map = new google.maps.Map(
-        document.getElementById('map'), {zoom: 15, center: ireland});
+        document.getElementById('map'), {zoom: 14, center: ireland});
 
-    if (latLonStops.length > 0) {
         var infowindow = new google.maps.InfoWindow();
 
         // 1/3 to center map around the markers
@@ -31,11 +30,11 @@ function initMap() {
                 }
             })(marker, i));
 
-            // 3/3 center map around the markers
-            //map.fitBounds(bounds);
+//             3/3 center map around the markers
+//            map.fitBounds(bounds);
          }
-    }
 
+    if (latLonStops.length < 1) {
     // start the user's geolocations-------------------------------------------
     infoWindow = new google.maps.InfoWindow;
 
@@ -46,7 +45,6 @@ function initMap() {
             lat: position.coords.latitude,
             lng: position.coords.longitude
             };
-
             infoWindow.setPosition(pos);
             infoWindow.setContent('You are here');
             infoWindow.open(map);
@@ -58,6 +56,10 @@ function initMap() {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
             }
+        } else if (latLonStops.length > 0) {
+//             3/3 center map around the markers
+            map.fitBounds(bounds);
+        }
     };// initMap()
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {

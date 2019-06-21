@@ -33,6 +33,7 @@
 </head>
 
 <body>
+
     <!--nav-->
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
@@ -106,7 +107,8 @@
                             </div>
 
                         <div align="center">
-                            <p> <button type="submit" value="Submit" class="inbutton">submit</button> </p>
+                            <p> <button type="submit" value="Submit" class="inbutton" onclick="scroll()">submit
+                            </button> </p>
                         </div>
                     </form>
                 </div>
@@ -156,6 +158,11 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-6 d-flex">
                     <div class="img d-flex align-self-stretch" style="background-image:url(static/images/bus5.jpg);" id="map"></div>
+                    {% if scroll %}
+                    <script>
+                    document.getElementById("map").scrollIntoView();
+                    </script>
+                    {% endif %}
                 </div>
             </div>
         </div>

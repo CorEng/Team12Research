@@ -54,7 +54,6 @@ class Stops:
         self.stopB = stopB
         self.route = route
 
-
         with open('stops.json', encoding="utf8") as read_file:
             read = json.load(read_file)
 
@@ -64,7 +63,7 @@ class Stops:
             end = [route for i, route in enumerate(read[self.stopB]["routes"].keys())]
 
             final = {}
-            for i, route in enumerate(start):
+            for route in start:
                 if (route in end) and (read[self.stopA]["routes"][route]["dest"] == read[self.stopB]["routes"][route][
                     "dest"]):
                     final[route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
@@ -85,19 +84,19 @@ class Stops:
         final_routes = [route for i, route in enumerate(final.keys())]
 
         stops = {}
-        for i, route in enumerate(final_routes):
+        for route in final_routes:
             stops[route] = []
-            for k, key in enumerate(read.keys()):
+            for stop in read.keys():
                 try:
-                    dest_search = read[key]["routes"][route]["dest"]
+                    dest_search = read[stop]["routes"][route]["dest"]
                     dest_given = final[route]["dest"]
                     seqA = int(final[route]["seqA"])
                     seqB = int(final[route]["seqB"])
-                    seq_search = int(read[key]["routes"][route]["seq"])
+                    seq_search = int(read[stop]["routes"][route]["seq"])
 
-                    if (dest_search == dest_given) and (seq_search >= seqA) and (seq_search <= seqB) and (key not in \
+                    if (dest_search == dest_given) and (seq_search >= seqA) and (seq_search <= seqB) and (stop not in \
                             stops):
-                        stops[route].append(key)
+                        stops[route].append(stop)
                 except:
                     continue
         read_file.close()
@@ -149,7 +148,7 @@ class Stops:
 
 # a = Stops()
 # a.get_stops()
-# print(a.a_to_b("2062", "4727", "84X"))
+# a.a_to_b("773", "777", "")
 # b = a.a_to_b("2062", "4727", "84X")
 # a.get_searched_stops(b)
 # a.a_to_b("7556", "7430")

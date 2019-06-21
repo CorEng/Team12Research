@@ -49,11 +49,17 @@ class Stops:
                         route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
                 else:
                     continue
+
         # If bus route given by the user
         elif len(self.route) > 0:
-            final = {}
-            final[self.route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
-                route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
+            try:
+                final = {}
+                final[self.route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
+                    route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
+
+            except:
+                pass
+
 
         final_routes = [route for i, route in enumerate(final.keys())]
 
@@ -74,8 +80,11 @@ class Stops:
                 except:
                     continue
         read_file.close()
-        # print(stops)
-        return stops
+
+        if len(stops) == 0:
+            return "No route for stops given"
+        elif len(stops) > 0:
+            return stops
 
 
     def create_json(self):
@@ -121,7 +130,7 @@ class Stops:
 
 # a = Stops()
 # a.get_stops()
-# a.a_to_b("5171", "2979", "16")
+# print(a.a_to_b("2062", "4727", "84X"))
 # a.a_to_b("7556", "7430")
 
 

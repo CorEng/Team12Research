@@ -10,20 +10,15 @@ def index():
     return render_template('index.html', lat_lon_stops=lat_lon_stops)
 
 @app.route('/handle_search', methods = ["POST"])
-def get_search():
+def show_search():
     stopA = request.form.get("stopA")
     stopB = request.form.get("stopB")
     route = request.form.get("route")
 
     a = Stops()
-    b = a_to_b(stopA, stopB, route)
-    return redirect('/show_search', )
+    b = a.a_to_b(stopA, stopB, route)
 
-@app.route('/show_search')
-def show_search():
-    a = Stops()
-
-    return render_template('index.html')
+    return render_template('index.html', )
 
 
 if __name__ == '__main__':

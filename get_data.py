@@ -59,8 +59,8 @@ class Stops:
 
         # If no bus route given by the user
         if len(self.route) == 0:
-            start = [route for i, route in enumerate(read[self.stopA]["routes"].keys())]
-            end = [route for i, route in enumerate(read[self.stopB]["routes"].keys())]
+            start = [route for route in read[self.stopA]["routes"].keys()]
+            end = [route for route in read[self.stopB]["routes"].keys()]
 
             final = {}
             for route in start:
@@ -81,7 +81,7 @@ class Stops:
             except:
                 pass
 
-        final_routes = [route for i, route in enumerate(final.keys())]
+        final_routes = [route for route in final.keys()]
 
         stops = {}
         for route in final_routes:
@@ -147,11 +147,6 @@ class Stops:
 
 
 # a = Stops()
-# a.get_stops()
-# a.a_to_b("773", "777", "")
-# b = a.a_to_b("2062", "4727", "84X")
-# a.get_searched_stops(b)
-# a.a_to_b("7556", "7430")
 
 
 

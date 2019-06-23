@@ -80,7 +80,7 @@
                                                name="stopA" required>
                                         <datalist id="stops">
                                             {% for stop in num_name %}
-                                            <option value="stop[0]">{{ stop[0] }} {{ stop[1] }}</option>
+                                            <option value={{ stop[0] }}>{{ stop[1] }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>
@@ -89,7 +89,7 @@
                                                name="stopB" required>
                                         <datalist id="stops">
                                             {% for stop in num_name %}
-                                            <option value="stop[0]">{{ stop[0] }} {{ stop[1] }}</option>
+                                            <option value={{ stop[0] }}>{{ stop[1] }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>

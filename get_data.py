@@ -57,7 +57,6 @@ class Stops:
         with open('stops.json', encoding="utf8") as read_file:
             read = json.load(read_file)
 
-
         # If no bus route given by the user
         if len(self.route) == 0:
             start = [route for route in read[self.stopA]["routes"].keys()]
@@ -65,10 +64,15 @@ class Stops:
 
             final = {}
             for route in start:
+                print(read[self.stopA]["routes"][route]["dest"])
+                print(read[self.stopB]["routes"][route]["dest"])
                 if (route in end) and (read[self.stopA]["routes"][route]["dest"] == read[self.stopB]["routes"][route][
                     "dest"]):
                     final[route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
                         route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
+                elif (route in end) and (read[self.stopA]["routes"][route]["dest"] != read[self.stopB]["routes"][route][
+                    "dest"]):
+                    print("bus stops chosen going in the opposite directions")
                 else:
                     continue
 
@@ -147,8 +151,8 @@ class Stops:
         outfile.close()
 
 
-# a = Stops()
-# a.get_all_stops()
-
+a = Stops()
+b = a.a_to_b("807", "809", "")
+# lat_lon_stops = a.get_searched_stops(b)
 
 

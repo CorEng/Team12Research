@@ -16,7 +16,9 @@ def handle_search():
     route = request.form.get("route").upper()
     scroll = "map"
 
-    lat_lon_stops = Stops().a_to_b(stopA, stopB, route).get_searched_stops(b)
+    a = Stops()
+    b = a.a_to_b(stopA, stopB, route)
+    lat_lon_stops = a.get_searched_stops(b)
     return render_template('index.html', lat_lon_stops=lat_lon_stops, scroll=scroll)
 
 

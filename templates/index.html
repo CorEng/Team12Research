@@ -75,21 +75,21 @@
                             <legend style="color: white">STOP</legend>
                             <div>
                                 <ul>
-                                    <li><label for="bday" style="color: white">From:</label>
+                                    <li><label style="color: white">From:</label>
                                         <input type="text" class="form-control" placeholder="start" list="stops"
                                                name="stopA" required>
                                         <datalist id="stops">
-                                            {% for stop in lat_lon_stops %}
-                                            <option value={{ stop[3] }}>
+                                            {% for i in num_name %}
+                                            <option>{{ i }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>
-                                    <li> <label for="bday" style="color: white">To:</label>
+                                    <li> <label style="color: white">To:</label>
                                         <input type="text" class="form-control" placeholder="end" list="stops"
                                                name="stopB" required>
                                         <datalist id="stops">
-                                            {% for stop in lat_lon_stops %}
-                                            <option value={{ stop[3] }}>
+                                            {% for i in num_name %}
+                                            <option>{{ i }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>

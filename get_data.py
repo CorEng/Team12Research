@@ -13,18 +13,17 @@ class Stops:
         with open('stops.json', encoding="utf8") as read_file:
             read = json.load(read_file)
 
-            stops = []
-            for stop in read.keys():
-                lat = read[stop]["lat"]
-                lon = read[stop]["lon"]
-                stop_name = read[stop]["stop_name"]
-                routes = [key for key in read[stop]["routes"].keys()]
-
-                stops.append([lat, lon, stop_name, stop, routes])
+            stop = []
+            for stop_no in read.keys():
+                stop_name = read[stop_no]["stop_name"]
+                if stop_no not in stop:
+                    stop.append(stop_no)
+                elif stop_no in stop:
+                    continue
 
             read_file.close()
-        # print(stops)
-        return stops
+        # print(stop)
+        return stop
 
     def get_searched_stops(self, dict):
 
@@ -50,12 +49,14 @@ class Stops:
 
 
     def a_to_b(self, stopA, stopB, route):
+
         self.stopA = stopA
         self.stopB = stopB
         self.route = route
 
         with open('stops.json', encoding="utf8") as read_file:
             read = json.load(read_file)
+
 
         # If no bus route given by the user
         if len(self.route) == 0:
@@ -147,7 +148,7 @@ class Stops:
 
 
 # a = Stops()
-
+# a.get_all_stops()
 
 
 

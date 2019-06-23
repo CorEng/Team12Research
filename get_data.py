@@ -17,7 +17,7 @@ class Stops:
             for stop_no in read.keys():
                 stop_name = read[stop_no]["stop_name"]
                 if stop_no not in stop:
-                    stop.append(stop_no)
+                    stop.append([stop_no, stop_name])
                 elif stop_no in stop:
                     continue
 

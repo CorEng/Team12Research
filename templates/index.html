@@ -79,8 +79,8 @@
                                         <input type="text" class="form-control" placeholder="start" list="stops"
                                                name="stopA" required>
                                         <datalist id="stops">
-                                            {% for i in num_name %}
-                                            <option>{{ i }}</option>
+                                            {% for stop in num_name %}
+                                            <option value="stop[0]">{{ stop[0] }} {{ stop[1] }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>
@@ -88,8 +88,8 @@
                                         <input type="text" class="form-control" placeholder="end" list="stops"
                                                name="stopB" required>
                                         <datalist id="stops">
-                                            {% for i in num_name %}
-                                            <option>{{ i }}</option>
+                                            {% for stop in num_name %}
+                                            <option value="stop[0]">{{ stop[0] }} {{ stop[1] }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>

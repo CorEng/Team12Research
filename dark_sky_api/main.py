@@ -1,7 +1,7 @@
 import requests
 from peewee import *
 
-
+# define the table
 class Weather(Model):
     time = IntegerField(primary_key=True)
     summary = CharField(max_length=255, null=True)
@@ -19,11 +19,12 @@ class Weather(Model):
     uvIndex = IntegerField(null=True)
     visibility = FloatField(null=True)
 
+# connect to database
     class Meta:
         database = MySQLDatabase('mydb', user='root', password='abc',
                                  host='127.0.0.1', port=3306)
 
-
+# if the table does not exist, we need to create the table
 def init_db():
     db = MySQLDatabase('mydb', user='root', password='abc',
                        host='127.0.0.1', port=3306)
@@ -35,14 +36,16 @@ def init_db():
 if __name__ == '__main__':
     init_db()
 
+    # 1514764800 stands for the 1/1/2018 and 1546300799 stands for 12/31/2018
+    # 86400 stands for the seconds of one day
     for d in range(1514764800, 1546300799, 86400):
         url = f"https://api.darksky.net/forecast/ae6a76d9d2a422cd7efb48155608e3e5/53.3498,6.2603,{d}?exclude=currently,minutely,daily'"
 
         result = requests.get(url)
-
+       
         if result.status_code == 200:
             data = result.json()['hourly']['data']
-
+                
             for record in data:
                 weather = Weather.create(time=record['time'],
                                          summary=record.get('summary', None),

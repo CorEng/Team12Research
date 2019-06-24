@@ -64,8 +64,6 @@ class Stops:
 
             final = {}
             for route in start:
-                print(read[self.stopA]["routes"][route]["dest"])
-                print(read[self.stopB]["routes"][route]["dest"])
                 if (route in end) and (read[self.stopA]["routes"][route]["dest"] == read[self.stopB]["routes"][route][
                     "dest"]):
                     final[route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
@@ -138,11 +136,19 @@ class Stops:
                     route = regex.search(row[0]).group()
                     route = route[1:-1]
                     stop_no = no_ceros.search(row[3][-6:]).group()
-                    if stop[stop_no]["routes"].get(route) == route:
-                        continue
-                    elif stop[stop_no]["routes"].get(route) == None:
-                        stop[stop_no]["routes"][route] = {"dest":row[5], "seq":row[4]}
 
+                    if not stop[stop_no]["routes"]:
+                        stop[stop_no]["routes"][route] = [(row[5], row[4])]
+
+                    elif route not in stop[stop_no]["routes"].keys():
+                        stop[stop_no]["routes"][route] = [(row[5], row[4])]
+
+                    elif (route in stop[stop_no]["routes"].keys()) and ((row[5], row[4]) not in stop[stop_no][
+                        "routes"][route]):
+                        stop[stop_no]["routes"][route].append((row[5], row[4]))
+
+                    else:
+                        continue
 
         read_file.close()
 
@@ -151,8 +157,8 @@ class Stops:
         outfile.close()
 
 
-a = Stops()
-b = a.a_to_b("807", "809", "")
+a = Stops().create_json()
+# b = a.a_to_b("807", "809", "")
 # lat_lon_stops = a.get_searched_stops(b)
 
 

@@ -64,47 +64,66 @@ class Stops:
 
             final = {}
             for route in start:
-                if (route in end) and (read[self.stopA]["routes"][route]["dest"] == read[self.stopB]["routes"][route][
-                    "dest"]):
-                    final[route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
-                        route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
-                elif (route in end) and (read[self.stopA]["routes"][route]["dest"] != read[self.stopB]["routes"][route][
-                    "dest"]):
-                    print("bus stops chosen going in the opposite directions")
-                else:
-                    continue
+                if (route in end):
+                    for i, dest_noA in enumerate(read[self.stopA]["routes"][route]):
+                        for j,dest_noB in enumerate(read[self.stopB]["routes"][route]):
+                            if (read[self.stopA]["routes"][route][i][0] == read[self.stopB]["routes"][route][j][0]) \
+                                    and (int(read[self.stopA]["routes"][route][i][1]) < int(read[self.stopB]["routes"][
+                                route][j][1])):
+                                if route not in final.keys():
+                                    final[route] = [{"dest": read[self.stopA]["routes"][route][i][0], "seqA": read[
+                                    self.stopA]["routes"][route][i][1], "seqB": read[self.stopB]["routes"][route][j][
+                                        1]}]
+                                elif route in final.keys():
+                                    final[route].append([{"dest": read[self.stopA]["routes"][route][i][0], "seqA": read[
+                                        self.stopA]["routes"][route][i][1], "seqB": read[self.stopB]["routes"][
+                                        route][j][1]}])
+                                else:
+                                    continue
 
         # If bus route given by the user
         elif len(self.route) > 0:
             try:
                 final = {}
-                final[self.route] = {"dest": read[self.stopA]["routes"][route]["dest"], "seqA":read[self.stopA]["routes"][
-                    route]["seq"], "seqB": read[self.stopB]["routes"][route]["seq"]}
-
+                for i, k in enumerate(read[self.stopA]["routes"][route]):
+                    for j, m in enumerate(read[self.stopB]["routes"][route]):
+                        if (read[self.stopA]["routes"][route][i][0] == read[self.stopB]["routes"][route][j][0]) and \
+                        (int(read[self.stopA]["routes"][route][i][1]) < int(read[self.stopB]["routes"][route][j][1])):
+                            if route not in final.keys():
+                                final[route] = [{"dest": read[self.stopA]["routes"][route][i][0], "seqA": read[
+                                    self.stopA]["routes"][route][i][1], "seqB": read[self.stopB]["routes"][route][j][
+                                    1]}]
+                            elif route in final.keys():
+                                final[route].append([{"dest": read[self.stopA]["routes"][route][i][0], "seqA": read[
+                                    self.stopA]["routes"][route][i][1], "seqB": read[self.stopB]["routes"][
+                                    route][j][1]}])
+                            else:
+                                continue
             except:
-                pass
+                print("The route given does not pass by these stops")
+
 
         final_routes = [route for route in final.keys()]
 
         stops = {}
         for route in final_routes:
             stops[route] = []
-            for stop in read.keys():
-                try:
-                    dest_search = read[stop]["routes"][route]["dest"]
-                    dest_given = final[route]["dest"]
-                    seqA = int(final[route]["seqA"])
-                    seqB = int(final[route]["seqB"])
-                    seq_search = int(read[stop]["routes"][route]["seq"])
-
-                    if (dest_search == dest_given) and (seq_search >= seqA) and (seq_search <= seqB) and (stop not in \
-                            stops):
-                        stops[route].append(stop)
-                except:
-                    continue
-        read_file.close()
-
-        return stops
+            # for stop in read.keys():
+        #         try:
+        #             dest_search = read[stop]["routes"][route]["dest"]
+        #             dest_given = final[route]["dest"]
+        #             seqA = int(final[route]["seqA"])
+        #             seqB = int(final[route]["seqB"])
+        #             seq_search = int(read[stop]["routes"][route]["seq"])
+        #
+        #             if (dest_search == dest_given) and (seq_search >= seqA) and (seq_search <= seqB) and (stop not in \
+        #                     stops):
+        #                 stops[route].append(stop)
+        #         except:
+        #             continue
+        # read_file.close()
+        #
+        # return stops
 
 
     def create_json(self):
@@ -157,8 +176,6 @@ class Stops:
         outfile.close()
 
 
-a = Stops().create_json()
-# b = a.a_to_b("807", "809", "")
-# lat_lon_stops = a.get_searched_stops(b)
+a = Stops().a_to_b("2061","2065","155")
 
 

@@ -76,18 +76,19 @@
                             <div>
                                 <ul>
                                     <li><label style="color: white">From:</label>
-                                        <input type="text" class="form-control" placeholder="start" list="stops"
-                                               name="stopA" required>
-                                        <datalist id="stops">
+                                        <input id="start" type="text" class="form-control" placeholder="start"
+                                        list="stoplistA" name="stopA" required>
+                                        <datalist id="stoplistA">
                                             {% for stop in num_name %}
                                             <option value={{ stop[0] }}>{{ stop[1] }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>
                                     <li> <label style="color: white">To:</label>
-                                        <input type="text" class="form-control" placeholder="end" list="stops"
+                                        <input id="end" type="text" class="form-control" placeholder="end"
+                                               list="stopslistB"
                                                name="stopB" required>
-                                        <datalist id="stops">
+                                        <datalist id="stopslistB">
                                             {% for stop in num_name %}
                                             <option value={{ stop[0] }}>{{ stop[1] }}</option>
                                                 {% endfor %}

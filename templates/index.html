@@ -68,8 +68,8 @@
                     <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">WHOSE BUS</p>
                 </div>
                 <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
-                    <form class="form" style="background-color: black" action="/handle_search"
-                          enctype="multipart/form-data" method="POST" autocomplete="on">
+                    <form class="form" style="background-color: black"
+                          enctype="multipart/form-data" autocomplete="on">
                         <h2 align="center" style="color: white;font-weight: 1000">Search Form</h2>
                         <fieldset class="border p-2">
                             <legend style="color: white">STOP</legend>
@@ -77,20 +77,19 @@
                                 <ul>
                                     <li><label style="color: white">From:</label>
                                         <input id="start" type="text" class="form-control" placeholder="start"
-                                        list="stoplistA" name="stopA" required>
+                                        list="stoplistA" name="stopA" onchange="calcRoute();" required>
                                         <datalist id="stoplistA">
                                             {% for stop in num_name %}
-                                            <option value={{ stop[0] }}>{{ stop[1] }}</option>
+                                            <option>{{ stop[3] }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>
                                     <li> <label style="color: white">To:</label>
                                         <input id="end" type="text" class="form-control" placeholder="end"
-                                               list="stopslistB"
-                                               name="stopB" required>
+                                               list="stopslistB" name="stopB" onchange="calcRoute();" required>
                                         <datalist id="stopslistB">
                                             {% for stop in num_name %}
-                                            <option value={{ stop[0] }}>{{ stop[1] }}</option>
+                                            <option>{{ stop[3] }}</option>
                                                 {% endfor %}
                                         </datalist>
                                     </li>

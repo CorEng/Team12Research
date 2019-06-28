@@ -64,6 +64,9 @@ function initMap() {
 //             3/3 center map around the markers
             map.fitBounds(bounds);
         }
+
+        directionsDisplay.setMap(map);
+
     };// initMap()
 
 

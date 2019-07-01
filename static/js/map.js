@@ -2,15 +2,6 @@ var dublin = {lat: 53.349605, lng:-6.264175 };
 var posA = {};
 var posB = {};
 
-var dublinBounds = new google.maps.LatLngBounds(
-  new google.maps.LatLng(53.1235, -6.5021),
-  new google.maps.LatLng(53.4872, -6.0209));
-
-var defaultBounds = {
-    bounds: dublinBounds,
-    strictBounds: true
-    };
-
 
 // Initialize and add the map
 function initMap() {
@@ -62,21 +53,35 @@ function calcRoute() {
     var request = {
         origin: start,
         destination: end,
-        travelMode: 'TRANSIT'
+        travelMode: 'TRANSIT',
+          transitOptions: {
+            modes: ['BUS'],
+            routingPreference: 'FEWER_TRANSFERS'
+          },
       };
 
     directionsService.route(request, function(result, status) {
         if (status == 'OK') {
           directionsDisplay.setDirections(result);
+        } else {
+          window.alert('Directions request failed due to ' + status);
         }
       });
     }
 
 // Take input from origin of trip
 function stopA(){
-
     // AutoComplete------------------------------------------------------------
     var input = document.getElementById('start');
+
+    var dublinBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(53.1235, -6.5021),
+      new google.maps.LatLng(53.4872, -6.0209));
+
+    var defaultBounds = {
+        bounds: dublinBounds,
+        strictBounds: true
+        };
 
     var autocomplete = new google.maps.places.Autocomplete(input, defaultBounds);
 
@@ -93,9 +98,17 @@ function stopA(){
 
 // Take input from Destination of trip
 function stopB(){
-
     // AutoComplete------------------------------------------------------------
     var input = document.getElementById('end');
+
+    var dublinBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(53.1235, -6.5021),
+      new google.maps.LatLng(53.4872, -6.0209));
+
+    var defaultBounds = {
+        bounds: dublinBounds,
+        strictBounds: true
+        };
 
     var autocomplete = new google.maps.places.Autocomplete(input, defaultBounds);
 

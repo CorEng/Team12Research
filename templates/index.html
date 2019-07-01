@@ -5,30 +5,28 @@
     <title>Dublin Bus</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/animate.css">
-
     <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
     <link rel="stylesheet" href="../static/css/owl.theme.default.min.css">
     <link rel="stylesheet" href="../static/css/magnific-popup.css">
-
     <link rel="stylesheet" href="../static/css/aos.css">
-
     <link rel="stylesheet" href="../static/css/ionicons.min.css">
-
     <link rel="stylesheet" href="../static/css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="../static/css/jquery.timepicker.css">
-
-
     <link rel="stylesheet" href="../static/css/style1.css">
-
     <link rel="stylesheet" href="../static/css/flaticon.css">
     <link rel="stylesheet" href="../static/css/icomoon.css">
     <link rel="stylesheet" href="../static/css/style.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <script type=text/javascript>
+      // Set-up connection variable between JS and Flask server application
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
 
 </head>
 
@@ -76,7 +74,8 @@
                             <div>
                                 <ul>
                                     <li><label style="color: white">From:</label>
-                                        <input id="start" type="text" class="form-control" placeholder="start"
+                                        <input id="start" type="text" class="form-control"
+                                               placeholder="start"
                                                autocomplete="on" runat="server" onclick="stopA()"/>
                                     </li>
                                     <li> <label style="color: white">To:</label>
@@ -97,7 +96,8 @@
                             </div>
 
                         <div align="center">
-                            <p> <button type="submit" value="Submit" class="inbutton" onclick="calcRoute()">submit
+                            <p> <button type="submit" value="Submit" class="inbutton" onclick="calcRoute()"
+                                        >submit
                             </button> </p>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                 </div>
                 <div class="col-md-1"></div>
                 <div class="col-md-6 d-flex">
-                    <div id="map" style="width:100%; height:300px;" class="img d-flex align-self-stretch"
+                    <div id="map" class="img d-flex align-self-stretch"
                          style="background-image:url(static/images/bus5.jpg);"></div>
                 </div>
             </div>

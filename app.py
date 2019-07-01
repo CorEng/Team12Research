@@ -9,7 +9,6 @@ def index():
     num_name = Stops().get_all_stops()
     return render_template('index.html', lat_lon_stops=lat_lon_stops, num_name=num_name)
 
-
 if __name__ == '__main__':
     app.run(debug=True)
 

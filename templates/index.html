@@ -26,10 +26,10 @@
 
     <link rel="stylesheet" href="../static/css/style1.css">
 
-
     <link rel="stylesheet" href="../static/css/flaticon.css">
     <link rel="stylesheet" href="../static/css/icomoon.css">
     <link rel="stylesheet" href="../static/css/style.css">
+
 </head>
 
 <body>
@@ -68,7 +68,7 @@
                     <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">WHOSE BUS</p>
                 </div>
                 <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
-                    <form class="form" style="background-color: black"
+                    <div class="form" style="background-color: black"
                           enctype="multipart/form-data" autocomplete="on">
                         <h2 align="center" style="color: white;font-weight: 1000">Search Form</h2>
                         <fieldset class="border p-2">
@@ -77,21 +77,11 @@
                                 <ul>
                                     <li><label style="color: white">From:</label>
                                         <input id="start" type="text" class="form-control" placeholder="start"
-                                        list="stoplistA" name="stopA" onchange="calcRoute();" required>
-                                        <datalist id="stoplistA">
-                                            {% for stop in num_name %}
-                                            <option>{{ stop[3] }}</option>
-                                                {% endfor %}
-                                        </datalist>
+                                               autocomplete="on" runat="server" onclick="stopA()"/>
                                     </li>
                                     <li> <label style="color: white">To:</label>
                                         <input id="end" type="text" class="form-control" placeholder="end"
-                                               list="stopslistB" name="stopB" onchange="calcRoute();" required>
-                                        <datalist id="stopslistB">
-                                            {% for stop in num_name %}
-                                            <option>{{ stop[3] }}</option>
-                                                {% endfor %}
-                                        </datalist>
+                                               autocomplete="on" runat="server" onclick="stopB()"/>
                                     </li>
                                 </ul>
                             </div>
@@ -107,15 +97,13 @@
                             </div>
 
                         <div align="center">
-                            <p> <button type="submit" value="Submit" class="inbutton" onclick="scroll()">submit
+                            <p> <button type="submit" value="Submit" class="inbutton" onclick="calcRoute()">submit
                             </button> </p>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-
-
     </div>
 
 <!--    <section class="ftco-section ftco-no-pt ftco-no-pb">-->
@@ -157,12 +145,8 @@
                 </div>
                 <div class="col-md-1"></div>
                 <div class="col-md-6 d-flex">
-                    <div class="img d-flex align-self-stretch" style="background-image:url(static/images/bus5.jpg);" id="map"></div>
-                    {% if scroll %}
-                    <script>
-                    document.getElementById("map").scrollIntoView();
-                    </script>
-                    {% endif %}
+                    <div id="map" style="width:100%; height:300px;" class="img d-flex align-self-stretch"
+                         style="background-image:url(static/images/bus5.jpg);"></div>
                 </div>
             </div>
         </div>
@@ -524,11 +508,13 @@
     <script src="js/google-map.js"></script>-->
     <script src="../static/js/main.js"></script>
 
-    <script>var latLonStops = {{ lat_lon_stops | safe }};</script>
+    <script src="../static/js/map.js"></script>
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXUnw_66vWdVYo2Cj73v6ZwiIpyjZbdhM&libraries=places&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places&callback=initMap">
 </script>
-<script src="../static/js/map.js"></script>
+
+
+
 </body>
 
 </html>

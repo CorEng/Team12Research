@@ -5,9 +5,17 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    lat_lon_stops = []
-    num_name = Stops().get_all_stops()
-    return render_template('index.html', lat_lon_stops=lat_lon_stops, num_name=num_name)
+    return render_template('index.html')
+
+@app.route("/directions", methods=['GET', 'POST'])
+def directions():
+    postA = request.args.get('postA')
+    postB = request.args.get('postB')
+
+    print(Stops().get_direct_goo(postA, postB))
+    return "HELLO"
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

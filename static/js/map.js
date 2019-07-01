@@ -2,7 +2,6 @@ var dublin = {lat: 53.349605, lng:-6.264175 };
 var posA = {};
 var posB = {};
 
-
 // Initialize and add the map
 function initMap() {
     directionsService = new google.maps.DirectionsService();
@@ -122,5 +121,15 @@ function stopB(){
       	};
         });
     }
+
+function ajax() {
+    calcRoute();
+    $.getJSON($SCRIPT_ROOT + '/directions', {
+        postA: document.getElementById("start").value,
+        postB: document.getElementById("end").value
+    }, function(data) {
+        var response = data;
+    });
+}
 
 google.maps.event.addDomListener(window, 'load', calcRoute);

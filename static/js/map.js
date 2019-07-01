@@ -3,7 +3,6 @@ var dublin = {lat: 53.349605, lng:-6.264175 };
 var posA = {};
 var posB = {};
 
-
 // Initialize and add the map
 function initMap() {
     directionsService = new google.maps.DirectionsService();
@@ -11,7 +10,7 @@ function initMap() {
 
     // The map, centered at Dublin
     var map = new google.maps.Map(
-        document.getElementById('map'), {zoom: 14, center: dublin});
+        document.getElementById('map'), {zoom: 12, center: dublin});
 
     // start the user's geolocations-------------------------------------------
     infoWindow = new google.maps.InfoWindow;
@@ -50,20 +49,13 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 
 function calcRoute() {
-
     var start = posA;
     var end = posB;
-    console.log(start);
-    console.log(end);
 
     var request = {
         origin: start,
         destination: end,
         travelMode: 'TRANSIT'
-//        TransitOptions: {
-//            modes: ['BUS'],
-//            routingPreference: 'LESS_WALKING'
-//        }
       };
 
     directionsService.route(request, function(result, status) {
@@ -78,7 +70,16 @@ function stopA(){
     // AutoComplete------------------------------------------------------------
     var input = document.getElementById('start');
 
-    var autocomplete = new google.maps.places.Autocomplete(input);
+    var dublinBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(53.1235, -6.5021),
+      new google.maps.LatLng(53.4872, -6.0209));
+
+    var defaultBounds = {
+    bounds: dublinBounds,
+    strictBounds: true
+    };
+
+    var autocomplete = new google.maps.places.Autocomplete(input, defaultBounds);
 
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
       var place = autocomplete.getPlace();
@@ -86,7 +87,7 @@ function stopA(){
       var lng = place.geometry.location.lng();
       posA = {
       	lat: lat,
-      	lng:lng
+      	lng: lng
       	};
         });
     }
@@ -96,7 +97,16 @@ function stopB(){
     // AutoComplete------------------------------------------------------------
     var input = document.getElementById('end');
 
-    var autocomplete = new google.maps.places.Autocomplete(input);
+    var dublinBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(53.1235, -6.5021),
+      new google.maps.LatLng(53.4872, -6.0209));
+
+    var defaultBounds = {
+    bounds: dublinBounds,
+    strictBounds: true
+    };
+
+    var autocomplete = new google.maps.places.Autocomplete(input, defaultBounds);
 
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
       var place = autocomplete.getPlace();
@@ -104,7 +114,7 @@ function stopB(){
       var lng = place.geometry.location.lng();
       posB = {
       	lat: lat,
-      	lng:lng
+      	lng: lng
       	};
         });
     }

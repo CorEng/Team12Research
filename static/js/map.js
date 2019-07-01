@@ -34,6 +34,7 @@ function initMap() {
     handleLocationError(false, infoWindow, map.getCenter());
         }
     directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById('left-panel'));
     };// initMap()
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {

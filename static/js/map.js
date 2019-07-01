@@ -1,7 +1,16 @@
-// The location of Ireland--------------------------------------------
 var dublin = {lat: 53.349605, lng:-6.264175 };
 var posA = {};
 var posB = {};
+
+var dublinBounds = new google.maps.LatLngBounds(
+  new google.maps.LatLng(53.1235, -6.5021),
+  new google.maps.LatLng(53.4872, -6.0209));
+
+var defaultBounds = {
+    bounds: dublinBounds,
+    strictBounds: true
+    };
+
 
 // Initialize and add the map
 function initMap() {
@@ -37,8 +46,6 @@ function initMap() {
     directionsDisplay.setMap(map);
     };// initMap()
 
-
-
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
     infoWindow.setContent(browserHasGeolocation ?
@@ -47,7 +54,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
     }
 
-
+// Google Directions
 function calcRoute() {
     var start = posA;
     var end = posB;
@@ -65,19 +72,11 @@ function calcRoute() {
       });
     }
 
+// Take input from origin of trip
 function stopA(){
 
     // AutoComplete------------------------------------------------------------
     var input = document.getElementById('start');
-
-    var dublinBounds = new google.maps.LatLngBounds(
-      new google.maps.LatLng(53.1235, -6.5021),
-      new google.maps.LatLng(53.4872, -6.0209));
-
-    var defaultBounds = {
-    bounds: dublinBounds,
-    strictBounds: true
-    };
 
     var autocomplete = new google.maps.places.Autocomplete(input, defaultBounds);
 
@@ -92,19 +91,11 @@ function stopA(){
         });
     }
 
+// Take input from Destination of trip
 function stopB(){
 
     // AutoComplete------------------------------------------------------------
     var input = document.getElementById('end');
-
-    var dublinBounds = new google.maps.LatLngBounds(
-      new google.maps.LatLng(53.1235, -6.5021),
-      new google.maps.LatLng(53.4872, -6.0209));
-
-    var defaultBounds = {
-    bounds: dublinBounds,
-    strictBounds: true
-    };
 
     var autocomplete = new google.maps.places.Autocomplete(input, defaultBounds);
 

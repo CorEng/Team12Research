@@ -1,4 +1,5 @@
 import csv, re, requests, json
+from passw import *
 
 
 class Stops:
@@ -27,11 +28,13 @@ class Stops:
 
         self.postA = postA
         self.postB = postB
-        api_key = 'AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus'
-        url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&'
+        url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
+        print(self.postA)
+        print(self.postB)
 
         req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB
-                         +'&sensor='+"false"+'&mode='+"transit"+'&key=' + api_key)
+                         +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
+        # passw.py
 
         direction_req = req.json()
         return json.dumps(direction_req)

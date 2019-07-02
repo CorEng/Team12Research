@@ -1,5 +1,6 @@
 import csv, re, requests, json
 from passw import *
+import MySQLdb
 
 
 class Stops:
@@ -34,10 +35,24 @@ class Stops:
 
         req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB
                          +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
-        # passw.py
+        # passw.py in local
 
         direction_req = req.json()
         return json.dumps(direction_req)
 
 
-# print(Stops().get_all_stops())
+    def connect_db(self):
+
+        try:
+            cnx = mysql.connector.connect(user='root', password=local_db_key,
+                                          host='127.0.0.1',
+                                          database='research')
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
+        else:
+            cnx.close()

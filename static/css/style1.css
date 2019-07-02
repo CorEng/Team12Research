@@ -96,3 +96,9 @@ section {
 #id05{
     margin-left: 450px;
 }
+
+#left-panel {
+    overflow: scroll;
+    width: 100%;
+    height: 300px;
+}

@@ -55,6 +55,9 @@ class Stops:
 
                     print("dep stop: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"])
 
+                    print("arr stop: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"][
+                        "name"])
+
                     print("headsign: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["headsign"])
 
                     print("route name: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"][

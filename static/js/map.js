@@ -6,10 +6,26 @@ var posB = {};
 function initMap() {
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer();
+//    if (Object.keys(directionsService).length == 0) {
+//        console.log("hello");
+//    };
 
     // The map, centered at Dublin
     var map = new google.maps.Map(
-        document.getElementById('map'), {zoom: 12, center: dublin});
+        document.getElementById('map'), {zoom: 13, center: dublin,
+          zoomControl: true,
+          mapTypeControl: true,
+          mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+          },
+          scaleControl: true,
+          streetViewControl: true,
+          streetViewControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_CENTER
+          },
+          rotateControl: true,
+          fullscreenControl: true
+        });
 
     // start the user's geolocations-------------------------------------------
     infoWindow = new google.maps.InfoWindow;

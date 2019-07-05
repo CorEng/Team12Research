@@ -8663,7 +8663,7 @@ h1, h2, h3, h4, h5,
   .ftco-game-schedule .owl-carousel {
     margin: 0; }
   .ftco-game-schedule .owl-carousel .owl-stage-outer {
-    padding-top: 0;
+    padding-top: 0em;
     padding-bottom: 2em;
     position: relative; }
   .ftco-game-schedule .owl-nav {
@@ -9112,7 +9112,7 @@ textarea.form-control {
   font-size: 24px; }
 
 .ftco-section {
-  padding: 6em 0;
+  padding: 1em 0;
   position: relative; }
   @media (max-width: 767.98px) {
     .ftco-section {

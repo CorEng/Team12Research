@@ -6,9 +6,6 @@ var posB = {};
 function initMap() {
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer();
-//    if (Object.keys(directionsService).length == 0) {
-//        console.log("hello");
-//    };
 
     // The map, centered at Dublin
     var map = new google.maps.Map(
@@ -69,8 +66,9 @@ function calcRoute() {
     var request = {
         origin: start,
         destination: end,
+        provideRouteAlternatives: true,
         travelMode: 'TRANSIT',
-          transitOptions: {
+        transitOptions: {
             modes: ['BUS'],
             routingPreference: 'FEWER_TRANSFERS'
           },
@@ -79,6 +77,7 @@ function calcRoute() {
     directionsService.route(request, function(result, status) {
         if (status == 'OK') {
           directionsDisplay.setDirections(result);
+          window.scrollTo(0, 700);
         } else {
           window.alert('Directions request failed due to ' + status);
         }

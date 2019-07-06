@@ -5,10 +5,10 @@ var posB = {};
 // Initialize and add the map
 function initMap() {
     directionsService = new google.maps.DirectionsService();
-    directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay = new Array();
 
     // The map, centered at Dublin
-    var map = new google.maps.Map(
+    map = new google.maps.Map(
         document.getElementById('map'), {zoom: 13, center: dublin,
           zoomControl: true,
           mapTypeControl: true,
@@ -46,8 +46,9 @@ function initMap() {
     // Browser doesn't support Geolocation
     handleLocationError(false, infoWindow, map.getCenter());
         }
-    directionsDisplay.setMap(map);
-    directionsDisplay.setPanel(document.getElementById('left-panel'));
+//    a.setMap(map);
+
+
     };// initMap()
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -76,7 +77,16 @@ function calcRoute() {
 
     directionsService.route(request, function(result, status) {
         if (status == 'OK') {
-          directionsDisplay.setDirections(result);
+            len = result.routes.length;
+            	for (var i = 0; i < len; i++) {
+            		a = new google.maps.DirectionsRenderer();
+            		directionsDisplay.push(a)
+            		directionsDisplay[i].setDirections(result);
+            		directionsDisplay[i].setRouteIndex(i);
+            		directionsDisplay[i].setMap(map);
+            	}
+//          This is for just one option
+//          directionsDisplay.setDirections(result);
           window.scrollTo(0, 700);
         } else {
           window.alert('Directions request failed due to ' + status);

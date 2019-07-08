@@ -12,7 +12,9 @@ def directions():
     postA = request.args.get('postA')
     postB = request.args.get('postB')
 
-    a = Stops().get_direct_goo(postA, postB)
+    a = Stops()
+    b = a.get_direct_goo(postA, postB)
+    a.final(b, postA, postB)
 
     return "HELLO"
 

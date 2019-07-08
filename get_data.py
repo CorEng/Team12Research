@@ -131,10 +131,10 @@ class Stops:
         return data
 
 
-    def start_end(self, b):
+    def start_end(self, b, bus_no, head_sign):
         c = []
         for i in b:
-            z = db_query2("46a", i[2], "Phoenix Pk" )
+            z = self.db_query2(bus_no, i[2], head_sign)
             if(len(z)!=0):
                 z.append(i[0])
                 z.append(i[1])
@@ -201,10 +201,18 @@ class Stops:
         for i in range(len(route_keys)):
             for j in range(len(a["routes"][i]["legs"][0]["steps"])):
                 if "transit_details" in a["routes"][i]["legs"][0]["steps"][j] and a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
-                    b = a.db_query(addr1, addr2)
-                    d = a.start_end(b)
-                    e = a.db_query3(d[0][1], d[0][0], d[0][4], d[1][4])
-                    f = a.db_query4(d[0][0], e[0][3], e[0][1], e[1][1])
+
+                    dep_stop = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["name"]
+                    arr_stop = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["name"]
+                    bus_no = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["short_name"]
+                    head_sign = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["headsign"]
+
+
+                    b = self.db_query(dep_stop, arr_stop)
+                    d = self.start_end(b, bus_no, head_sign)
+                    print(d)
+                    e = self.db_query3(d[0][1], d[0][0], d[0][4], d[1][4])
+                    f = self.db_query4(d[0][0], e[0][3], e[0][1], e[1][1])
                     print(f)
                     print("step: ", j)
             print("option: ", i)

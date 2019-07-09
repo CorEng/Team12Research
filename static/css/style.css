@@ -6498,7 +6498,7 @@ button.bg-dark:focus {
 
 .mb-4,
 .my-4 {
-  margin-bottom: 1.5rem !important; }
+  margin-bottom: 1rem !important; }
 
 .ml-4,
 .mx-4 {
@@ -6509,7 +6509,7 @@ button.bg-dark:focus {
 
 .mt-5,
 .my-5 {
-  margin-top: 3rem !important; }
+  margin-top: 1rem !important; }
 
 .mr-5,
 .mx-5 {
@@ -6623,7 +6623,7 @@ button.bg-dark:focus {
 
 .pt-5,
 .py-5 {
-  padding-top: 3rem !important; }
+  padding-top: 0rem !important; }
 
 .pr-5,
 .px-5 {
@@ -8001,7 +8001,7 @@ body {
   font-family: "Lato", Arial, sans-serif;
   background: #fff;
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.5;
   font-weight: 400;
   color: #999999;
   overflow-x: hidden; }
@@ -8024,7 +8024,7 @@ h1, h2, h3, h4, h5,
   font-family: "Oswald", Arial, sans-serif; }
 
 .container {
-  max-width: 1200px; }
+  max-width: 2000px; }
 
 .ftco-navbar-light {
   background: transparent !important;

@@ -1,12 +1,12 @@
-import csv, re, requests, json, datetime
+import requests, datetime, json, pymysql, sys, difflib
 from passw import *
-import pymysql
 
 
 class Stops:
 
     def __init__(self):
-        pass
+        self.goahead = ["17", "17a", "18", "33a", "33b", "45a", "45b", "59", "63", "63a", "75", "75a", "76", "76a",
+                    "102", "104", "111", "114", "161", "175", "184", "185", "220", "236", "238", "239", "270"]
 
     def get_direct_goo(self, postA, postB):
 
@@ -23,48 +23,10 @@ class Stops:
         return req.json()
 
 
-    def needed_data(self, data):
-
-        route_keys = [data["routes"][i].keys() for i, k in enumerate(data["routes"])]
-
-        for i in range(len(route_keys)):
-            for j in range(len(data["routes"][i]["legs"][0]["steps"])):
-
-                if "transit_details" in data["routes"][i]["legs"][0]["steps"][j] and data["routes"][i]["legs"][0][
-                    "steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
-
-                    print("Vehicle: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"][
-                        "type"])
-
-                    print("dep stop: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"])
-
-                    print("arr stop: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"][
-                        "name"])
-
-                    print("headsign: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["headsign"])
-
-                    print("route name: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"][
-                        "short_name"])
-
-                    print("num_stops: ", data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["num_stops"])
-
-                    arr = int(data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_time"]["value"])
-                    dep = int(data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_time"]["value"])
-                    tot = datetime.timedelta(seconds=(arr - dep))
-                    print("total bus trip time: ", tot)
-
-                    print("step number", j)
-                    print("option number:", i)
-                    print()
-
-            print("-----------------------------------------------------")
-            print()
-
-
-    def connect_db(self):
+    def lat_lon(self, busNo, head_sign, goolat, goolon):
 
         user = 'root'
-        password = local_db_key
+        password = 'migmarache1982'
         host = '127.0.0.1'
         database = 'research'
 
@@ -73,147 +35,177 @@ class Stops:
         except Exception as e:
             sys.exit(e)
 
-        cur = con.cursor()
-        cur.execute("SELECT * FROM research.stops LIMIT 10") # Example
-        data = cur.fetchall()
-        print(data)
+        lat = round(float(goolat), 4)
+        lon = round(float(goolon), 4)
 
-
-    def db_query(self, addre1, addre2):
-
-        user='root'
-        password='migmarache1982'
-        host='127.0.0.1'
-        database='research'
-
-        try:
-            con = pymysql.connect(host=host,database=database,user=user, password=password)
-        except Exception as e:
-            sys.exit(e)
-
-        query = """SELECT stop_lat,stop_lon,stop_id,stop_name 
-        FROM research.stops 
-        WHERE stop_name LIKE %s or stop_name LIKE %s"""
+        query = """SELECT distinct stop_lat, stop_lon, stop_id, stop_name 
+                FROM research.stops, research.stop_times
+                WHERE research.stop_times.bus_stop_number = research.stops.stop_id 
+                    and research.stop_times.bus_number = %s
+                    and research.stop_times.headsign = %s
+                    and ((stop_lat BETWEEN %s and %s) and (stop_lon BETWEEN %s and %s));"""
 
         cur = con.cursor()
-        cur.execute(query, (addre1, addre2),)
+        cur.execute(query, (busNo, head_sign, lat-0.003, lat+0.003, lon-0.003, lon+0.003), )
         data = cur.fetchall()
         cur.close()
-        return data
+
+        return tuple(data)
 
 
-    def db_query2(self, bus_no, stop_no, head_sign):
+    def filter_name(self, stops_list, google_name):
 
-        user='root'
-        password='migmarache1982'
-        host='127.0.0.1'
-        database='research'
+        final = ()
+
+        ratio = 0
+        for stop in stops_list:
+            stop_ratio = difflib.SequenceMatcher(None, stop[3], google_name).ratio()
+            if stop_ratio > ratio:
+                ratio = stop_ratio
+                final = stop
+
+        return final
+
+
+    def db_query3(self, head_sign, bus_no, stop_noA, stop_noB, diff):
+
+        user = 'root'
+        password = 'migmarache1982'
+        host = '127.0.0.1'
+        database = 'research'
 
         try:
-            con = pymysql.connect(host=host,database=database,user=user, password=password)
+            con = pymysql.connect(host=host, database=database, user=user, password=password)
         except Exception as e:
             sys.exit(e)
 
-        query = """SELECT distinct research.stop_times.bus_number  
-        FROM research.stop_times 
-        WHERE research.stop_times.bus_number=%s and research.stop_times.bus_stop_number=%s 
-        and research.stop_times.headsign=%s"""
-
-        cur = con.cursor()
-        cur.execute(query, (bus_no, stop_no, head_sign),)
-        data = list(cur.fetchall())
-
-        if len(data) > 0:
-            data.pop()
-            data.append(bus_no)
-            data.append(head_sign)
-        cur.close()
-        return data
-
-
-    def start_end(self, b, bus_no, head_sign):
-        c = []
-        for i in b:
-            z = self.db_query2(bus_no, i[2], head_sign)
-            if(len(z)!=0):
-                z.append(i[0])
-                z.append(i[1])
-                z.append(i[2])
-                z.append(i[3])
-                c.append(z)
-        return c
-
-
-    def db_query3(self, head_sign, bus_no, stop_noA, stop_noB):
-
-        user='root'
-        password='migmarache1982'
-        host='127.0.0.1'
-        database='research'
-
-        try:
-            con = pymysql.connect(host=host,database=database,user=user, password=password)
-        except Exception as e:
-            sys.exit(e)
-
-        query = """SELECT research.stop_times.bus_stop_number, research.stop_times.stop_sequence, research.trips.direction_id, research.stop_times.headsign 
-        FROM research.stop_times, research.trips 
-        WHERE stop_times.trip_id = trips.trip_id and stop_times.headsign = %s 
-        and stop_times.bus_number = %s and (bus_stop_number = %s or bus_stop_number = %s)"""
+        query = """SELECT research.stop_times.bus_stop_number, research.stop_times.stop_sequence, research.stop_times.headsign 
+            FROM research.stop_times
+            WHERE stop_times.headsign = %s 
+                and stop_times.bus_number = %s 
+                and (bus_stop_number = %s or bus_stop_number = %s)"""
 
         cur = con.cursor()
         cur.execute(query, (head_sign, bus_no, stop_noA, stop_noB),)
         cur.close()
-        return cur.fetchall()
+        data = cur.fetchall()
+
+        final = []
+
+        for i, value in enumerate(data):
+            if i == 0:
+                final.append(value)
+            else:
+                if value[1] - final[0][1] == diff:
+                    final.append(value)
+
+        return tuple(final)
 
 
     def db_query4(self, bus_no, head_sign, seqA, seqB):
 
-        user='root'
-        password='migmarache1982'
-        host='127.0.0.1'
-        database='research'
+        user = 'root'
+        password = 'migmarache1982'
+        host = '127.0.0.1'
+        database = 'research'
 
         try:
-            con = pymysql.connect(host=host,database=database,user=user, password=password)
+            con = pymysql.connect(host=host, database=database, user=user, password=password)
         except Exception as e:
             sys.exit(e)
 
-        query = """SELECT research.stops.stop_lat, research.stops.stop_lon, research.stop_times.bus_stop_number, 
-        research.stop_times.stop_sequence, research.stop_times.headsign, research.stop_times.bus_number 
-        FROM research.stop_times, research.stops
-        WHERE bus_number = %s and headsign = %s and (stop_sequence between %s AND %s)
-        LIMIT %s
-        """
+        query = """SELECT research.stops.stop_lat, research.stops.stop_lon, research.stop_times.bus_stop_number, research.stop_times.stop_sequence, research.stop_times.headsign, research.stop_times.bus_number 
+            FROM research.stop_times, research.stops
+            WHERE research.stop_times.bus_number = %s and research.stop_times.headsign = %s and (research.stop_times.stop_sequence between %s AND %s)
+            LIMIT %s
+            """
 
         limit = seqB - seqA + 1
-
         cur = con.cursor()
         cur.execute(query, (bus_no, head_sign, seqA, seqB, limit),)
         cur.close()
         return cur.fetchall()
 
 
-    def final(self, a, addr1, addr2):
+    def fin(self, goo_data):
 
-        route_keys = [a["routes"][i].keys() for i, k in enumerate(a["routes"])]
+        route_keys = [goo_data["routes"][i].keys() for i, k in enumerate(goo_data["routes"])]
 
         for i in range(len(route_keys)):
-            for j in range(len(a["routes"][i]["legs"][0]["steps"])):
-                if "transit_details" in a["routes"][i]["legs"][0]["steps"][j] and a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
+            for j in range(len(goo_data["routes"][i]["legs"][0]["steps"])):
 
-                    dep_stop = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["name"]
-                    arr_stop = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["name"]
-                    bus_no = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["short_name"]
-                    head_sign = a["routes"][i]["legs"][0]["steps"][j]["transit_details"]["headsign"]
+                if "transit_details" in goo_data["routes"][i]["legs"][0]["steps"][j] and goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
 
+                    dep_stop = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["name"].strip()
+                    arr_stop = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["name"].strip()
+                    bus_no = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["short_name"].strip()
+                    head_sign = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["headsign"].strip()
+                    num_stops = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["num_stops"]
 
-                    b = self.db_query(dep_stop, arr_stop)
-                    d = self.start_end(b, bus_no, head_sign)
-                    print(d)
-                    e = self.db_query3(d[0][1], d[0][0], d[0][4], d[1][4])
-                    f = self.db_query4(d[0][0], e[0][3], e[0][1], e[1][1])
-                    print(f)
-                    print("step: ", j)
-            print("option: ", i)
-            print("*****************************************************************")
+                    latA = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["location"]["lat"]
+                    lonA = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["location"]["lng"]
+
+                    latB = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["location"]["lat"]
+                    lonB = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["location"]["lng"]
+
+                    print("Option:", i, "leg", j)
+                    print("Details from google:")
+                    print("dep_stop:", dep_stop)
+                    print("arr_stop:", arr_stop)
+                    if bus_no in self.goahead:
+                        print("bus_no:", bus_no, "**FROM GOAHEAD**")
+                    else:
+                        print("bus_no:", bus_no)
+                    print("num_stops: ", num_stops)
+                    print("head_sign:", head_sign)
+                    print("lat/lon A:", latA, lonA)
+                    print("lat/lon B:", latB, lonB)
+                    print()
+
+                    print("1st Query - lat_lon ----------------------")
+                    print("stopA")
+                    oneA = self.lat_lon(bus_no, head_sign, latA, lonA)
+                    print(oneA)
+                    print()
+                    print("stopB")
+                    oneB = self.lat_lon(bus_no, head_sign, latB, lonB)
+                    print(oneB)
+                    print()
+
+                    if len(oneA) > 0 and len(oneB) > 0:
+                        print("filter 1st query by name -----------------------")
+                        print("stopA")
+                        twoA = self.filter_name(oneA, dep_stop)
+                        print(twoA)
+                        print()
+                        print("stopB")
+                        twoB = self.filter_name(oneB, arr_stop)
+                        print(twoB)
+                        print()
+
+                        if twoA and twoB:
+                            print("Query 3 - get seq and direction id -------------")
+                            # Stop A and stop B here have to be the ones from our filters not from google
+                            three = self.db_query3(head_sign, bus_no, twoA[2], twoB[2], num_stops)
+                            print(three)
+                            print()
+
+                            if len(three) == 2:
+                                print("Query 4 - obtain intermediate stops ------------")
+                                # Pass only the 1st two stops given by previous query
+                                four = self.db_query4(bus_no, head_sign, three[0][1], three[1][1])
+                                print(four)
+                                print()
+
+                            else:
+                                print("ERROR: query 3 does not have 2 items - it has:", len(three), "items")
+                                pass
+                        else:
+                            print("ERROR: length of twoA:", len(twoA), "length of twoB:", len(twoB))
+                            pass
+                    else:
+                        print("ERROR: length of oneA is", len(oneA), "length of oneB:", len(oneB))
+                        pass
+
+                    print()
+            print("-----------------------------------------------------------------------------------------------------------------------")

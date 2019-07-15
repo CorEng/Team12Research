@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, jsonify
 from get_data import *
 
 app = Flask(__name__)
@@ -16,7 +16,7 @@ def directions():
     get_goo_data = intermediate.get_direct_goo(postA, postB)
     intermediate.fin(get_goo_data)
 
-    return "HELLO"
+    return jsonify(get_goo_data)
 
 
 

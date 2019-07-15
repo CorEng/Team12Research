@@ -143,14 +143,11 @@ function stopB(){
 
 function ajax() {
     calcRoute();
-    directionsDisplay.setRouteIndex(0);
-    no = directionsDisplay.routes;
-    console.log(no);
     $.getJSON($SCRIPT_ROOT + '/directions', {
         postA: document.getElementById("start").value,
         postB: document.getElementById("end").value
     }, function(data) {
-        var response = data;
+        var goo_data = data;
     });
 }
 

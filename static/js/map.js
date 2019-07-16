@@ -61,11 +61,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     }
 
 
-function ajax2(result) {
-    $.getJSON($SCRIPT_ROOT + '/directions', result);
-}
-
-
 // Google Directions
 function calcRoute() {
 
@@ -147,30 +142,58 @@ function stopB(){
         });
     }
 
+// Draw the polylines from the back end google maps directions api call
+function draw_poly(response, option) {
+            if (option === undefined) {
+                option = 0;
+            }
+            var linebounds = new google.maps.LatLngBounds();
+            linebounds.extend(response['routes'][option]['bounds']['northeast']);
+            linebounds.extend(response['routes'][option]['bounds']['southwest']);
+            map.fitBounds(linebounds);
+            for (var i = 0; i < response['routes'][option]['legs'][0]['steps'].length; i++) {
+                if (response['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'WALKING') {
+                    var poli = new google.maps.Polyline({
+                          path: google.maps.geometry.encoding.decodePath
+                          (response['routes'][option]['legs'][0]['steps'][i]['polyline']['points']),
+                          geodesic: true,
+                          strokeColor: '#ff0000',
+                          strokeOpacity: 0.5,
+                          strokeWeight: 5
+                        });
+                        poli.setMap(map);
+                } else if (response['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'TRANSIT') {
+                    var poli = new google.maps.Polyline({
+                          path: google.maps.geometry.encoding.decodePath
+                          (response['routes'][option]['legs'][0]['steps'][i]['polyline']['points']),
+                          geodesic: true,
+                          strokeColor: '#0000cc',
+                          strokeOpacity: 0.5,
+                          strokeWeight: 5
+                        });
+                        poli.setMap(map);
+                }
+            }
+            window.scrollTo(0, 700);
+}
+
+function draw_markers(response, option) {
+    if (option === undefined) {
+        option = 0;
+    }
+}
+
+
+
+// Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
-//    calcRoute();
     $.getJSON($SCRIPT_ROOT + '/directions', {
         postA: document.getElementById("start").value,
         postB: document.getElementById("end").value
     }, function(response) {
     console.log(response);
-        var linebounds = new google.maps.LatLngBounds();
-        linebounds.extend(response['routes'][0]['bounds']['northeast']);
-        linebounds.extend(response['routes'][0]['bounds']['southwest']);
-        map.fitBounds(linebounds);
-        for (var i = 0; i < response['routes'][0]['legs'][0]['steps'].length; i++) {
-            var poli = new google.maps.Polyline({
-                  path: google.maps.geometry.encoding.decodePath
-                  (response['routes'][0]['legs'][0]['steps'][i]['polyline']['points']),
-                  geodesic: true,
-                  strokeColor: '#0000cc',
-                  strokeOpacity: 0.6,
-                  strokeWeight: 5
-                });
-                poli.setMap(map);
-        }
+    draw_poly(response);
     });
-    window.scrollTo(0, 700);
 }
 
 google.maps.event.addDomListener(window, 'load', calcRoute);

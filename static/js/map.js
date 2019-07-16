@@ -61,8 +61,14 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     }
 
 
+function ajax2(result) {
+    $.getJSON($SCRIPT_ROOT + '/directions', result);
+}
+
+
 // Google Directions
 function calcRoute() {
+
     var start = posA;
     var end = posB;
 
@@ -142,13 +148,30 @@ function stopB(){
     }
 
 function ajax() {
-    calcRoute();
+//    calcRoute();
     $.getJSON($SCRIPT_ROOT + '/directions', {
         postA: document.getElementById("start").value,
         postB: document.getElementById("end").value
-    }, function(data) {
-        var goo_data = data;
+    }, function(response) {
+    console.log(response);
+        var linebounds = new google.maps.LatLngBounds();
+        linebounds.extend(response['routes'][0]['bounds']['northeast']);
+        linebounds.extend(response['routes'][0]['bounds']['southwest']);
+        map.fitBounds(linebounds);
+        for (var i = 0; i < response['routes'][0]['legs'][0]['steps'].length; i++) {
+            var poli = new google.maps.Polyline({
+                  path: google.maps.geometry.encoding.decodePath
+                  (response['routes'][0]['legs'][0]['steps'][i]['polyline']['points']),
+                  geodesic: true,
+                  strokeColor: '#0000cc',
+                  strokeOpacity: 0.6,
+                  strokeWeight: 5
+                });
+                poli.setMap(map);
+        }
     });
+    window.scrollTo(0, 700);
 }
 
 google.maps.event.addDomListener(window, 'load', calcRoute);
+

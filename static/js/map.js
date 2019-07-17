@@ -1,6 +1,8 @@
 var dublin = {lat: 53.349605, lng:-6.264175 };
 var posA = {};
 var posB = {};
+var googleData;
+var intermediateStops;
 
 // Initialize and add the map
 function initMap() {
@@ -177,9 +179,27 @@ function draw_poly(response, option) {
             window.scrollTo(0, 700);
 }
 
-function draw_markers(response, option) {
+function draw_markers(intermediateStops, option) {
     if (option === undefined) {
         option = 0;
+    }
+    var infowindow = new google.maps.InfoWindow();
+    for (var i = 0; i < intermediateStops[option].length; i++) {
+        for (var j = 0; j < intermediateStops[option][i].length; j++) {
+        console.log(intermediateStops[option][i][j])
+
+            var location = {lat: intermediateStops[option][i][j][0], lng: intermediateStops[option][i][j][1]};
+            var marker = new google.maps.Marker({animation: google.maps.Animation.DROP, position: location, map: map});
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infowindow.setContent('<div class="infoWin">' +
+                    '<p class="detail">' + "HELLO" + '</p>' +
+                    '</div>');
+                    infowindow.open(map, marker);
+                }
+            })(marker, i));
+        }
     }
 }
 
@@ -191,8 +211,10 @@ function ajax() {
         postA: document.getElementById("start").value,
         postB: document.getElementById("end").value
     }, function(response) {
-    console.log(response);
-    draw_poly(response);
+    googleData = response['gooData'];
+    intermediateStops = response['interstops'];
+    draw_markers(intermediateStops);
+    draw_poly(googleData);
     });
 }
 

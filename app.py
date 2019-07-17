@@ -14,9 +14,11 @@ def directions():
 
     intermediate = Stops()
     get_goo_data = intermediate.get_direct_goo(postA, postB)
-    intermediate.fin(get_goo_data)
+    interStops = intermediate.fin(get_goo_data)
+    jsonObj = get_goo_data
+    full = {"interstops": interStops, "gooData": jsonObj}
 
-    return jsonify(get_goo_data)
+    return jsonify(full)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -116,7 +116,10 @@ class Stops:
 
         query = """SELECT research.stops.stop_lat, research.stops.stop_lon, research.stop_times.bus_stop_number, research.stop_times.stop_sequence, research.stop_times.headsign, research.stop_times.bus_number 
             FROM research.stop_times, research.stops
-            WHERE research.stop_times.bus_number = %s and research.stop_times.headsign = %s and (research.stop_times.stop_sequence between %s AND %s)
+            WHERE research.stops.stop_id = research.stop_times.bus_stop_number
+                and research.stop_times.bus_number = %s 
+                and research.stop_times.headsign = %s 
+                and (research.stop_times.stop_sequence between %s AND %s)
             LIMIT %s
             """
 
@@ -130,8 +133,9 @@ class Stops:
     def fin(self, goo_data):
 
         route_keys = [goo_data["routes"][i].keys() for i, k in enumerate(goo_data["routes"])]
-
+        all_opts = []
         for i in range(len(route_keys)):
+            option = []
             for j in range(len(goo_data["routes"][i]["legs"][0]["steps"])):
 
                 if "transit_details" in goo_data["routes"][i]["legs"][0]["steps"][j] and goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
@@ -194,6 +198,7 @@ class Stops:
                                 print("Query 4 - obtain intermediate stops ------------")
                                 # Pass only the 1st two stops given by previous query
                                 four = self.db_query4(bus_no, head_sign, three[0][1], three[1][1])
+                                option.append(four)
                                 print(four)
                                 print()
 
@@ -208,4 +213,6 @@ class Stops:
                         pass
 
                     print()
-            print("-----------------------------------------------------------------------------------------------------------------------")
+            all_opts.append(option)
+            print("-------------------------------------------------------------------------------------------")
+        return all_opts

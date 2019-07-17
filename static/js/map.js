@@ -183,10 +183,11 @@ function draw_markers(intermediateStops, option) {
     if (option === undefined) {
         option = 0;
     }
+    console.log(intermediateStops);
     var infowindow = new google.maps.InfoWindow();
     for (var i = 0; i < intermediateStops[option].length; i++) {
         for (var j = 0; j < intermediateStops[option][i].length; j++) {
-        console.log(intermediateStops[option][i][j])
+        console.log(intermediateStops[option][i][j]);
 
             var location = {lat: intermediateStops[option][i][j][0], lng: intermediateStops[option][i][j][1]};
             var marker = new google.maps.Marker({animation: google.maps.Animation.DROP, position: location, map: map});

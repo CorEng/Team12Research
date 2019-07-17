@@ -1,4 +1,5 @@
 import requests, datetime, json, pymysql, sys, difflib
+from operator import itemgetter, attrgetter
 from passw import *
 
 
@@ -79,9 +80,11 @@ class Stops:
         except Exception as e:
             sys.exit(e)
 
-        query = """SELECT research.stop_times.bus_stop_number, research.stop_times.stop_sequence, research.stop_times.headsign 
-            FROM research.stop_times
-            WHERE stop_times.headsign = %s 
+        query = """SELECT research.stop_times.bus_stop_number, research.stop_times.stop_sequence, 
+        research.stop_times.headsign, research.trips.trip_id
+            FROM research.stop_times, research.trips
+            WHERE research.stop_times.trip_id = research.trips.trip_id
+                and stop_times.headsign = %s 
                 and stop_times.bus_number = %s 
                 and (bus_stop_number = %s or bus_stop_number = %s)"""
 
@@ -102,7 +105,7 @@ class Stops:
         return tuple(final)
 
 
-    def db_query4(self, bus_no, head_sign, seqA, seqB):
+    def db_query4(self, bus_no, head_sign, seqA, seqB, tripid):
 
         user = 'root'
         password = 'migmarache1982'
@@ -115,19 +118,21 @@ class Stops:
             sys.exit(e)
 
         query = """SELECT research.stops.stop_lat, research.stops.stop_lon, research.stop_times.bus_stop_number, research.stop_times.stop_sequence, research.stop_times.headsign, research.stop_times.bus_number 
-            FROM research.stop_times, research.stops
-            WHERE research.stops.stop_id = research.stop_times.bus_stop_number
+            FROM research.stop_times, research.stops, research.trips
+            WHERE research.stop_times.bus_stop_number = research.stops.stop_id
+                and research.trips.trip_id = research.stop_times.trip_id
                 and research.stop_times.bus_number = %s 
                 and research.stop_times.headsign = %s 
                 and (research.stop_times.stop_sequence between %s AND %s)
-            LIMIT %s
+                and research.stop_times.trip_id = %s
             """
 
-        limit = seqB - seqA + 1
         cur = con.cursor()
-        cur.execute(query, (bus_no, head_sign, seqA, seqB, limit),)
+        cur.execute(query, (bus_no, head_sign, seqA, seqB, tripid),)
         cur.close()
-        return cur.fetchall()
+        # sorted(student_tuples, key=itemgetter(2))
+        ordered = sorted(list(cur.fetchall()), key=itemgetter(3))
+        return ordered
 
 
     def fin(self, goo_data):
@@ -197,7 +202,7 @@ class Stops:
                             if len(three) == 2:
                                 print("Query 4 - obtain intermediate stops ------------")
                                 # Pass only the 1st two stops given by previous query
-                                four = self.db_query4(bus_no, head_sign, three[0][1], three[1][1])
+                                four = self.db_query4(bus_no, head_sign, three[0][1], three[1][1], three[0][3])
                                 option.append(four)
                                 print(four)
                                 print()

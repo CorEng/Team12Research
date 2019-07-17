@@ -183,31 +183,54 @@ function draw_markers(intermediateStops, option) {
     if (option === undefined) {
         option = 0;
     }
-    console.log(intermediateStops);
+
     var infowindow = new google.maps.InfoWindow();
     for (var i = 0; i < intermediateStops[option].length; i++) {
         for (var j = 0; j < intermediateStops[option][i].length; j++) {
-        console.log(intermediateStops[option][i][j]);
 
             var location = {lat: intermediateStops[option][i][j][0], lng: intermediateStops[option][i][j][1]};
             var marker = new google.maps.Marker({animation: google.maps.Animation.DROP, position: location, map: map});
 
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            var name = intermediateStops[option][i][j][6];
+            var going = intermediateStops[option][i][j][4];
+            var stopNum = intermediateStops[option][i][j][2].slice(-4);
+
+            var contentString = '<div class="infoWin">' +
+                                '<p class="detail">STOP NAME: ' + name + '</p>' +
+                                '<p class="detail">GOING TO: ' + going + '</p>' +
+                                '<p class="detail">STOP NO: ' + stopNum + '</p>' +
+                                '</div>';
+
+            google.maps.event.addListener(marker, 'click', (function(contentString, marker, i) {
                 return function() {
-                    infowindow.setContent('<div class="infoWin">' +
-                    '<p class="detail">' + "HELLO" + '</p>' +
-                    '</div>');
+
+                    infowindow.setContent(contentString.toString());
                     infowindow.open(map, marker);
                 }
-            })(marker, i));
+            })(contentString, marker, i));
         }
     }
 }
 
 
-
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
+        map = new google.maps.Map(
+            document.getElementById('map'), {zoom: 13, center: dublin,
+              zoomControl: true,
+              mapTypeControl: true,
+              mapTypeControlOptions: {
+              style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+              },
+              scaleControl: true,
+              streetViewControl: true,
+              streetViewControlOptions: {
+              position: google.maps.ControlPosition.RIGHT_CENTER
+              },
+              rotateControl: true,
+              fullscreenControl: true
+            });
+
     $.getJSON($SCRIPT_ROOT + '/directions', {
         postA: document.getElementById("start").value,
         postB: document.getElementById("end").value

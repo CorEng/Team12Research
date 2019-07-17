@@ -117,15 +117,17 @@ class Stops:
         except Exception as e:
             sys.exit(e)
 
-        query = """SELECT research.stops.stop_lat, research.stops.stop_lon, research.stop_times.bus_stop_number, research.stop_times.stop_sequence, research.stop_times.headsign, research.stop_times.bus_number 
-            FROM research.stop_times, research.stops, research.trips
-            WHERE research.stop_times.bus_stop_number = research.stops.stop_id
-                and research.trips.trip_id = research.stop_times.trip_id
-                and research.stop_times.bus_number = %s 
-                and research.stop_times.headsign = %s 
-                and (research.stop_times.stop_sequence between %s AND %s)
-                and research.stop_times.trip_id = %s
-            """
+        query = """SELECT research.stops.stop_lat, research.stops.stop_lon, research.stop_times.bus_stop_number, 
+                research.stop_times.stop_sequence, research.stop_times.headsign, research.stop_times.bus_number,
+                research.stops.stop_name 
+                FROM research.stop_times, research.stops, research.trips
+                WHERE research.stop_times.bus_stop_number = research.stops.stop_id
+                    and research.trips.trip_id = research.stop_times.trip_id
+                    and research.stop_times.bus_number = %s 
+                    and research.stop_times.headsign = %s 
+                    and (research.stop_times.stop_sequence between %s AND %s)
+                    and research.stop_times.trip_id = %s
+                """
 
         cur = con.cursor()
         cur.execute(query, (bus_no, head_sign, seqA, seqB, tripid),)

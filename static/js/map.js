@@ -63,7 +63,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     }
 
 
-// Google Directions
+// Google Directions front end route request and uses google renderer to show route
 function calcRoute() {
 
     var start = posA;
@@ -145,29 +145,29 @@ function stopB(){
     }
 
 // Draw the polylines from the back end google maps directions api call
-function draw_poly(response, option) {
+function draw_poly(googleData, option) {
     if (option === undefined) {
         option = 0;
     }
     var linebounds = new google.maps.LatLngBounds();
-    linebounds.extend(response['routes'][option]['bounds']['northeast']);
-    linebounds.extend(response['routes'][option]['bounds']['southwest']);
+    linebounds.extend(googleData['routes'][option]['bounds']['northeast']);
+    linebounds.extend(googleData['routes'][option]['bounds']['southwest']);
     map.fitBounds(linebounds);
-    for (var i = 0; i < response['routes'][option]['legs'][0]['steps'].length; i++) {
-        if (response['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'WALKING') {
+    for (var i = 0; i < googleData['routes'][option]['legs'][0]['steps'].length; i++) {
+        if (googleData['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'WALKING') {
             var poli = new google.maps.Polyline({
                   path: google.maps.geometry.encoding.decodePath
-                  (response['routes'][option]['legs'][0]['steps'][i]['polyline']['points']),
+                  (googleData['routes'][option]['legs'][0]['steps'][i]['polyline']['points']),
                   geodesic: true,
                   strokeColor: '#ff6600',
                   strokeOpacity: 0.5,
                   strokeWeight: 5
                 });
                 poli.setMap(map);
-        } else if (response['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'TRANSIT') {
+        } else if (googleData['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'TRANSIT') {
             var poli = new google.maps.Polyline({
                   path: google.maps.geometry.encoding.decodePath
-                  (response['routes'][option]['legs'][0]['steps'][i]['polyline']['points']),
+                  (googleData['routes'][option]['legs'][0]['steps'][i]['polyline']['points']),
                   geodesic: true,
                   strokeColor: '#0000cc',
                   strokeOpacity: 0.5,
@@ -212,8 +212,43 @@ function draw_markers(intermediateStops, option) {
     }
 }
 
-function showOptions(intermediateStops) {
-    document.getElementById('ops').style.display = 'block';
+function showOptions() {
+    console.log(googleData);
+    if (googleData) {
+
+        for (var i = 0; i < googleData['routes'].length; i++) {
+            var div = document.createElement("div");
+            div.setAttribute("class", "opbutt");
+            div.setAttribute("onClick", "chooseOption(" + i.toString() + ")");
+
+            var indiv1 = document.createElement("div");
+            indiv1.setAttribute("class", "indivleft");
+            div.appendChild(indiv1);
+            var indiv2 = document.createElement("div");
+            indiv2.setAttribute("class", "indivmid");
+            div.appendChild(indiv2);
+            var indiv3 = document.createElement("div");
+            indiv3.setAttribute("class", "indivright");
+            div.appendChild(indiv3);
+
+            document.getElementById('ops').appendChild(div);
+        }
+
+
+
+
+        document.getElementById('ops').style.display = 'block';
+//        document.getElementById('route').innerHTML =
+//        googleData['routes'][0]['legs'][0]['steps'][1]['transit_details']['line']['short_name'];
+    } else {
+        document.getElementById('ops').style.display = 'none';
+    }
+
+}
+
+function choseOption(num) {
+    draw_markers(intermediateStops, num);
+    draw_poly(googleData, num);
 }
 
 

@@ -99,4 +99,37 @@ section {
 
 .variable {
     display: none;
+    width: 100%;
+    text-align: center;
+}
+
+.opbutt {
+    width: 35%;
+    background-color: black;
+    border-radius: 6px;
+    margin: auto;
+    margin-bottom: 8px;
+}
+
+.indivleft {
+    width: 24%;
+    display: inline-block;
+    height: 75px;
+    margin-top: 8px;
+}
+
+.indivmid {
+    width: 49%;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    display: inline-block;
+    height: 75px;
+    margin-top: 8px;
+}
+
+.indivright {
+    width: 24%;
+    display: inline-block;
+    height: 75px;
+    margin-top: 8px;
 }

@@ -212,8 +212,8 @@ function draw_markers(intermediateStops, option) {
     }
 }
 
+// Create the html to show the different options with minimal info
 function showOptions() {
-    console.log(googleData);
     if (googleData) {
 
         for (var i = 0; i < googleData['routes'].length; i++) {
@@ -223,23 +223,41 @@ function showOptions() {
 
             var indiv1 = document.createElement("div");
             indiv1.setAttribute("class", "indivleft");
+            var time = document.createElement("p");
+            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['duration']['text']);
+            time.appendChild(timetext);
+            indiv1.appendChild(time);
             div.appendChild(indiv1);
+
             var indiv2 = document.createElement("div");
             indiv2.setAttribute("class", "indivmid");
+            var time = document.createElement("p");
+            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to "
+            + googleData['routes'][i]['legs'][0]['arrival_time']['text']);
+            time.appendChild(timetext);
+            indiv2.appendChild(time);
             div.appendChild(indiv2);
+
             var indiv3 = document.createElement("div");
             indiv3.setAttribute("class", "indivright");
+            var buses = document.createElement("p");
+            var allBuses = [];
+            for (var j = 0; j < googleData['routes'][i]['legs'][0]['steps'].length; j++ ) {
+                if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'TRANSIT') {
+                    allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
+                    ['short_name']);
+                }
+            }
+            var timetext = document.createTextNode(allBuses.join(" / "));
+            buses.appendChild(timetext);
+            indiv3.appendChild(buses);
             div.appendChild(indiv3);
 
             document.getElementById('ops').appendChild(div);
         }
 
-
-
-
         document.getElementById('ops').style.display = 'block';
-//        document.getElementById('route').innerHTML =
-//        googleData['routes'][0]['legs'][0]['steps'][1]['transit_details']['line']['short_name'];
+
     } else {
         document.getElementById('ops').style.display = 'none';
     }
@@ -255,6 +273,8 @@ function choseOption(num) {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
+    $('div').remove(".opbutt");
+
     if (intermediateStops) {
         map = new google.maps.Map(
               document.getElementById('map'), {zoom: 13, center: dublin,

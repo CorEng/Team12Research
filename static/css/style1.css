@@ -96,3 +96,7 @@ section {
 #id05{
     margin-left: 450px;
 }
+
+.variable {
+    display: none;
+}

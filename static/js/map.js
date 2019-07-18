@@ -264,9 +264,27 @@ function showOptions() {
 
 }
 
-function choseOption(num) {
+function chooseOption(num) {
+
+    map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 13, center: dublin,
+      zoomControl: true,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+      },
+      scaleControl: true,
+      streetViewControl: true,
+      streetViewControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_CENTER
+      },
+      rotateControl: true,
+      fullscreenControl: true
+    });
+
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
+    window.scrollTo(0, 1000);
 }
 
 

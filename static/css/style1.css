@@ -101,6 +101,8 @@ section {
     display: none;
     width: 100%;
     text-align: center;
+    color: white;
+    margin-bottom: 10px;
 }
 
 .opbutt {
@@ -109,6 +111,11 @@ section {
     border-radius: 6px;
     margin: auto;
     margin-bottom: 8px;
+}
+
+div.opbutt:hover {
+    opacity: 0.8;
+    cursor:pointer;
 }
 
 .indivleft {

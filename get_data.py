@@ -9,10 +9,14 @@ class Stops:
         self.goahead = ["17", "17a", "18", "33a", "33b", "45a", "45b", "59", "63", "63a", "75", "75a", "76", "76a",
                     "102", "104", "111", "114", "161", "175", "184", "185", "220", "236", "238", "239", "270"]
 
-    def get_direct_goo(self, postA, postB):
+    def get_direct_goo(self, postA, postB, frontTime, frontDate):
 
         self.postA = postA
         self.postB = postB
+        self.frontTime = frontTime
+        self.frontDate = frontDate
+
+
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
         print(self.postA)
         print(self.postB)

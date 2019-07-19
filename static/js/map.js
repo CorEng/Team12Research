@@ -253,8 +253,15 @@ function showOptions() {
             indiv3.appendChild(buses);
             div.appendChild(indiv3);
 
-            document.getElementById('ops').appendChild(div);
-        }
+            var routeNeeded = document.getElementById("route").value;
+                if (routeNeeded.length > 0) {
+                    if (allBuses.includes(routeNeeded) == true) {
+                        document.getElementById('ops').appendChild(div);
+                    }
+                } else if (routeNeeded.length < 1) {
+                    document.getElementById('ops').appendChild(div);
+                }
+            }
 
         document.getElementById('ops').style.display = 'block';
 
@@ -284,7 +291,7 @@ function chooseOption(num) {
 
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
-    window.scrollTo(0, 1000);
+    window.scrollTo(0, 1100);
 }
 
 
@@ -313,7 +320,10 @@ function ajax() {
 
     $.getJSON($SCRIPT_ROOT + '/directions', {
         postA: document.getElementById("start").value,
-        postB: document.getElementById("end").value
+        postB: document.getElementById("end").value,
+        htmlTime: document.getElementById("time").value,
+        htmlDate: document.getElementById("date").value,
+
     }, function(response) {
         googleData = response['gooData'];
         intermediateStops = response['interstops'];
@@ -323,5 +333,5 @@ function ajax() {
     });
 }
 
-google.maps.event.addDomListener(window, 'load', calcRoute);
+//google.maps.event.addDomListener(window, 'load', calcRoute);
 

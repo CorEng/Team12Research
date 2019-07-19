@@ -11,9 +11,11 @@ def index():
 def directions():
     postA = request.args.get('postA')
     postB = request.args.get('postB')
+    frontTime = request.args.get('htmlTime')
+    frontDate = request.args.get('htmlDate')
 
     intermediate = Stops()
-    get_goo_data = intermediate.get_direct_goo(postA, postB)
+    get_goo_data = intermediate.get_direct_goo(postA, postB, frontTime, frontDate)
     interStops = intermediate.fin(get_goo_data)
     jsonObj = get_goo_data
     full = {"interstops": interStops, "gooData": jsonObj}

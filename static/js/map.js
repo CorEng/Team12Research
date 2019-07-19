@@ -215,7 +215,7 @@ function draw_markers(intermediateStops, option) {
 // Create the html to show the different options with minimal info
 function showOptions() {
     if (googleData) {
-
+        var countOps = 0;
         for (var i = 0; i < googleData['routes'].length; i++) {
             var div = document.createElement("div");
             div.setAttribute("class", "opbutt");
@@ -254,16 +254,30 @@ function showOptions() {
             div.appendChild(indiv3);
 
             var routeNeeded = document.getElementById("route").value;
-                if (routeNeeded.length > 0) {
-                    if (allBuses.includes(routeNeeded) == true) {
-                        document.getElementById('ops').appendChild(div);
-                    }
-                } else if (routeNeeded.length < 1) {
+            if (routeNeeded.length > 0) {
+                if (allBuses.includes(routeNeeded) == true) {
                     document.getElementById('ops').appendChild(div);
+                    countOps++;
+                    if (countOps == 1) {
+                        chooseOption(i);
+                    }
+                }
+            } else if (routeNeeded.length < 1) {
+                document.getElementById('ops').appendChild(div);
+                countOps++;
+                if (countOps == 1) {
+                    chooseOption(i);
                 }
             }
-
+        }
+        window.scrollTo(0, 700);
         document.getElementById('ops').style.display = 'block';
+        if (countOps < 1) {
+            window.alert("The Quickest Options Don't Use the Bus You Specified! - PLEASE TRY SEARCHING AGAIN WITHOUT A "
+             +
+            "SPECIFIC BUS NUMBER TO SEE THE BEST OPTIONS")
+
+        }
 
     } else {
         document.getElementById('ops').style.display = 'none';
@@ -327,8 +341,6 @@ function ajax() {
     }, function(response) {
         googleData = response['gooData'];
         intermediateStops = response['interstops'];
-        draw_markers(intermediateStops);
-        draw_poly(googleData);
         showOptions();
     });
 }

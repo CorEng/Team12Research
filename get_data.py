@@ -1,5 +1,5 @@
-import requests, datetime, json, pymysql, sys, difflib
-from operator import itemgetter, attrgetter
+import requests, datetime, pymysql, sys, difflib
+from operator import itemgetter
 from passw import *
 
 
@@ -227,3 +227,19 @@ class Stops:
             all_opts.append(option)
             print("-------------------------------------------------------------------------------------------")
         return all_opts
+
+
+    def getSeconds(self, date, time):
+        self.date = date
+        self.time = time
+
+        currentTimeDate = datetime.datetime.now()
+
+        if len(self.date) < 1:
+            self.date = currentTimeDate.strftime("%d/%m/%Y")
+        if len(self.time) < 1:
+            self.time = currentTimeDate.strftime("%H:%M")
+
+        dateTime = self.date + " " + self.time
+
+

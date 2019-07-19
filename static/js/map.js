@@ -1,6 +1,8 @@
 var dublin = {lat: 53.349605, lng:-6.264175 };
 // Geolocation variable
 var pos;
+// Date and time of search
+var dateTime;
 // Locations entered by the user
 var posA = {};
 var posB = {};
@@ -322,7 +324,6 @@ function chooseOption(num) {
 }
 
 
-
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
 //  Remove the previous options displayed
@@ -352,6 +353,7 @@ function ajax() {
     } else if (origin.length < 1) {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
+
 //    Ajax pass variables to Flask back end
     $.getJSON($SCRIPT_ROOT + '/directions', {
         postA,

@@ -14,7 +14,10 @@ def directions():
     frontTime = request.args.get('htmlTime')
     frontDate = request.args.get('htmlDate')
 
+
+
     intermediate = Stops()
+    intermediate.getSeconds(frontDate, frontTime)
     get_goo_data = intermediate.get_direct_goo(postA, postB, frontTime, frontDate)
     interStops = intermediate.fin(get_goo_data)
     jsonObj = get_goo_data

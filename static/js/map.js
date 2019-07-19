@@ -1,7 +1,12 @@
 var dublin = {lat: 53.349605, lng:-6.264175 };
+// Geolocation variable
+var pos;
+// Locations entered by the user
 var posA = {};
 var posB = {};
+// Data returned by the google call in the back end
 var googleData;
+// Data of intermediate stops worked out in the back end with google data
 var intermediateStops;
 
 // Initialize and add the map
@@ -32,7 +37,7 @@ function initMap() {
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
+        pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
         };
@@ -154,6 +159,7 @@ function draw_poly(googleData, option) {
     linebounds.extend(googleData['routes'][option]['bounds']['southwest']);
     map.fitBounds(linebounds);
     for (var i = 0; i < googleData['routes'][option]['legs'][0]['steps'].length; i++) {
+//        IF its walking draw polyline with a certain color
         if (googleData['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'WALKING') {
             var poli = new google.maps.Polyline({
                   path: google.maps.geometry.encoding.decodePath
@@ -164,7 +170,9 @@ function draw_poly(googleData, option) {
                   strokeWeight: 5
                 });
                 poli.setMap(map);
-        } else if (googleData['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'TRANSIT') {
+        }
+//        If its by bus draw the polyline with a certain colour
+        else if (googleData['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'TRANSIT') {
             var poli = new google.maps.Polyline({
                   path: google.maps.geometry.encoding.decodePath
                   (googleData['routes'][option]['legs'][0]['steps'][i]['polyline']['points']),
@@ -216,6 +224,7 @@ function draw_markers(intermediateStops, option) {
 function showOptions() {
     if (googleData) {
         var countOps = 0;
+//        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
             var div = document.createElement("div");
             div.setAttribute("class", "opbutt");
@@ -253,6 +262,8 @@ function showOptions() {
             indiv3.appendChild(buses);
             div.appendChild(indiv3);
 
+//            Filter the options to show the ones that use the bus number given in search form and display first on map
+//            that fits the chosen bus number
             var routeNeeded = document.getElementById("route").value;
             if (routeNeeded.length > 0) {
                 if (allBuses.includes(routeNeeded) == true) {
@@ -262,7 +273,9 @@ function showOptions() {
                         chooseOption(i);
                     }
                 }
-            } else if (routeNeeded.length < 1) {
+            }
+//            If no specific bus number input in search form show all options in list and display 1st on map
+            else if (routeNeeded.length < 1) {
                 document.getElementById('ops').appendChild(div);
                 countOps++;
                 if (countOps == 1) {
@@ -286,7 +299,7 @@ function showOptions() {
 }
 
 function chooseOption(num) {
-
+//  refresh map
     map = new google.maps.Map(
       document.getElementById('map'), {zoom: 13, center: dublin,
       zoomControl: true,
@@ -302,7 +315,7 @@ function chooseOption(num) {
       rotateControl: true,
       fullscreenControl: true
     });
-
+//  Draw markers and polylines of a specific option chosen
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
     window.scrollTo(0, 1100);
@@ -312,8 +325,9 @@ function chooseOption(num) {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
+//  Remove the previous options displayed
     $('div').remove(".opbutt");
-
+//  Refresh map
     if (intermediateStops) {
         map = new google.maps.Map(
               document.getElementById('map'), {zoom: 13, center: dublin,
@@ -331,14 +345,22 @@ function ajax() {
               fullscreenControl: true
         });
     }
-
+//    Check that the user has input a value otherwise use the geolocation coordinates
+    var origin = document.getElementById("start").value;
+    if (origin.length > 0) {
+        postA = origin;
+    } else if (origin.length < 1) {
+        postA = pos['lat'].toString() + "," + pos['lng'].toString();
+    }
+//    Ajax pass variables to Flask back end
     $.getJSON($SCRIPT_ROOT + '/directions', {
-        postA: document.getElementById("start").value,
+        postA,
         postB: document.getElementById("end").value,
         htmlTime: document.getElementById("time").value,
         htmlDate: document.getElementById("date").value,
-
-    }, function(response) {
+    },
+//  Response from the back end
+    function(response) {
         googleData = response['gooData'];
         intermediateStops = response['interstops'];
         showOptions();

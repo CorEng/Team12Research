@@ -12,10 +12,11 @@ var googleData;
 var intermediateStops;
 // Display current time and current date in search form
 var a = new Date();
-var h = a.getHours();
-var m = a.getMinutes();
+var h = a.getHours().toString();
+var m = a.getMinutes().toString();
+document.querySelector("#time").value = h + ":" + m;
 document.querySelector("#date").valueAsDate = a;
-document.querySelector("#time").value = h.toString() + ":" + m.toString();
+
 
 // Initialize and add the map
 function initMap() {

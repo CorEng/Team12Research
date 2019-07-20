@@ -1,11 +1,17 @@
 from flask import Flask, redirect, render_template, request, jsonify
+from datetime import datetime, timedelta
 from get_data import *
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    todayObj = datetime.datetime.now()
+    today = todayObj.strftime("%Y-%m-%d")
+    max = todayObj + timedelta(days=90)
+    maxDate = max.strftime("%Y-%m-%d")
+
+    return render_template('index.html', today=today, maxDate=maxDate)
 
 @app.route("/directions", methods=['GET', 'POST'])
 def directions():
@@ -15,10 +21,9 @@ def directions():
     frontDate = request.args.get('htmlDate')
 
 
-
     intermediate = Stops()
-    intermediate.getSeconds(frontDate, frontTime)
-    get_goo_data = intermediate.get_direct_goo(postA, postB, frontTime, frontDate)
+    secs = intermediate.getSeconds(frontDate, frontTime)
+    get_goo_data = intermediate.get_direct_goo(postA, postB, secs)
     interStops = intermediate.fin(get_goo_data)
     jsonObj = get_goo_data
     full = {"interstops": interStops, "gooData": jsonObj}

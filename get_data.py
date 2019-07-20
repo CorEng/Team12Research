@@ -9,19 +9,15 @@ class Stops:
         self.goahead = ["17", "17a", "18", "33a", "33b", "45a", "45b", "59", "63", "63a", "75", "75a", "76", "76a",
                     "102", "104", "111", "114", "161", "175", "184", "185", "220", "236", "238", "239", "270"]
 
-    def get_direct_goo(self, postA, postB, frontTime, frontDate):
+    def get_direct_goo(self, postA, postB, secs):
 
         self.postA = postA
         self.postB = postB
-        self.frontTime = frontTime
-        self.frontDate = frontDate
-
+        self.secs = secs
 
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
-        print(self.postA)
-        print(self.postB)
 
-        req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB
+        req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + '&departure_time=' + secs
                          +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
         # passw.py in local
 
@@ -231,15 +227,22 @@ class Stops:
 
     def getSeconds(self, date, time):
         self.date = date
-        self.time = time
+        self.time = time + ":00"
 
         currentTimeDate = datetime.datetime.now()
 
         if len(self.date) < 1:
-            self.date = currentTimeDate.strftime("%d/%m/%Y")
-        if len(self.time) < 1:
-            self.time = currentTimeDate.strftime("%H:%M")
+            self.date = currentTimeDate.strftime("%Y-%m-%d")
+        if len(self.time) < 4:
+            self.time = currentTimeDate.strftime("%H:%M:%S")
+
 
         dateTime = self.date + " " + self.time
+        timeObj = datetime.datetime.strptime(dateTime, "%Y-%m-%d %H:%M:%S")
+
+        seconds = round(timeObj.timestamp())
+
+        return str(seconds)
+
 
 

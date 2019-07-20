@@ -89,12 +89,12 @@
                                        name="route">
                             </div>
                         <div class="form-group">
-                                <input id="time" runat="server" type="time" class="form-control" placeholder="time"
+                                <input id="time" runat="server" type="time" class="form-control"
                                        name="time">
                             </div>
                         <div class="form-group">
-                                <input id="date" runat="server" type="date" class="form-control" placeholder="date"
-                                       name="date">
+                                <input id="date" runat="server" type="date" class="form-control"
+                                       name="date" min={{ today | safe }} max={{ maxDate | safe }}>
                             </div>
 
                         <div align="center">

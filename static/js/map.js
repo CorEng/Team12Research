@@ -1,21 +1,39 @@
 var dublin = {lat: 53.349605, lng:-6.264175 };
+
 // Geolocation variable
 var pos;
+
 // Date and time of search
 var dateTime;
+
 // Locations entered by the user
 var posA = {};
 var posB = {};
+
 // Data returned by the google call in the back end
 var googleData;
+
 // Data of intermediate stops worked out in the back end with google data
 var intermediateStops;
+
+var nowDayTime;
+var hrs;
+var mins;
+
 // Display current time and current date in search form
-var a = new Date();
-var h = a.getHours().toString();
-var m = a.getMinutes().toString();
-document.querySelector("#time").value = h + ":" + m;
-document.querySelector("#date").valueAsDate = a;
+function displayNowTimeDate() {
+
+    nowDayTime = new Date();
+    hrs = nowDayTime.getHours().toString();
+    mins = nowDayTime.getMinutes().toString();
+    if (mins.length < 2) {
+        mins = "0"+ mins;
+    }
+
+    document.querySelector("#time").value = hrs + ":" + mins;
+    document.querySelector("#date").valueAsDate = nowDayTime;
+}
+
 
 
 // Initialize and add the map
@@ -333,6 +351,7 @@ function chooseOption(num) {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
+
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
 //  Refresh map
@@ -353,28 +372,63 @@ function ajax() {
               fullscreenControl: true
         });
     }
+
 //    Check that the user has input a value otherwise use the geolocation coordinates
     var origin = document.getElementById("start").value;
+
     if (origin.length > 0) {
         postA = origin;
     } else if (origin.length < 1) {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
 
-//    Ajax pass variables to Flask back end
-    $.getJSON($SCRIPT_ROOT + '/directions', {
-        postA,
-        postB: document.getElementById("end").value,
-        htmlTime: document.getElementById("time").value,
-        htmlDate: document.getElementById("date").value,
-    },
-//  Response from the back end
-    function(response) {
-        googleData = response['gooData'];
-        intermediateStops = response['interstops'];
-        showOptions();
-    });
+    formTime = document.getElementById("time").value;
+    console.log(formTime);
+    formDate = document.getElementById("date").value;
+
+    var formMonth = parseInt(formDate.substring(5,7));
+    var nowMonth = nowDayTime.getMonth()+1;
+
+    var formDay = parseInt(formDate.substring(8));
+    var nowDay = nowDayTime.getDate();
+
+    var formHour = parseInt(formTime.substring(0,2));
+    var nowHour = nowDayTime.getHours();
+
+    var formMins = parseInt(formTime.substring(3));
+    var nowMins = nowDayTime.getMinutes();
+
+    if (formMonth < nowMonth) {
+        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+    }
+    else if (formMonth == nowMonth && formDay < nowDay) {
+        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+    }
+    else if (formMonth == nowMonth && formDay == nowDay && formHour < nowHour) {
+        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+    }
+    else if (formMonth == nowMonth && formDay == nowDay && formHour == nowHour && formMins < nowMins) {
+        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+    }
+    else {
+        //    Ajax pass variables to Flask back end
+            $.getJSON($SCRIPT_ROOT + '/directions', {
+                postA,
+                postB: document.getElementById("end").value,
+                htmlTime: document.getElementById("time").value,
+                htmlDate: document.getElementById("date").value,
+            },
+        //  Response from the back end
+            function(response) {
+                googleData = response['gooData'];
+                intermediateStops = response['interstops'];
+                showOptions();
+            });
+        }
+
+
 }
 
+$("input").click(displayNowTimeDate);
 //google.maps.event.addDomListener(window, 'load', calcRoute);
 

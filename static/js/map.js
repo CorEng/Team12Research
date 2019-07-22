@@ -95,33 +95,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     }
 
 
-// Google Directions front end route request and uses google renderer to show route
-function calcRoute() {
-
-    var start = posA;
-    var end = posB;
-
-    var request = {
-        origin: start,
-        destination: end,
-        provideRouteAlternatives: true,
-        travelMode: 'TRANSIT',
-        transitOptions: {
-            modes: ['BUS'],
-            routingPreference: 'FEWER_TRANSFERS'
-          },
-      };
-
-    directionsService.route(request, function(result, status) {
-        if (status == 'OK') {
-          directionsDisplay.setDirections(result);
-          window.scrollTo(0, 700);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
-      });
-    }
-
 // Take input from origin of trip
 function stopA(){
     // AutoComplete------------------------------------------------------------
@@ -311,7 +284,8 @@ function showOptions() {
             }
         }
         window.scrollTo(0, 700);
-        document.getElementById('ops').style.display = 'block';
+        $("div.variable").slideDown("slow");
+//        document.getElementById('ops').style.display = 'block';
         if (countOps < 1) {
             window.alert("The Quickest Options Don't Use the Bus You Specified! - PLEASE TRY SEARCHING AGAIN WITHOUT A "
              +
@@ -351,7 +325,7 @@ function chooseOption(num) {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
-
+    $("div.variable").slideUp("slow");
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
 //  Refresh map
@@ -430,5 +404,5 @@ function ajax() {
 }
 
 $("input").click(displayNowTimeDate);
-//google.maps.event.addDomListener(window, 'load', calcRoute);
+
 

@@ -15,6 +15,7 @@ class Stops:
         self.postB = postB
         self.secs = secs
 
+
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
 
         req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + '&departure_time=' + secs

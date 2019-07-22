@@ -20,6 +20,25 @@ var nowDayTime;
 var hrs;
 var mins;
 
+function refreshMap() {
+    map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 13, center: dublin,
+      zoomControl: true,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+      },
+      scaleControl: true,
+      streetViewControl: true,
+      streetViewControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_CENTER
+      },
+      rotateControl: true,
+      fullscreenControl: true
+    })
+}
+
+
 // Display current time and current date in search form
 function displayNowTimeDate() {
 
@@ -41,22 +60,7 @@ function initMap() {
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer();
 
-    // The map, centered at Dublin
-    map = new google.maps.Map(
-        document.getElementById('map'), {zoom: 13, center: dublin,
-          zoomControl: true,
-          mapTypeControl: true,
-          mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-          },
-          scaleControl: true,
-          streetViewControl: true,
-          streetViewControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_CENTER
-          },
-          rotateControl: true,
-          fullscreenControl: true
-        });
+    refreshMap();
 
     // start the user's geolocations-------------------------------------------
     infoWindow = new google.maps.InfoWindow;
@@ -300,26 +304,37 @@ function showOptions() {
 }
 
 function chooseOption(num) {
-//  refresh map
-    map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 13, center: dublin,
-      zoomControl: true,
-      mapTypeControl: true,
-      mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-      },
-      scaleControl: true,
-      streetViewControl: true,
-      streetViewControlOptions: {
-      position: google.maps.ControlPosition.RIGHT_CENTER
-      },
-      rotateControl: true,
-      fullscreenControl: true
-    });
+
+    refreshMap();
+
 //  Draw markers and polylines of a specific option chosen
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
     window.scrollTo(0, 1100);
+}
+
+
+function checkDateAndTime() {
+    formTime = document.getElementById("time").value;
+    formDate = document.getElementById("date").value;
+
+    var formMonth = parseInt(formDate.substring(5,7));
+    var nowMonth = nowDayTime.getMonth()+1;
+    var formDay = parseInt(formDate.substring(8));
+    var nowDay = nowDayTime.getDate();
+
+    var formHour = parseInt(formTime.substring(0,2));
+    var nowHour = nowDayTime.getHours();
+    var formMins = parseInt(formTime.substring(3));
+    var nowMins = nowDayTime.getMinutes();
+
+    if ((formMonth < nowMonth) || (formMonth == nowMonth && formDay < nowDay) || (formMonth == nowMonth && formDay ==
+    nowDay && formHour < nowHour) || (formMonth == nowMonth && formDay == nowDay && formHour == nowHour && formMins
+    < nowMins)) {
+        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+    } else {
+        return true
+    }
 }
 
 
@@ -330,21 +345,7 @@ function ajax() {
     $('div').remove(".opbutt");
 //  Refresh map
     if (intermediateStops) {
-        map = new google.maps.Map(
-              document.getElementById('map'), {zoom: 13, center: dublin,
-              zoomControl: true,
-              mapTypeControl: true,
-              mapTypeControlOptions: {
-              style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-              },
-              scaleControl: true,
-              streetViewControl: true,
-              streetViewControlOptions: {
-              position: google.maps.ControlPosition.RIGHT_CENTER
-              },
-              rotateControl: true,
-              fullscreenControl: true
-        });
+        refreshMap();
     }
 
 //    Check that the user has input a value otherwise use the geolocation coordinates
@@ -355,52 +356,21 @@ function ajax() {
     } else if (origin.length < 1) {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
-
-    formTime = document.getElementById("time").value;
-    console.log(formTime);
-    formDate = document.getElementById("date").value;
-
-    var formMonth = parseInt(formDate.substring(5,7));
-    var nowMonth = nowDayTime.getMonth()+1;
-
-    var formDay = parseInt(formDate.substring(8));
-    var nowDay = nowDayTime.getDate();
-
-    var formHour = parseInt(formTime.substring(0,2));
-    var nowHour = nowDayTime.getHours();
-
-    var formMins = parseInt(formTime.substring(3));
-    var nowMins = nowDayTime.getMinutes();
-
-    if (formMonth < nowMonth) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else if (formMonth == nowMonth && formDay < nowDay) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else if (formMonth == nowMonth && formDay == nowDay && formHour < nowHour) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else if (formMonth == nowMonth && formDay == nowDay && formHour == nowHour && formMins < nowMins) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else {
-        //    Ajax pass variables to Flask back end
-            $.getJSON($SCRIPT_ROOT + '/directions', {
-                postA,
-                postB: document.getElementById("end").value,
-                htmlTime: document.getElementById("time").value,
-                htmlDate: document.getElementById("date").value,
-            },
-        //  Response from the back end
-            function(response) {
-                googleData = response['gooData'];
-                intermediateStops = response['interstops'];
-                showOptions();
-            });
-        }
-
-
+    if (checkDateAndTime() == true) {
+    //    Ajax pass variables to Flask back end
+        $.getJSON($SCRIPT_ROOT + '/directions', {
+            postA,
+            postB: document.getElementById("end").value,
+            htmlTime: document.getElementById("time").value,
+            htmlDate: document.getElementById("date").value,
+        },
+    //  Response from the back end
+        function(response) {
+            googleData = response['gooData'];
+            intermediateStops = response['interstops'];
+            showOptions();
+        });
+    };
 }
 
 $("input").click(displayNowTimeDate);

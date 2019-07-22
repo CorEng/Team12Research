@@ -195,7 +195,6 @@ function draw_markers(intermediateStops, option) {
     if (option === undefined) {
         option = 0;
     }
-
     var infowindow = new google.maps.InfoWindow();
     for (var i = 0; i < intermediateStops[option].length; i++) {
         for (var j = 0; j < intermediateStops[option][i].length; j++) {
@@ -226,6 +225,7 @@ function draw_markers(intermediateStops, option) {
 
 // Create the html to show the different options with minimal info
 function showOptions() {
+console.log(googleData);
     if (googleData) {
         var countOps = 0;
 //        Build the options buttons
@@ -233,6 +233,10 @@ function showOptions() {
             var div = document.createElement("div");
             div.setAttribute("class", "opbutt");
             div.setAttribute("onClick", "chooseOption(" + i.toString() + ")");
+
+            var allSteps = document.createElement("div");
+            allSteps.setAttribute("class", "allsteps");
+            allSteps.setAttribute("id", "allSteps"+i.toString())
 
             var indiv1 = document.createElement("div");
             indiv1.setAttribute("class", "indivleft");
@@ -260,6 +264,11 @@ function showOptions() {
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
                 }
+                var step = document.createElement("p");
+                var instruction = document.createTextNode
+                (googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']);
+                step.appendChild(instruction);
+                allSteps.appendChild(step);
             }
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
@@ -272,6 +281,7 @@ function showOptions() {
             if (routeNeeded.length > 0) {
                 if (allBuses.includes(routeNeeded) == true) {
                     document.getElementById('ops').appendChild(div);
+                    document.getElementById('ops').appendChild(allSteps);
                     countOps++;
                     if (countOps == 1) {
                         chooseOption(i);
@@ -281,6 +291,7 @@ function showOptions() {
 //            If no specific bus number input in search form show all options in list and display 1st on map
             else if (routeNeeded.length < 1) {
                 document.getElementById('ops').appendChild(div);
+                document.getElementById('ops').appendChild(allSteps);
                 countOps++;
                 if (countOps == 1) {
                     chooseOption(i);
@@ -289,25 +300,34 @@ function showOptions() {
         }
         window.scrollTo(0, 700);
         $("div.variable").slideDown("slow");
-//        document.getElementById('ops').style.display = 'block';
+
         if (countOps < 1) {
             window.alert("The Quickest Options Don't Use the Bus You Specified! - PLEASE TRY SEARCHING AGAIN WITHOUT A "
              +
             "SPECIFIC BUS NUMBER TO SEE THE BEST OPTIONS")
-
         }
-
     } else {
         document.getElementById('ops').style.display = 'none';
     }
-
 }
+
+
+function showSteps(num) {
+
+    if ( $("#allSteps"+num.toString()).css("display") == "none") {
+        $("#allSteps"+num.toString()).slideDown("slow");
+    } else {
+        $("#allSteps"+num.toString()).slideUp("slow");
+    }
+}
+
 
 function chooseOption(num) {
 
     refreshMap();
 
 //  Draw markers and polylines of a specific option chosen
+    showSteps(num);
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
     window.scrollTo(0, 1100);

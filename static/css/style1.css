@@ -111,7 +111,7 @@ section {
     background-color: black;
     border-radius: 6px;
     margin: auto;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 div.opbutt:hover {
@@ -138,4 +138,14 @@ div.opbutt:hover {
     width: 24%;
     display: inline-block;
     height: 75px;
+}
+
+.allsteps {
+    width: 37%;
+    background-color: grey;
+    height: auto;
+    margin: auto;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    display: none;
 }

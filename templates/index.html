@@ -4,7 +4,7 @@
 <head>
     <title>Dublin Bus</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
@@ -23,9 +23,15 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-    <script type=text/javascript> // Set-up connection variable between JS and Flask server application $SCRIPT_ROOT={{ request.script_root|tojson|safe }} ; </script> </head> <body>
+    <script type=text/javascript>
+      // Set-up connection variable between JS and Flask server application
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
 
-        <!--nav-->
+</head>
+
+<body>
+    <!--nav-->
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand"
@@ -54,38 +60,42 @@
 
         <div class="container">
             <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start" data-scrollax-parent="true">
-                
                 <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
                     <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">DUBLIN BUS</h1>
                     <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">WHOSE BUS</p>
                 </div>
-               
                 
-               <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
-                    <div class="form" 
+              
+                
+                
+                
+                <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
+                    <div class="form" style="background-color: black"
                           enctype="multipart/form-data" autocomplete="on">
-                        <!--<h2 align="center" style="color: white;font-weight: 1000">Search Form</h2>-->
-                       <!-- <fieldset class="border p-2">
-                            <legend style="color: white">STOP</legend>-->
-                        
-                        <div class="form-group" >
-                               <input id="start" type="text" class="form-control "
+            
+                            <div class="form-group">
+                                
+                                        <input id="start" type="text" class="form-control"
                                                placeholder="start"
                                                autocomplete="on" runat="server" onclick="stopA()"/>
-                            </div>
-                        <div class="form-group" >
-                                <input id="end" type="text" class="form-control" placeholder="end"
+                        </div>
+                                   <div class="form-group">
+                                        <input id="end" type="text" class="form-control" placeholder="end"
                                                autocomplete="on" runat="server" onclick="stopB()"/>
-                            </div>
-                       <!-- </fieldset>-->
-                        <div class="form-group" >
-                                <input type="text" class="form-control" placeholder="route" name="route">
-                            </div>
-                        <div class="form-group" >
-                                <input type="time" class="form-control" placeholder="time" name="time">
+                    </div>
+
+                    
+                        <div class="form-group">
+                                <input id="route" type="text" class="form-control" placeholder="route"
+                                       name="route">
                             </div>
                         <div class="form-group">
-                                <input type="date" class="form-control" placeholder="date" name="date">
+                                <input id="time" runat="server" type="time" class="form-control"
+                                       name="time">
+                            </div>
+                        <div class="form-group">
+                                <input id="date" runat="server" type="date" class="form-control"
+                                       name="date" min={{ today | safe }} max={{ maxDate | safe }}>
                             </div>
 
                         <div align="center">
@@ -95,132 +105,85 @@
                         </div>
                     </div>
                 </div>
-              
-
             </div>
         </div>
     </div>
 
-<!--    <section class="ftco-section ftco-no-pt ftco-no-pb">-->
-<!--        <div class="container-fluid px-0">-->
-<!--            <div class="row">-->
-<!--                <div class="col-md-12">-->
-<!--                    <div class="game-wrap-1 ftco-animate">-->
-
-<!--                        <a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN" data-label_2="WEATHER" data-textcolor="#ffffff">DUBLIN WEATHER</a>-->
-<!--                        <script>-->
-<!--                            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');-->
-<!--</script>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </section>-->
-
-
-    <section class="ftco-section ftco-no-pb">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="heading-section text-center ftco-animate">
-                        <span class="subheading">routing map</span>
-                        <h2 class="mb-4">Routing map</h2>
-                    </div>
-                    <div class="scoreboard slash">
-                        <div class="divider ftco-animate text-center mb-4"><span>Mon. June 3, 2019; bus stop</span></div>
-
-                        <!--<div id="left-panel"></div>-->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section class="ftco-section ftco-no-pt ftco-highlights">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <div id="map" class="img video-wrap ftco-animate d-flex align-items-center justify-content-center py-5 align-self-stretch" style="background-image: url(../static/images/night3.jpg); width: 100%">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <!--END COVER-->
-    
-    
-    
-    
 
     <!--MAIN PART-->
 
+    
+   
+    
 
-    <section class="ftco-section ftco-team img" style="background-image:url(static/images/bus9.jpg);" data-stellar-background-ratio="0.5">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row justify-content-center pb-5">
-                <div class="col-md-6 heading-section heading-section-white text-center ftco-animate">
-                    <span class="subheading">WHAT BUS</span>
-                    <h2 class="mb-4">what your <span>choice</span></h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+    <section class="ftco-section ftco-game-schedule">
+        <div class="ftco-section ftco-team img" style="background-image:url(static/images/bus9.jpg);" data-stellar-background-ratio="0.5">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row justify-content-center pb-5">
+                    <div class="col-md-6 heading-section heading-section-white text-center ftco-animate">
+                        <span class="subheading">WHAT BUS</span>
+                        <h2 class="mb-4">what your <span>choice</span></h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
 
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 ftco-animate">
-                    <div class="carousel-team owl-carousel">
-                        <div class="item">
-                            <div class="team-wrap text-center">
-                                <div class="img" style="background-image: url(static/images/bus9.jpg);"></div>
-                                <div class="text">
-                                    <h3 class="mb-0">101</h3>
-                                    <span class="position">bird avenue</span>
+                <div class="row">
+                    <div class="col-md-12 ftco-animate">
+                        <div class="carousel-team owl-carousel">
+                            <div class="item">
+                                <div class="team-wrap text-center">
+                                    <div class="img" style="background-image: url(static/images/bus9.jpg);"></div>
+                                    <div class="text">
+                                        <h3 class="mb-0">101</h3>
+                                        <span class="position">bird avenue</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="team-wrap text-center">
-                                <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
-                                <div class="text">
-                                    <h3 class="mb-0">102</h3>
-                                    <span class="position">bird avenue</span>
+                            <div class="item">
+                                <div class="team-wrap text-center">
+                                    <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
+                                    <div class="text">
+                                        <h3 class="mb-0">102</h3>
+                                        <span class="position">bird avenue</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="team-wrap text-center">
-                                <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
-                                <div class="text">
-                                    <h3 class="mb-0">101</h3>
-                                    <span class="position">bird avenue</span>
+                            <div class="item">
+                                <div class="team-wrap text-center">
+                                    <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
+                                    <div class="text">
+                                        <h3 class="mb-0">101</h3>
+                                        <span class="position">bird avenue</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="team-wrap text-center">
-                                <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
-                                <div class="text">
-                                    <h3 class="mb-0">101</h3>
-                                    <span class="position">bird avenue</span>
+                            <div class="item">
+                                <div class="team-wrap text-center">
+                                    <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
+                                    <div class="text">
+                                        <h3 class="mb-0">101</h3>
+                                        <span class="position">bird avenue</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="team-wrap text-center">
-                                <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
-                                <div class="text">
-                                    <h3 class="mb-0">101</h3>
-                                    <span class="position">bird avenue</span>
+                            <div class="item">
+                                <div class="team-wrap text-center">
+                                    <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
+                                    <div class="text">
+                                        <h3 class="mb-0">101</h3>
+                                        <span class="position">bird avenue</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="team-wrap text-center">
-                                <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
-                                <div class="text">
-                                    <h3 class="mb-0">101</h3>
-                                    <span class="position">bird avenue</span>
+                            <div class="item">
+                                <div class="team-wrap text-center">
+                                    <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
+                                    <div class="text">
+                                        <h3 class="mb-0">101</h3>
+                                        <span class="position">bird avenue</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -232,32 +195,19 @@
 
     <!--END MAIN PART-->
 
-    <!--<section>
+    
+    
+    <!--<div class="variable" id="ops">
+        <h1>Options</h1>
 
-        <div class="container">
-            <div class="row justify-content-center pb-5">
-                <div class="col-md-6 heading-section text-center ftco-animate">
-                    <h2 class="mb-4">output</h2>
-                </div>
-            </div>
-        </div>
+    </div>-->
 
-    </section>-->
-
-    <section class="ftco-section ftco-no-pt ftco-no-pb">
-        <div class="container-fluid px-0">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="game-wrap-1 ftco-animate">
-                        <a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN" data-label_2="WEATHER" data-theme="pure">DUBLIN WEATHER</a>
-                        <script>
-                            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-</script>
+    <section class="ftco-section  ftco-game-schedule">
+    <div id="map"
+         class="img video-wrap ftco-animate d-flex align-items-center justify-content-center py-5 align-self-stretch">
                     </div>
-                </div>
-            </div>
-        </div>
     </section>
+    
     <!--designer-->
     <section class="ftco-section testimony-section slash">
         <div class="overlay"></div>
@@ -382,31 +332,6 @@
 
     <!--END INTRODUCTION-->
 
-    <!--Subcribe-->
-
-    <section class="ftco-subscribe img" style="background-image: url(static/images/night3.jpg);">
-        <div class="overlay">
-            <div class="container">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-md-9 text-wrap text-center heading-section heading-section-white ftco-animate">
-                        <h2>Subcribe to our webpage</h2>
-                        <div class="row d-flex justify-content-center mt-4 mb-4">
-                            <div class="col-md-10">
-                                <form action="#" class="subscribe-form">
-                                    <div class="form-group d-flex">
-                                        <input type="text" class="form-control" placeholder="Enter email address">
-                                        <input type="submit" value="Subscribe" class="submit px-3">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--END Subcribe-->
-
     <!--footer-->
     <footer class="ftco-footer ftco-section">
         <div class="container-fluid px-md-5">
@@ -485,7 +410,7 @@
 
     <!--END footer-->
 
-    loader
+     loader
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
             <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
             <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
@@ -509,11 +434,11 @@
     <script src="../static/js/main.js"></script>
 
     <script src="../static/js/map.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places&callback=initMap">
-    </script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places&callback=initMap">
+</script>
 
 
-
-    </body>
+</body>
 
 </html>

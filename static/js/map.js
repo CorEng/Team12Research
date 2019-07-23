@@ -260,15 +260,44 @@ console.log(googleData);
             var buses = document.createElement("p");
             var allBuses = [];
             for (var j = 0; j < googleData['routes'][i]['legs'][0]['steps'].length; j++ ) {
-                if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'TRANSIT') {
+
+                var step = document.createElement("p");
+                var stepOff = document.createElement("p");
+
+                if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'WALKING' && j ==
+                googleData['routes'][i]['legs'][0]['steps'].length - 1) {
+                    var instruction = document.createTextNode
+                    (googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']);
+                    step.appendChild(instruction);
+                    allSteps.appendChild(step);
+                }
+                else if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'WALKING') {
+                    var instruction = document.createTextNode
+                    (googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions'] + " Bus Stop");
+                    step.appendChild(instruction);
+                    allSteps.appendChild(step);
+                }
+                else if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'TRANSIT') {
+                    var instruction = document.createTextNode
+                    ("Get On Bus " +  googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
+                    ['line']['short_name'] + googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']
+                    .substring(3));
+
+                    var off = document.createTextNode
+                    ("Get Off At " + googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
+                    ['arrival_stop']['name'] + " Bus Stop");
+
+                    step.appendChild(instruction);
+                    allSteps.appendChild(step);
+                    stepOff.appendChild(off);
+                    allSteps.appendChild(stepOff);
+
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
                 }
-                var step = document.createElement("p");
-                var instruction = document.createTextNode
-                (googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']);
-                step.appendChild(instruction);
-                allSteps.appendChild(step);
+
+
+
             }
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
@@ -365,6 +394,7 @@ function ajax() {
     $("div.variable").slideUp("slow");
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
+    $('div').remove(".allsteps");
 //  Refresh map
     if (intermediateStops) {
         refreshMap();

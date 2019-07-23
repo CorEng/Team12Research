@@ -314,10 +314,12 @@ console.log(googleData);
 
 function showSteps(num) {
 
-    if ( $("#allSteps"+num.toString()).css("display") == "none") {
-        $("#allSteps"+num.toString()).slideDown("slow");
-    } else {
-        $("#allSteps"+num.toString()).slideUp("slow");
+    if ( $("#allSteps"+num.toString()).css("display") != "none") {
+            $("#allSteps"+num.toString()).slideUp("slow");
+        }
+    else {
+    $(".allsteps").not("#allSteps"+num.toString()).slideUp("slow")
+            $("#allSteps"+num.toString()).slideDown("slow");
     }
 }
 

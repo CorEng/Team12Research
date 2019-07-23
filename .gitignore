@@ -1,2 +1,4 @@
 passw.py
 stops.csv
+*.idea
+__pycache__

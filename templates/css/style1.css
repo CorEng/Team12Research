@@ -95,3 +95,8 @@ section {
     background: white;
     color: black;
 }
+
+#map-container {
+    margin: 2em 0;
+    width: 50%;
+}

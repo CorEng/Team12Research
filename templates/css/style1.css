@@ -37,21 +37,6 @@ input {
 }
 
 
-/*fieldset {
-    width: 270px;
-    box-sizing: border-box;
-    margin-left: 125px;
-    border: 3px solid red;
-    display: block;
-}*/
-
-button {
-    margin: 25px 0 0 155px;
-    width: 100px;
-    height: 40px;
-    font-size: 15px;
-}
-
 label {
     position: relative;
 }
@@ -95,4 +80,18 @@ section {
 }
 #id05{
     margin-left: 450px;
+}
+
+.search-button {
+    border: 2px solid white;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.search-button:focus, .search-button:hover {
+    border: 2px solid black;
+    background: white;
+    color: black;
 }

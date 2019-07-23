@@ -1,49 +1,248 @@
-import pandas as pd
-
-def get_data():
-    """Use dublin bus stop data file to obtain the necessary data and save it on a different smaller file"""
-
-    # Open file
-    df_stops = pd.ExcelFile("dublinbusstops.xls")
-    df = df_stops.parse("Sheet1")
-
-    # Create new columns
-    df["Latitude"] = None
-    df["Longitude"] = None
-
-    # Take the lat and lon and put them in the correct columns - only to str types
-    for i, value in enumerate(df["Coordinates"]):
-
-        if type(df["Coordinates"][i]) != float:
-            df.at[i, "Latitude"] = df["Coordinates"][i][7:13]
-            df.at[i, "Longitude"] = df["Coordinates"][i][15:]
-        else:
-            continue
-
-    # Drop unwanted data
-    df = df.dropna()
-    df = df.drop(["Unique British Isles Id", "Map", "Coordinates", "Projection", "Easting", "Prov", "Unnamed: 9",
-                  "Northing"], axis = 1)
-
-    # Create and write new file
-    with pd.ExcelWriter('final_stops.xls') as writer:
-        df.to_excel(writer)
+import requests, datetime, pymysql, sys, difflib
+from operator import itemgetter
+from passw import *
 
 
-def get_stops():
-    """Get data from final xls file and put it in a list for each stop"""
-    # Open file
-    df_stops = pd.ExcelFile("final_stops.xls")
-    df = df_stops.parse("Sheet1")
+class Stops:
+
+    def __init__(self):
+        self.goahead = ["17", "17a", "18", "33a", "33b", "45a", "45b", "59", "63", "63a", "75", "75a", "76", "76a",
+                    "102", "104", "111", "114", "161", "175", "184", "185", "220", "236", "238", "239", "270"]
+
+    def get_direct_goo(self, postA, postB, secs):
+
+        self.postA = postA
+        self.postB = postB
+        self.secs = secs
+
+        url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
+
+        req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + '&departure_time=' + secs
+                         +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
+        # passw.py in local
+
+        return req.json()
 
 
-    final_list = []
-    # Iterate through data and add it to final_list
-    for i, j in enumerate(df["Name"]):
-        sub_list = []
-        for k, value in enumerate(df):
-            sub_list.append(df.iloc[i][value])
+    def lat_lon(self, busNo, head_sign, goolat, goolon):
 
-        final_list.append(sub_list)
+        user = 'root'
+        password = 'migmarache1982'
+        host = '127.0.0.1'
+        database = 'research'
 
-    return final_list
+        try:
+            con = pymysql.connect(host=host, database=database, user=user, password=password)
+        except Exception as e:
+            sys.exit(e)
+
+        lat = round(float(goolat), 4)
+        lon = round(float(goolon), 4)
+
+        query = """SELECT distinct stop_lat, stop_lon, stop_id, stop_name 
+                FROM research.stops, research.stop_times
+                WHERE research.stop_times.bus_stop_number = research.stops.stop_id 
+                    and research.stop_times.bus_number = %s
+                    and research.stop_times.headsign = %s
+                    and ((stop_lat BETWEEN %s and %s) and (stop_lon BETWEEN %s and %s));"""
+
+        cur = con.cursor()
+        cur.execute(query, (busNo, head_sign, lat-0.003, lat+0.003, lon-0.003, lon+0.003), )
+        data = cur.fetchall()
+        cur.close()
+
+        return tuple(data)
+
+
+    def filter_name(self, stops_list, google_name):
+
+        final = ()
+
+        ratio = 0
+        for stop in stops_list:
+            stop_ratio = difflib.SequenceMatcher(None, stop[3], google_name).ratio()
+            if stop_ratio > ratio:
+                ratio = stop_ratio
+                final = stop
+
+        return final
+
+
+    def db_query3(self, head_sign, bus_no, stop_noA, stop_noB, diff):
+
+        user = 'root'
+        password = 'migmarache1982'
+        host = '127.0.0.1'
+        database = 'research'
+
+        try:
+            con = pymysql.connect(host=host, database=database, user=user, password=password)
+        except Exception as e:
+            sys.exit(e)
+
+        query = """SELECT research.stop_times.bus_stop_number, research.stop_times.stop_sequence, 
+        research.stop_times.headsign, research.trips.trip_id
+            FROM research.stop_times, research.trips
+            WHERE research.stop_times.trip_id = research.trips.trip_id
+                and stop_times.headsign = %s 
+                and stop_times.bus_number = %s 
+                and (bus_stop_number = %s or bus_stop_number = %s)"""
+
+        cur = con.cursor()
+        cur.execute(query, (head_sign, bus_no, stop_noA, stop_noB),)
+        cur.close()
+        data = cur.fetchall()
+
+        final = []
+
+        for i, value in enumerate(data):
+            if i == 0:
+                final.append(value)
+            else:
+                if value[1] - final[0][1] == diff:
+                    final.append(value)
+
+        return tuple(final)
+
+
+    def db_query4(self, bus_no, head_sign, seqA, seqB, tripid):
+
+        user = 'root'
+        password = 'migmarache1982'
+        host = '127.0.0.1'
+        database = 'research'
+
+        try:
+            con = pymysql.connect(host=host, database=database, user=user, password=password)
+        except Exception as e:
+            sys.exit(e)
+
+        query = """SELECT research.stops.stop_lat, research.stops.stop_lon, research.stop_times.bus_stop_number, 
+                research.stop_times.stop_sequence, research.stop_times.headsign, research.stop_times.bus_number,
+                research.stops.stop_name 
+                FROM research.stop_times, research.stops, research.trips
+                WHERE research.stop_times.bus_stop_number = research.stops.stop_id
+                    and research.trips.trip_id = research.stop_times.trip_id
+                    and research.stop_times.bus_number = %s 
+                    and research.stop_times.headsign = %s 
+                    and (research.stop_times.stop_sequence between %s AND %s)
+                    and research.stop_times.trip_id = %s
+                """
+
+        cur = con.cursor()
+        cur.execute(query, (bus_no, head_sign, seqA, seqB, tripid),)
+        cur.close()
+        # sorted(student_tuples, key=itemgetter(2))
+        ordered = sorted(list(cur.fetchall()), key=itemgetter(3))
+        return ordered
+
+
+    def fin(self, goo_data):
+
+        route_keys = [goo_data["routes"][i].keys() for i, k in enumerate(goo_data["routes"])]
+        all_opts = []
+        for i in range(len(route_keys)):
+            option = []
+            for j in range(len(goo_data["routes"][i]["legs"][0]["steps"])):
+
+                if "transit_details" in goo_data["routes"][i]["legs"][0]["steps"][j] and goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
+
+                    dep_stop = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["name"].strip()
+                    arr_stop = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["name"].strip()
+                    bus_no = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["short_name"].strip()
+                    head_sign = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["headsign"].strip()
+                    num_stops = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["num_stops"]
+
+                    latA = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["location"]["lat"]
+                    lonA = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["departure_stop"]["location"]["lng"]
+
+                    latB = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["location"]["lat"]
+                    lonB = goo_data["routes"][i]["legs"][0]["steps"][j]["transit_details"]["arrival_stop"]["location"]["lng"]
+
+                    print("Option:", i, "leg", j)
+                    print("Details from google:")
+                    print("dep_stop:", dep_stop)
+                    print("arr_stop:", arr_stop)
+                    if bus_no in self.goahead:
+                        print("bus_no:", bus_no, "**FROM GOAHEAD**")
+                    else:
+                        print("bus_no:", bus_no)
+                    print("num_stops: ", num_stops)
+                    print("head_sign:", head_sign)
+                    print("lat/lon A:", latA, lonA)
+                    print("lat/lon B:", latB, lonB)
+                    print()
+
+                    print("1st Query - lat_lon ----------------------")
+                    print("stopA")
+                    oneA = self.lat_lon(bus_no, head_sign, latA, lonA)
+                    print(oneA)
+                    print()
+                    print("stopB")
+                    oneB = self.lat_lon(bus_no, head_sign, latB, lonB)
+                    print(oneB)
+                    print()
+
+                    if len(oneA) > 0 and len(oneB) > 0:
+                        print("filter 1st query by name -----------------------")
+                        print("stopA")
+                        twoA = self.filter_name(oneA, dep_stop)
+                        print(twoA)
+                        print()
+                        print("stopB")
+                        twoB = self.filter_name(oneB, arr_stop)
+                        print(twoB)
+                        print()
+
+                        if twoA and twoB:
+                            print("Query 3 - get seq and direction id -------------")
+                            # Stop A and stop B here have to be the ones from our filters not from google
+                            three = self.db_query3(head_sign, bus_no, twoA[2], twoB[2], num_stops)
+                            print(three)
+                            print()
+
+                            if len(three) == 2:
+                                print("Query 4 - obtain intermediate stops ------------")
+                                # Pass only the 1st two stops given by previous query
+                                four = self.db_query4(bus_no, head_sign, three[0][1], three[1][1], three[0][3])
+                                option.append(four)
+                                print(four)
+                                print()
+
+                            else:
+                                print("ERROR: query 3 does not have 2 items - it has:", len(three), "items")
+                                pass
+                        else:
+                            print("ERROR: length of twoA:", len(twoA), "length of twoB:", len(twoB))
+                            pass
+                    else:
+                        print("ERROR: length of oneA is", len(oneA), "length of oneB:", len(oneB))
+                        pass
+
+                    print()
+            all_opts.append(option)
+            print("-------------------------------------------------------------------------------------------")
+        return all_opts
+
+
+    def getSeconds(self, date, time):
+        self.date = date
+        self.time = time + ":00"
+
+        currentTimeDate = datetime.datetime.now()
+
+        if len(self.date) < 1:
+            self.date = currentTimeDate.strftime("%Y-%m-%d")
+        if len(self.time) < 4:
+            self.time = currentTimeDate.strftime("%H:%M:%S")
+
+
+        dateTime = self.date + " " + self.time
+        timeObj = datetime.datetime.strptime(dateTime, "%Y-%m-%d %H:%M:%S")
+
+        seconds = round(timeObj.timestamp())
+
+        return str(seconds)
+
+
+

@@ -48,8 +48,11 @@ class Stops:
                     and ((stop_lat BETWEEN %s and %s) and (stop_lon BETWEEN %s and %s));"""
 
         cur = con.cursor()
-        cur.execute(query, (busNo, head_sign, lat-0.003, lat+0.003, lon-0.003, lon+0.003), )
+        cur.execute(query, (busNo, head_sign, lat-0.001, lat+0.001, lon-0.001, lon+0.001), )
         data = cur.fetchall()
+        if len(data) < 1:
+            cur.execute(query, (busNo, head_sign, lat-0.003, lat+0.003, lon-0.003, lon+0.003), )
+            data = cur.fetchall()
         cur.close()
 
         return tuple(data)

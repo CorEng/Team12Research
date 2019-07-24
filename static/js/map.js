@@ -306,7 +306,7 @@ console.log(googleData);
 
 //            Filter the options to show the ones that use the bus number given in search form and display first on map
 //            that fits the chosen bus number
-            var routeNeeded = document.getElementById("route").value;
+            var routeNeeded = document.getElementById("route").value.toUpperCase();
             if (routeNeeded.length > 0) {
                 if (allBuses.includes(routeNeeded) == true) {
                     document.getElementById('ops').appendChild(div);

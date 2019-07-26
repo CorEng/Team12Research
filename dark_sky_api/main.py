@@ -36,8 +36,8 @@ def init_db():
 if __name__ == '__main__':
     init_db()
 
-    # 1514764800 stands for the 1/1/2018 and 1546300799 stands for 12/31/2018
-    # 86400 stands for the seconds of one day
+    # 1514764800 stands for the date of 1/1/2018 and 1546300799 stands for the date of 12/31/2018
+    # 86400 stands for the total seconds of one day
     for d in range(1514764800, 1546300799, 86400):
         url = f"https://api.darksky.net/forecast/ae6a76d9d2a422cd7efb48155608e3e5/53.3498,6.2603,{d}?exclude=currently,minutely,daily'"
 

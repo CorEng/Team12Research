@@ -4,16 +4,16 @@ h1 {
     margin-top: 0;
 }
 
-/*ul {
+ul {
     margin: 6px;
     padding: 0;
     list-style: none;
 }
-*/
+
 .form {
     margin: 0 auto;
-    width: 292px;
-    padding: 0.5em;
+    width: 350px;
+    padding: 1em;
     border: 4px solid white;
     border-radius: 1em;
 }
@@ -24,34 +24,18 @@ div + div {
 
 label span {
     display: inline-block;
-    width: 100px;
+    width: 110px;
     text-align: justify;
-    font-size: 10px;
+    font-size: 18px;
 }
 
 input {
     font: 1em sans-serif;
-    width: 100px;
+    width: 200px;
     box-sizing: border-box;
     border: 2px solid #999;
-    height: 50px
 }
 
-
-/*fieldset {
-    width: 270px;
-    box-sizing: border-box;
-    margin-left: 125px;
-    border: 3px solid red;
-    display: block;
-}*/
-
-button {
-    margin: 25px 0 0 155px;
-    width: 100px;
-    height: 40px;
-    font-size: 15px;
-}
 
 label {
     position: relative;
@@ -98,45 +82,26 @@ section {
     margin-left: 450px;
 }
 
-.variable {
-    display: none;
-    width: 100%;
-    text-align: center;
+.search-button {
+    border: 2px solid white;
+    background: black;
     color: white;
-    font-size: 20px;
-    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 100%;
+    height: 2em;
 }
 
-.opbutt {
-    width: 37%;
-    background-color: black;
-    border-radius: 6px;
-    margin: auto;
-    margin-bottom: 8px;
+.search-button:focus, .search-button:hover {
+    border: 2px solid black;
+    background: white;
+    color: black;
 }
 
-div.opbutt:hover {
-    opacity: 0.8;
-    cursor:pointer;
+#map-container {
+    margin: 2em 0;
+    width: 50%;
 }
 
-.indivleft {
-    width: 24%;
-    display: inline-block;
-    height: 75px;
-}
-
-.indivmid {
-    width: 49%;
-    border-left: 2px solid white;
-    border-right: 2px solid white;
-    display: inline-block;
-    height: 75px;
-    padding-top: 1em;
-}
-
-.indivright {
-    width: 24%;
-    display: inline-block;
-    height: 75px;
+.form-group label {
+    width: 100%;
 }

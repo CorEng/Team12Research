@@ -228,7 +228,6 @@ function draw_poly(googleData, option) {
                 poli.setMap(map);
         }
     }
-    window.scrollTo(0, 700);
 }
 
 function draw_markers(intermediateStops, option) {
@@ -382,8 +381,6 @@ console.log(googleData);
                 }
             }
         }
-
-        window.scrollTo(0, 700);
         $("div.variable").slideDown("slow");
 
         if (countOps < 1) {
@@ -422,7 +419,7 @@ function chooseOption(num) {
     showSteps(num);
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
-    window.scrollTo(0, 1100);
+    window.scrollTo(0, 700);
 }
 
 
@@ -485,6 +482,7 @@ function ajax() {
 
 function createChart(num) {
     var chart = document.getElementById("mychart"+num.toString());
+    Chart.defaults.global.defaultFontColor = "white";
     var best = 5;
     var main = 8;
     var worst = 10;
@@ -511,7 +509,8 @@ function createChart(num) {
                     scaleLabel: {
                         display: true,
                         labelString: "Cases",
-                        fontSize: 12
+                        fontSize: 12,
+                        fontColor: "white"
                     }
                 }],
                 yAxes: [{
@@ -527,7 +526,7 @@ function createChart(num) {
                 }]
             },
         }
-        Chart.Line(chart, {
+        Chart.Bar(chart, {
           options: options,
           data: data
         });

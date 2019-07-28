@@ -66,15 +66,7 @@ function refreshMap(num) {
 // Display current time and current date in search form
 function displayNowTimeDate() {
 
-    var radioButton = document.getElementsByName("deparr");
-
-    for (var i = 0; i < radioButton.length; i++) {
-        if (radioButton[i].checked) {
-            var htmlDepArr = radioButton[i].value;
-        }
-    }
-    if (htmlDepArr == "dep") {
-        nowDayTime = new Date();
+    nowDayTime = new Date();
         hrs = nowDayTime.getHours().toString();
         mins = nowDayTime.getMinutes().toString();
         if (mins.length < 2) {
@@ -83,9 +75,9 @@ function displayNowTimeDate() {
         if (hrs.length < 2) {
             hrs = "0" + hrs;
         }
-        document.querySelector("#time").value = hrs + ":" + mins;
-        document.querySelector("#date").valueAsDate = nowDayTime;
-    }
+
+    document.querySelector("#time").value = hrs + ":" + mins;
+    document.querySelector("#date").valueAsDate = nowDayTime;
 }
 
 
@@ -403,7 +395,51 @@ console.log(googleData);
 }
 
 
+function checkDateAndTime() {
+    formTime = document.getElementById("time").value;
+    formDate = document.getElementById("date").value;
+
+    formSeconds = new Date(formDate + " " + formTime + ":00" ).getTime() / 1000;
+    nowDayTimeSeconds = nowDayTime.getTime() / 1000;
+
+    if (getDepArr() == "dep") {
+        if (formSeconds < nowDayTimeSeconds) {
+                alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+            } else {
+                return true;
+            }
+    }
+    else if (getDepArr() == "arr") {
+
+        if (googleData) {
+
+            var delayed = 0;
+
+            for (var i = 0; i < googleData["routes"].length; i++) {
+
+                var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
+
+                if (gooDepTime < nowDayTimeSeconds) {
+                    delayed++;
+                } else {
+                    return true;
+                }
+            }
+            if (delayed > 0) {
+                alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+}
+
+
 function showSteps(num) {
+
+    checkDateAndTime();
 
     if ( $("#opinfo"+num.toString()).css("display") != "none") {
             $("#opinfo"+num.toString()).slideUp("slow");
@@ -432,29 +468,16 @@ function chooseOption(num) {
 }
 
 
-function checkDateAndTime() {
-    formTime = document.getElementById("time").value;
-    formDate = document.getElementById("date").value;
+function getDepArr() {
+    var radioButton = document.getElementsByName("deparr");
 
-    var formMonth = parseInt(formDate.substring(5,7));
-    var nowMonth = nowDayTime.getMonth()+1;
-    var formDay = parseInt(formDate.substring(8));
-    var nowDay = nowDayTime.getDate();
-
-    var formHour = parseInt(formTime.substring(0,2));
-    var nowHour = nowDayTime.getHours();
-    var formMins = parseInt(formTime.substring(3));
-    var nowMins = nowDayTime.getMinutes();
-
-    if ((formMonth < nowMonth) || (formMonth == nowMonth && formDay < nowDay) || (formMonth == nowMonth && formDay ==
-    nowDay && formHour < nowHour) || (formMonth == nowMonth && formDay == nowDay && formHour == nowHour && formMins
-    < nowMins)) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    } else {
-        return true
+    for (var i = 0; i < radioButton.length; i++) {
+        if (radioButton[i].checked) {
+            var htmlDepArr = radioButton[i].value;
+        }
     }
+    return htmlDepArr;
 }
-
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
@@ -472,20 +495,12 @@ function ajax() {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
 
-    var radioButton = document.getElementsByName("deparr");
-
-    for (var i = 0; i < radioButton.length; i++) {
-        if (radioButton[i].checked) {
-            var htmlDepArr = radioButton[i].value;
-        }
-    }
-
     if (checkDateAndTime() == true) {
     //    Ajax pass variables to Flask back end
         $.getJSON($SCRIPT_ROOT + '/directions', {
             postA,
             postB: document.getElementById("end").value,
-            htmlDepArr,
+            htmlDepArr: getDepArr(),
             htmlTime: document.getElementById("time").value,
             htmlDate: document.getElementById("date").value,
         },
@@ -552,5 +567,5 @@ function createChart(num) {
 }
 
 // Event listeners
-$("input").not(".radio").click(displayNowTimeDate);
+$(window).load(displayNowTimeDate);
 

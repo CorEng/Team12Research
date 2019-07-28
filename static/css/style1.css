@@ -97,6 +97,11 @@ section {
     margin-left: 450px;
 }
 
+.radio {
+    width: 25px;
+    display: inline-block;
+}
+
 .variable {
     display: none;
     width: 100%;

@@ -18,6 +18,7 @@ var intermediateStops;
 
 // To Work out today's date and now's time for search form
 var nowDayTime;
+var htmlDepArr;
 var hrs;
 var mins;
 
@@ -65,18 +66,26 @@ function refreshMap(num) {
 // Display current time and current date in search form
 function displayNowTimeDate() {
 
-    nowDayTime = new Date();
-    hrs = nowDayTime.getHours().toString();
-    mins = nowDayTime.getMinutes().toString();
-    if (mins.length < 2) {
-        mins = "0" + mins;
-    }
-    if (hrs.length < 2) {
-        hrs = "0" + hrs;
-    }
+    var radioButton = document.getElementsByName("deparr");
 
-    document.querySelector("#time").value = hrs + ":" + mins;
-    document.querySelector("#date").valueAsDate = nowDayTime;
+    for (var i = 0; i < radioButton.length; i++) {
+        if (radioButton[i].checked) {
+            var htmlDepArr = radioButton[i].value;
+        }
+    }
+    if (htmlDepArr == "dep") {
+        nowDayTime = new Date();
+        hrs = nowDayTime.getHours().toString();
+        mins = nowDayTime.getMinutes().toString();
+        if (mins.length < 2) {
+            mins = "0" + mins;
+        }
+        if (hrs.length < 2) {
+            hrs = "0" + hrs;
+        }
+        document.querySelector("#time").value = hrs + ":" + mins;
+        document.querySelector("#date").valueAsDate = nowDayTime;
+    }
 }
 
 
@@ -462,11 +471,21 @@ function ajax() {
     } else if (origin.length < 1) {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
+
+    var radioButton = document.getElementsByName("deparr");
+
+    for (var i = 0; i < radioButton.length; i++) {
+        if (radioButton[i].checked) {
+            var htmlDepArr = radioButton[i].value;
+        }
+    }
+
     if (checkDateAndTime() == true) {
     //    Ajax pass variables to Flask back end
         $.getJSON($SCRIPT_ROOT + '/directions', {
             postA,
             postB: document.getElementById("end").value,
+            htmlDepArr,
             htmlTime: document.getElementById("time").value,
             htmlDate: document.getElementById("date").value,
         },
@@ -533,5 +552,5 @@ function createChart(num) {
 }
 
 // Event listeners
-$("input").click(displayNowTimeDate);
+$("input").not(".radio").click(displayNowTimeDate);
 

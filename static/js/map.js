@@ -382,7 +382,7 @@ console.log(googleData);
                 }
             }
         }
-        $("div.variable").slideDown("slow");
+        $("div.options").slideDown("slow");
 
         if (countOps < 1) {
             window.alert("The Quickest Options Don't Use the Bus You Specified! - PLEASE TRY SEARCHING AGAIN WITHOUT A "
@@ -482,7 +482,7 @@ function getDepArr() {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
-    $("div.variable").slideUp("slow");
+    $("div.options").slideUp("slow");
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");

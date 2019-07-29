@@ -80,18 +80,18 @@ section {
     margin-left: 450px;
 }
 
-.radio {
+.radioform {
     height: auto;
-    width: 10px;
+    width: 15px;
     display: inline-block;
 }
-.variable {
+.options {
     display: none;
     width: 100%;
     text-align: center;
     color: white;
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .opbutt {
@@ -189,4 +189,37 @@ div.graph {
     margin: 0;
     vertical-align: middle;
     transition: width 3s;
+}
+
+.amenities {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    //display: none;
+}
+
+.headerAmen {
+    display: inline-block;
+    margin-right:10px;
+}
+
+.radioAmen {
+    display: inline-block;
+    height: auto;
+    width: 25px;
+}
+
+.amenops {
+    display: inline-block;
+    color: black;
+    font-size: 15px;
+}
+
+.amenbutton {
+    display: inline-block;
+    width: auto;
+    background-color: black;
+    color: white;
+    border-radius: 6px;
+    margin-left: 10px;
 }

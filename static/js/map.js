@@ -448,6 +448,7 @@ function showSteps(num) {
     $(".opinfo").not("#opinfo"+num.toString()).slideUp("slow");
             $("#opinfo"+num.toString()).slideDown("slow", function(){
                 var mapHeight = $(this).height();
+                console.log(mapHeight);
                 $("div#map"+num.toString()).height(mapHeight);
                 $("div#graph"+num.toString()).height(mapHeight);
             });

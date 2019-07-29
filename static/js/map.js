@@ -383,6 +383,7 @@ console.log(googleData);
             }
         }
         $("div.options").slideDown("slow");
+        $("div.amenities").slideDown("slow");
 
         if (countOps < 1) {
             window.alert("The Quickest Options Don't Use the Bus You Specified! - PLEASE TRY SEARCHING AGAIN WITHOUT A "
@@ -412,13 +413,10 @@ function checkDateAndTime() {
     else if (getDepArr() == "arr") {
 
         if (googleData) {
-
             var delayed = 0;
 
             for (var i = 0; i < googleData["routes"].length; i++) {
-
                 var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
-
                 if (gooDepTime < nowDayTimeSeconds) {
                     delayed++;
                 } else {
@@ -448,7 +446,6 @@ function showSteps(num) {
     $(".opinfo").not("#opinfo"+num.toString()).slideUp("slow");
             $("#opinfo"+num.toString()).slideDown("slow", function(){
                 var mapHeight = $(this).height();
-                console.log(mapHeight);
                 $("div#map"+num.toString()).height(mapHeight);
                 $("div#graph"+num.toString()).height(mapHeight);
             });
@@ -465,7 +462,7 @@ function chooseOption(num) {
     showSteps(num);
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
-    window.scrollTo(0, 700);
+    window.scrollTo(0, 900);
 }
 
 
@@ -483,6 +480,7 @@ function getDepArr() {
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
     $("div.options").slideUp("slow");
+    $("div.amenities").slideUp("slow");
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
@@ -565,6 +563,25 @@ function createChart(num) {
           options: options,
           data: data
         });
+}
+
+function ajax2() {
+    var radioButton = document.getElementsByName("amenities");
+
+    for (var i = 0; i < radioButton.length; i++) {
+            if (radioButton[i].checked) {
+                var htmlAmenities = radioButton[i].value;
+            }
+        }
+
+     $.getJSON($SCRIPT_ROOT + '/amenities', {
+            htmlAmenities,
+        },
+    //  Response from the back end
+        function(response) {
+
+        });
+
 }
 
 // Event listeners

@@ -195,7 +195,7 @@ div.graph {
     width: 100%;
     height: auto;
     text-align: center;
-    //display: none;
+    display: none;
 }
 
 .headerAmen {
@@ -205,14 +205,15 @@ div.graph {
 
 .radioAmen {
     display: inline-block;
-    height: auto;
+    vertical-align: middle;
+    height: 20px;
     width: 25px;
 }
 
 .amenops {
     display: inline-block;
     color: black;
-    font-size: 15px;
+    margin-right: 10px;
 }
 
 .amenbutton {
@@ -221,5 +222,4 @@ div.graph {
     background-color: black;
     color: white;
     border-radius: 6px;
-    margin-left: 10px;
 }

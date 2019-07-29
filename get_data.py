@@ -253,4 +253,26 @@ class Stops:
         return str(seconds)
 
 
+    def getAmenities(self, type, list):
+        self.type = type
+        self.list = list
+
+        self.finalAmenities = []
+
+        url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
+
+        for option in self.list:
+            opList = []
+            for stop in option:
+                location = stop[0] + "," + stop[1]
+                req = requests.get(url + "location=" + location + "&radius=100&type=" + self.type
+                       + "&key=" + "&fields=formatted_address,geometry/location,name" +  google_key)
+                opList.append(req)
+            self.finalAmenities.append(opList)
+
+
+
+
+
+
 

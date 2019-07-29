@@ -27,9 +27,17 @@ def directions():
     get_goo_data = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     interStops = intermediate.fin(get_goo_data)
     jsonObj = get_goo_data
+    global full
     full = {"interstops": interStops, "gooData": jsonObj}
 
     return jsonify(full)
+
+@app.route("/amenities", methods=['GET', 'POST'])
+def Amenities():
+    frontAmenities = request.args.get('htmlAmenities')
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

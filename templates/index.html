@@ -20,10 +20,20 @@
     <link rel="stylesheet" href="../static/css/flaticon.css">
     <link rel="stylesheet" href="../static/css/icomoon.css">
     <link rel="stylesheet" href="../static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places,geometry">
+    </script>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-    <script type=text/javascript> // Set-up connection variable between JS and Flask server application $SCRIPT_ROOT={{ request.script_root|tojson|safe }} ; </script> </head> <body>
+    <script type=text/javascript>
+      // Set-up connection variable between JS and Flask server application
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
+</head>
+
+<body>
         <!--nav-->
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
@@ -82,6 +92,9 @@
                                 <input id="route" type="text" class="form-control" placeholder="route"
                                        name="route">
                             </div>
+                        <input class="radio" type="radio" name="deparr" value="dep"> Departure Time
+                        <input class="radio" type="radio" name="deparr" value="arr"> Arrival Time
+
                         <div class="form-group">
                                 <input id="time" runat="server" type="time" class="form-control"
                                        name="time">
@@ -106,7 +119,10 @@
 
     <!--MAIN PART-->
 
+    <div class="variable" id="ops">
+        <h1>Options</h1>
     
+    </div>
    
     
 
@@ -437,13 +453,13 @@
     <script src="../static/js/jquery.animateNumber.min.js"></script>
     <script src="../static/js/bootstrap-datepicker.js"></script>
     <script src="../static/js/scrollax.min.js"></script>
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="js/google-map.js"></script>-->
     <script src="../static/js/main.js"></script>
 
     <script src="../static/js/map.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places&callback=initMap">
-    </script>
+    <script>geolocation();</script>
+<!--<script async defer-->
+<!--        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places&callback=initMap">-->
+<!--</script>-->
 
 
     </body>

@@ -16,47 +16,96 @@ var googleData;
 // Data of intermediate stops worked out in the back end with google data
 var intermediateStops;
 
+// To Work out today's date and now's time for search form
 var nowDayTime;
+var htmlDepArr;
 var hrs;
 var mins;
+
+// To give a heigth to the map and the chart for each option
+var mapHeight;
+
+function refreshMap(num) {
+
+    if (num === undefined) {
+        map = new google.maps.Map(
+              document.getElementById('map'), {zoom: 12, center: dublin,
+              zoomControl: true,
+              mapTypeControl: true,
+              mapTypeControlOptions: {
+              style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+              },
+              scaleControl: true,
+              streetViewControl: true,
+              streetViewControlOptions: {
+              position: google.maps.ControlPosition.RIGHT_CENTER
+              },
+              rotateControl: true,
+              fullscreenControl: true
+            });
+    } else {
+        map = new google.maps.Map(
+              document.getElementById('map'+num.toString()), {zoom: 12, center: dublin,
+              zoomControl: true,
+              mapTypeControl: true,
+              mapTypeControlOptions: {
+              style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+              },
+              scaleControl: true,
+              streetViewControl: true,
+              streetViewControlOptions: {
+              position: google.maps.ControlPosition.RIGHT_CENTER
+              },
+              rotateControl: true,
+              fullscreenControl: true
+            });
+    }
+}
+
 
 // Display current time and current date in search form
 function displayNowTimeDate() {
 
     nowDayTime = new Date();
-    hrs = nowDayTime.getHours().toString();
-    mins = nowDayTime.getMinutes().toString();
-    if (mins.length < 2) {
-        mins = "0"+ mins;
-    }
+        hrs = nowDayTime.getHours().toString();
+        mins = nowDayTime.getMinutes().toString();
+        if (mins.length < 2) {
+            mins = "0" + mins;
+        }
+        if (hrs.length < 2) {
+            hrs = "0" + hrs;
+        }
 
     document.querySelector("#time").value = hrs + ":" + mins;
     document.querySelector("#date").valueAsDate = nowDayTime;
 }
 
 
+function geolocation() {
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+        };
+
+    }, function() {
+    handleLocationError(true, infoWindow, map.getCenter());
+    });
+    } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+        }
+}
+
 
 // Initialize and add the map
-function initMap() {
+function initMap(num) {
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer();
 
-    // The map, centered at Dublin
-    map = new google.maps.Map(
-        document.getElementById('map'), {zoom: 13, center: dublin,
-          zoomControl: true,
-          mapTypeControl: true,
-          mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-          },
-          scaleControl: true,
-          streetViewControl: true,
-          streetViewControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_CENTER
-          },
-          rotateControl: true,
-          fullscreenControl: true
-        });
+    refreshMap(num);
 
     // start the user's geolocations-------------------------------------------
     infoWindow = new google.maps.InfoWindow;
@@ -70,7 +119,7 @@ function initMap() {
         };
 
         infoWindow.setPosition(pos);
-        infoWindow.setContent('You are here');
+        infoWindow.setContent('<div class="infoWin">You are here</div>');
         infoWindow.open(map);
         map.setCenter(pos);
     }, function() {
@@ -80,7 +129,6 @@ function initMap() {
     // Browser doesn't support Geolocation
     handleLocationError(false, infoWindow, map.getCenter());
         }
-
     directionsDisplay.setMap(map);
 
     };// initMap()
@@ -94,33 +142,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
     }
 
-
-// Google Directions front end route request and uses google renderer to show route
-function calcRoute() {
-
-    var start = posA;
-    var end = posB;
-
-    var request = {
-        origin: start,
-        destination: end,
-        provideRouteAlternatives: true,
-        travelMode: 'TRANSIT',
-        transitOptions: {
-            modes: ['BUS'],
-            routingPreference: 'FEWER_TRANSFERS'
-          },
-      };
-
-    directionsService.route(request, function(result, status) {
-        if (status == 'OK') {
-          directionsDisplay.setDirections(result);
-          window.scrollTo(0, 700);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
-      });
-    }
 
 // Take input from origin of trip
 function stopA(){
@@ -181,10 +202,7 @@ function draw_poly(googleData, option) {
     if (option === undefined) {
         option = 0;
     }
-    var linebounds = new google.maps.LatLngBounds();
-    linebounds.extend(googleData['routes'][option]['bounds']['northeast']);
-    linebounds.extend(googleData['routes'][option]['bounds']['southwest']);
-    map.fitBounds(linebounds);
+
     for (var i = 0; i < googleData['routes'][option]['legs'][0]['steps'].length; i++) {
 //        IF its walking draw polyline with a certain color
         if (googleData['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'WALKING') {
@@ -211,14 +229,12 @@ function draw_poly(googleData, option) {
                 poli.setMap(map);
         }
     }
-    window.scrollTo(0, 700);
 }
 
 function draw_markers(intermediateStops, option) {
     if (option === undefined) {
         option = 0;
     }
-
     var infowindow = new google.maps.InfoWindow();
     for (var i = 0; i < intermediateStops[option].length; i++) {
         for (var j = 0; j < intermediateStops[option][i].length; j++) {
@@ -238,7 +254,6 @@ function draw_markers(intermediateStops, option) {
 
             google.maps.event.addListener(marker, 'click', (function(contentString, marker, i) {
                 return function() {
-
                     infowindow.setContent(contentString.toString());
                     infowindow.open(map, marker);
                 }
@@ -249,13 +264,33 @@ function draw_markers(intermediateStops, option) {
 
 // Create the html to show the different options with minimal info
 function showOptions() {
+console.log(googleData);
     if (googleData) {
         var countOps = 0;
 //        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
-            var div = document.createElement("div");
-            div.setAttribute("class", "opbutt");
-            div.setAttribute("onClick", "chooseOption(" + i.toString() + ")");
+            var opbutt = document.createElement("div");
+            opbutt.setAttribute("class", "opbutt");
+            opbutt.setAttribute("onClick", "chooseOption(" + i.toString() + ")");
+
+            var opInfo = document.createElement("div");
+            opInfo.setAttribute("class", "opinfo");
+            opInfo.setAttribute("id", "opinfo"+i.toString());
+
+            var allSteps = document.createElement("div");
+            allSteps.setAttribute("class", "allsteps");
+            allSteps.setAttribute("id", "allSteps"+i.toString())
+
+            var miniMap = document.createElement("div");
+            miniMap.setAttribute("class", "minimap");
+            miniMap.setAttribute("id", "map"+i.toString());
+
+            var opGraph = document.createElement("div");
+            opGraph.setAttribute("class", "graph");
+            opGraph.setAttribute("id", "graph"+i.toString());
+            var chart = document.createElement("canvas");
+            chart.setAttribute("id", "mychart"+i.toString());
+            opGraph.appendChild(chart);
 
             var indiv1 = document.createElement("div");
             indiv1.setAttribute("class", "indivleft");
@@ -263,7 +298,7 @@ function showOptions() {
             var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['duration']['text']);
             time.appendChild(timetext);
             indiv1.appendChild(time);
-            div.appendChild(indiv1);
+            opbutt.appendChild(indiv1);
 
             var indiv2 = document.createElement("div");
             indiv2.setAttribute("class", "indivmid");
@@ -272,14 +307,45 @@ function showOptions() {
             + googleData['routes'][i]['legs'][0]['arrival_time']['text']);
             time.appendChild(timetext);
             indiv2.appendChild(time);
-            div.appendChild(indiv2);
+            opbutt.appendChild(indiv2);
 
             var indiv3 = document.createElement("div");
             indiv3.setAttribute("class", "indivright");
             var buses = document.createElement("p");
             var allBuses = [];
             for (var j = 0; j < googleData['routes'][i]['legs'][0]['steps'].length; j++ ) {
-                if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'TRANSIT') {
+
+                var step = document.createElement("p");
+                var stepOff = document.createElement("p");
+
+                if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'WALKING' && j ==
+                googleData['routes'][i]['legs'][0]['steps'].length - 1) {
+                    var instruction = document.createTextNode
+                    (googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']);
+                    step.appendChild(instruction);
+                    allSteps.appendChild(step);
+                }
+                else if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'WALKING') {
+                    var instruction = document.createTextNode
+                    (googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions'] + " Bus Stop");
+                    step.appendChild(instruction);
+                    allSteps.appendChild(step);
+                }
+                else if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'TRANSIT') {
+                    var instruction = document.createTextNode
+                    ("Get On Bus " +  googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
+                    ['line']['short_name'] + googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']
+                    .substring(3));
+
+                    var off = document.createTextNode
+                    ("Get Off At " + googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
+                    ['arrival_stop']['name'] + " Bus Stop");
+
+                    step.appendChild(instruction);
+                    allSteps.appendChild(step);
+                    stepOff.appendChild(off);
+                    allSteps.appendChild(stepOff);
+
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
                 }
@@ -287,14 +353,19 @@ function showOptions() {
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
             indiv3.appendChild(buses);
-            div.appendChild(indiv3);
+            opbutt.appendChild(indiv3);
+
+            opInfo.appendChild(miniMap);
+            opInfo.appendChild(allSteps);
+            opInfo.appendChild(opGraph);
 
 //            Filter the options to show the ones that use the bus number given in search form and display first on map
 //            that fits the chosen bus number
-            var routeNeeded = document.getElementById("route").value;
+            var routeNeeded = document.getElementById("route").value.toUpperCase();
             if (routeNeeded.length > 0) {
                 if (allBuses.includes(routeNeeded) == true) {
-                    document.getElementById('ops').appendChild(div);
+                    document.getElementById('ops').appendChild(opbutt);
+                    document.getElementById('ops').appendChild(opInfo);
                     countOps++;
                     if (countOps == 1) {
                         chooseOption(i);
@@ -303,75 +374,117 @@ function showOptions() {
             }
 //            If no specific bus number input in search form show all options in list and display 1st on map
             else if (routeNeeded.length < 1) {
-                document.getElementById('ops').appendChild(div);
+                document.getElementById('ops').appendChild(opbutt);
+                document.getElementById('ops').appendChild(opInfo);
                 countOps++;
                 if (countOps == 1) {
                     chooseOption(i);
                 }
             }
         }
-        window.scrollTo(0, 700);
-        document.getElementById('ops').style.display = 'block';
+        $("div.variable").slideDown("slow");
+
         if (countOps < 1) {
             window.alert("The Quickest Options Don't Use the Bus You Specified! - PLEASE TRY SEARCHING AGAIN WITHOUT A "
              +
             "SPECIFIC BUS NUMBER TO SEE THE BEST OPTIONS")
-
         }
-
     } else {
         document.getElementById('ops').style.display = 'none';
     }
-
 }
+
+
+function checkDateAndTime() {
+    formTime = document.getElementById("time").value;
+    formDate = document.getElementById("date").value;
+
+    formSeconds = new Date(formDate + " " + formTime + ":00" ).getTime() / 1000;
+    nowDayTimeSeconds = nowDayTime.getTime() / 1000;
+
+    if (getDepArr() == "dep") {
+        if (formSeconds < nowDayTimeSeconds) {
+                alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+            } else {
+                return true;
+            }
+    }
+    else if (getDepArr() == "arr") {
+
+        if (googleData) {
+
+            var delayed = 0;
+
+            for (var i = 0; i < googleData["routes"].length; i++) {
+
+                var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
+
+                if (gooDepTime < nowDayTimeSeconds) {
+                    delayed++;
+                } else {
+                    return true;
+                }
+            }
+            if (delayed > 0) {
+                alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+}
+
+
+function showSteps(num) {
+
+    checkDateAndTime();
+
+    if ( $("#opinfo"+num.toString()).css("display") != "none") {
+            $("#opinfo"+num.toString()).slideUp("slow");
+        }
+    else {
+    $(".opinfo").not("#opinfo"+num.toString()).slideUp("slow");
+            $("#opinfo"+num.toString()).slideDown("slow", function(){
+                var mapHeight = $(this).height();
+                $("div#map"+num.toString()).height(mapHeight);
+                $("div#graph"+num.toString()).height(mapHeight);
+            });
+    }
+}
+
 
 function chooseOption(num) {
-//  refresh map
-    map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 13, center: dublin,
-      zoomControl: true,
-      mapTypeControl: true,
-      mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-      },
-      scaleControl: true,
-      streetViewControl: true,
-      streetViewControlOptions: {
-      position: google.maps.ControlPosition.RIGHT_CENTER
-      },
-      rotateControl: true,
-      fullscreenControl: true
-    });
+
+    createChart(num);
+    initMap(num);
+
 //  Draw markers and polylines of a specific option chosen
+    showSteps(num);
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
-    window.scrollTo(0, 1100);
+    window.scrollTo(0, 700);
 }
 
+
+function getDepArr() {
+    var radioButton = document.getElementsByName("deparr");
+
+    for (var i = 0; i < radioButton.length; i++) {
+        if (radioButton[i].checked) {
+            var htmlDepArr = radioButton[i].value;
+        }
+    }
+    return htmlDepArr;
+}
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajax() {
-
+    $("div.variable").slideUp("slow");
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
-//  Refresh map
-    if (intermediateStops) {
-        map = new google.maps.Map(
-              document.getElementById('map'), {zoom: 13, center: dublin,
-              zoomControl: true,
-              mapTypeControl: true,
-              mapTypeControlOptions: {
-              style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-              },
-              scaleControl: true,
-              streetViewControl: true,
-              streetViewControlOptions: {
-              position: google.maps.ControlPosition.RIGHT_CENTER
-              },
-              rotateControl: true,
-              fullscreenControl: true
-        });
-    }
+    $('div').remove(".opinfo");
 
 //    Check that the user has input a value otherwise use the geolocation coordinates
     var origin = document.getElementById("start").value;
@@ -382,53 +495,77 @@ function ajax() {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
 
-    formTime = document.getElementById("time").value;
-    console.log(formTime);
-    formDate = document.getElementById("date").value;
-
-    var formMonth = parseInt(formDate.substring(5,7));
-    var nowMonth = nowDayTime.getMonth()+1;
-
-    var formDay = parseInt(formDate.substring(8));
-    var nowDay = nowDayTime.getDate();
-
-    var formHour = parseInt(formTime.substring(0,2));
-    var nowHour = nowDayTime.getHours();
-
-    var formMins = parseInt(formTime.substring(3));
-    var nowMins = nowDayTime.getMinutes();
-
-    if (formMonth < nowMonth) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else if (formMonth == nowMonth && formDay < nowDay) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else if (formMonth == nowMonth && formDay == nowDay && formHour < nowHour) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else if (formMonth == nowMonth && formDay == nowDay && formHour == nowHour && formMins < nowMins) {
-        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-    }
-    else {
-        //    Ajax pass variables to Flask back end
-            $.getJSON($SCRIPT_ROOT + '/directions', {
-                postA,
-                postB: document.getElementById("end").value,
-                htmlTime: document.getElementById("time").value,
-                htmlDate: document.getElementById("date").value,
-            },
-        //  Response from the back end
-            function(response) {
-                googleData = response['gooData'];
-                intermediateStops = response['interstops'];
-                showOptions();
-            });
-        }
-
-
+    if (checkDateAndTime() == true) {
+    //    Ajax pass variables to Flask back end
+        $.getJSON($SCRIPT_ROOT + '/directions', {
+            postA,
+            postB: document.getElementById("end").value,
+            htmlDepArr: getDepArr(),
+            htmlTime: document.getElementById("time").value,
+            htmlDate: document.getElementById("date").value,
+        },
+    //  Response from the back end
+        function(response) {
+            googleData = response['gooData'];
+            intermediateStops = response['interstops'];
+            showOptions();
+        });
+    };
 }
 
-$("input").click(displayNowTimeDate);
-//google.maps.event.addDomListener(window, 'load', calcRoute);
+
+function createChart(num) {
+    var chart = document.getElementById("mychart"+num.toString());
+    Chart.defaults.global.defaultFontColor = "white";
+    var best = 5;
+    var main = 8;
+    var worst = 10;
+
+    var data = {
+        labels: ["Best Case", "Main Prediction", "Worst Case"],
+        datasets: [{
+            label: "Minutes",
+            backgroundColor: "white",
+            borderColor: "black",
+            data:[best, main, worst],
+        }]
+    };
+
+    var options = {
+        maintainAspectRatio: false,
+        title: {
+              display: true,
+              text: 'Bus Arrival Time',
+              fontSize: 12,
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Cases",
+                        fontSize: 12,
+                        fontColor: "white"
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        suggestedMax: best,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Prediction Times",
+                        fontSize: 12
+                    }
+                }]
+            },
+        }
+        Chart.Bar(chart, {
+          options: options,
+          data: data
+        });
+}
+
+// Event listeners
+$(window).load(displayNowTimeDate);
 

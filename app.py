@@ -17,13 +17,14 @@ def index():
 def directions():
     postA = request.args.get('postA')
     postB = request.args.get('postB')
+    frontDepArr = request.args.get('htmlDepArr')
     frontTime = request.args.get('htmlTime')
     frontDate = request.args.get('htmlDate')
 
 
     intermediate = Stops()
     secs = intermediate.getSeconds(frontDate, frontTime)
-    get_goo_data = intermediate.get_direct_goo(postA, postB, secs)
+    get_goo_data = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     interStops = intermediate.fin(get_goo_data)
     jsonObj = get_goo_data
     full = {"interstops": interStops, "gooData": jsonObj}
@@ -32,7 +33,6 @@ def directions():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 #set FLASK_APP=app.py

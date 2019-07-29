@@ -80,6 +80,11 @@ section {
     margin-left: 450px;
 }
 
+.radio {
+    height: auto;
+    width: 10px;
+    display: inline-block;
+}
 .variable {
     display: none;
     width: 100%;
@@ -131,17 +136,43 @@ div.opbutt:hover {
     height: 2em;
 }
 
-.search-button:focus, .search-button:hover {
-    border: 2px solid black;
-    background: white;
-    color: black;
+.allsteps {
+    width: 32%;
+    background-color: grey;
+    height: auto;
+    min-height: 350px;
+    margin: auto;
+    border-radius: 6px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
-#map-container {
-    margin: 2em 0;
-    width: 50%;
+div.allsteps p {
+    vertical-align: middle;
 }
 
-.form-group label {
+div.minimap:hover {
     width: 100%;
+}
+
+div.minimap {
+    width: 32%;
+    height: auto;
+    display: inline-block;
+    border-radius: 6px;
+    margin: 0;
+    transition: width 3s;
+    vertical-align: middle;
+}
+
+div.graph {
+    position: relative;
+    width:32%;
+    height: auto;
+    display: inline-block;
+    background-color: black;
+    border-radius: 6px;
+    margin: 0;
+    vertical-align: middle;
+    transition: width 3s;
 }

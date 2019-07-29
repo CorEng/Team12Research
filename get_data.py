@@ -9,15 +9,20 @@ class Stops:
         self.goahead = ["17", "17a", "18", "33a", "33b", "45a", "45b", "59", "63", "63a", "75", "75a", "76", "76a",
                     "102", "104", "111", "114", "161", "175", "184", "185", "220", "236", "238", "239", "270"]
 
-    def get_direct_goo(self, postA, postB, secs):
+    def get_direct_goo(self, postA, postB, secs, depArrTime):
 
         self.postA = postA
         self.postB = postB
         self.secs = secs
+        if depArrTime == "dep":
+            depArrTime = '&departure_time='
+        elif depArrTime == "arr":
+            depArrTime = '&arrival_time='
+
 
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
 
-        req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + '&departure_time=' + secs
+        req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + depArrTime + secs
                          +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
         # passw.py in local
 
@@ -47,8 +52,11 @@ class Stops:
                     and ((stop_lat BETWEEN %s and %s) and (stop_lon BETWEEN %s and %s));"""
 
         cur = con.cursor()
-        cur.execute(query, (busNo, head_sign, lat-0.003, lat+0.003, lon-0.003, lon+0.003), )
+        cur.execute(query, (busNo, head_sign, lat-0.001, lat+0.001, lon-0.001, lon+0.001), )
         data = cur.fetchall()
+        if len(data) < 1:
+            cur.execute(query, (busNo, head_sign, lat-0.003, lat+0.003, lon-0.003, lon+0.003), )
+            data = cur.fetchall()
         cur.close()
 
         return tuple(data)

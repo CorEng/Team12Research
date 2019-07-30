@@ -254,6 +254,7 @@ class Stops:
 
 
     def getAmenities(self, type, list):
+
         self.type = type
         self.list = list
 
@@ -263,14 +264,18 @@ class Stops:
 
         for option in self.list:
             opList = []
-            for stop in option:
-                location = stop[0] + "," + stop[1]
-                req = requests.get(url + "location=" + location + "&radius=100&type=" + self.type
-                       + "&key=" + "&fields=formatted_address,geometry/location,name" +  google_key)
-                opList.append(req)
+            for leg in option:
+                for stop in leg:
+                    location = str(stop[0])+","+str(stop[1])
+                    req = requests.get(url + "location=" + location + "&radius=50&type=" + self.type
+                         + "&fields=formatted_address,geometry,name&key=" + google_key)
+
+                    if req.json()["status"] == "OK":
+                        opList.append(req.json()["results"])
+
             self.finalAmenities.append(opList)
 
-
+        return self.finalAmenities
 
 
 

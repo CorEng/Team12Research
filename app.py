@@ -36,7 +36,10 @@ def directions():
 def Amenities():
     frontAmenities = request.args.get('htmlAmenities')
 
+    interAmenities = Stops()
+    amenitiesList = interAmenities.getAmenities(frontAmenities, full["interstops"])
 
+    return jsonify(amenitiesList)
 
 
 if __name__ == '__main__':

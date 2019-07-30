@@ -25,6 +25,9 @@ var mins;
 // To give a heigth to the map and the chart for each option
 var mapHeight;
 
+// To take the response from the google places nearby search
+var backAmenities;
+
 function refreshMap(num) {
 
     if (num === undefined) {
@@ -579,7 +582,8 @@ function ajax2() {
         },
     //  Response from the back end
         function(response) {
-
+            backAmenities = response;
+            console.log(backAmenities);
         });
 
 }

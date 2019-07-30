@@ -465,6 +465,9 @@ function chooseOption(num) {
     showSteps(num);
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
+    if (backAmenities) {
+        drawAmenitiesMarkers();
+    }
     window.scrollTo(0, 900);
 }
 
@@ -568,6 +571,59 @@ function createChart(num) {
         });
 }
 
+
+function drawAmenitiesMarkers() {
+    opId = $("div.opinfo");
+    var count = 0;
+    for (var i = 0; i < opId.length; i++) {
+        if (opId[i].style.display == 'block') {
+            var id = opId[i].getAttribute("id");
+            count++;
+        }
+    }
+    if (count > 0) {
+        var opNeeded = parseInt(id.slice(-1));
+    } else if (count == 0) {
+        var opNeeded = 0;
+    }
+
+
+    var infowindow = new google.maps.InfoWindow();
+    for (var i = 0; i < backAmenities[opNeeded].length; i++) {
+
+        var location = {lat: backAmenities[opNeeded][i][0]["geometry"]["location"]["lat"], lng:
+        backAmenities[opNeeded][i][0]["geometry"]["location"]["lng"]};
+        var image = "https://img.icons8.com/ios-filled/50/000000/marker.png";
+        var marker = new google.maps.Marker({
+            animation: google.maps.Animation.DROP,
+            position: location,
+            map: map,
+            icon: image});
+
+        var name = backAmenities[opNeeded][i][0]["name"];
+        if (backAmenities[opNeeded][i][0].hasOwnProperty("opening_hours")){
+            var open = (backAmenities[opNeeded][i][0]["opening_hours"]["open_now"] == true) ? "Yes":"No";
+        } else {
+            var open = "Not Known"
+        }
+        var addr = backAmenities[opNeeded][i][0]["vicinity"];
+
+        var contentString = '<div class="infoWin">' +
+                            '<p class="detail">NAME: ' + name + '</p>' +
+                            '<p class="detail">OPEN NOW: ' + open + '</p>' +
+                            '<p class="detail">ADDRESS: ' + addr + '</p>' +
+                            '</div>';
+
+        google.maps.event.addListener(marker, 'click', (function(contentString, marker, i) {
+            return function() {
+                infowindow.setContent(contentString.toString());
+                infowindow.open(map, marker);
+            }
+        })(contentString, marker, i));
+    }
+}
+
+
 function ajax2() {
     var radioButton = document.getElementsByName("amenities");
 
@@ -584,6 +640,7 @@ function ajax2() {
         function(response) {
             backAmenities = response;
             console.log(backAmenities);
+            drawAmenitiesMarkers();
         });
 
 }

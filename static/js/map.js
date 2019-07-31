@@ -23,7 +23,7 @@ var hrs;
 var mins;
 
 // To give a heigth to the map and the chart for each option
-var mapHeight;
+var mapChartHeight;
 
 // To take the response from the google places nearby search
 var backAmenities;
@@ -448,9 +448,9 @@ function showSteps(num) {
     else {
     $(".opinfo").not("#opinfo"+num.toString()).slideUp("slow");
             $("#opinfo"+num.toString()).slideDown("slow", function(){
-                var mapHeight = $(this).height();
-                $("div#map"+num.toString()).height(mapHeight);
-                $("div#graph"+num.toString()).height(mapHeight);
+                mapChartHeight = $(this).height();
+                $("div#map"+num.toString()).height(mapChartHeight);
+                $("div#graph"+num.toString()).height(mapChartHeight);
             });
     }
 }
@@ -641,7 +641,6 @@ function ajax2() {
                 var htmlAmenities = radioButton[i].value;
             }
         }
-
      $.getJSON($SCRIPT_ROOT + '/amenities', {
             htmlAmenities,
         },
@@ -656,4 +655,8 @@ function ajax2() {
 
 // Event listeners
 $(window).load(displayNowTimeDate);
+
+$("div[id^='allSteps']").resize(function() {
+
+})
 

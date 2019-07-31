@@ -27,6 +27,7 @@ var mapChartHeight;
 
 // To take the response from the google places nearby search
 var backAmenities;
+var num;
 
 function refreshMap(num) {
 
@@ -656,7 +657,9 @@ function ajax2() {
 // Event listeners
 $(window).load(displayNowTimeDate);
 
-$("div[id^='allSteps']").resize(function() {
-
-})
+$(window).resize(function() {
+    var mapChartHeight = $("div.allsteps:visible").height();
+    $("div.minimap:visible").height(mapChartHeight);
+    $("div.graph:visible").height(mapChartHeight);
+});
 

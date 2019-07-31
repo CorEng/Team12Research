@@ -1,5 +1,7 @@
 import requests, datetime, pymysql, sys, difflib
 from operator import itemgetter
+from datetime import date, time, timedelta
+from tweepy import OAuthHandler, API, Cursor
 from passw import *
 
 
@@ -278,6 +280,40 @@ class Stops:
         return self.finalAmenities
 
 
+    def notification_check(self, googData):
 
+        #These are Cormac's twitter access tokens - I will revoke after project
+        ACCESS_TOKEN = '52064929-gZaO53w9BuQNZzp2DPNNWYhDH602wBDH5bIW0WbAi'
+        ACCESS_SECRET = 'a8aPm6uJIQq7zBZVzBUxOuyVXXlWlpqYWP5jT3aoR9MaJ'
+        CONSUMER_KEY = '1kMiypEgdzcN0klIT2HQMPyXc'
+        CONSUMER_SECRET = 'RhJNFUPrG8EOArbqlW7xhxCns8VJ0HjLJ3njMYBiPIdbI4wBNB'
+
+        auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+        auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
+        auth_api = API(auth)
+
+        end_date = datetime.datetime.utcnow() - timedelta(days=2)
+        tweetlist=[]
+
+        for i in range(len(googData["routes"])):
+            option = []
+            for j in range(len(googData["routes"][i]["legs"][0]["steps"])):
+
+                if "transit_details" in googData["routes"][i]["legs"][0]["steps"][j] and googData["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
+
+                    route = googData["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["short_name"].strip()
+
+                    for status in Cursor(auth_api.user_timeline, id="@dublinbusnews").items():
+
+                        if "#DBSvcUpdate" in status.text:
+                            if ("#DB" + route) in status.text:
+                                option.append(status.text)
+                            if "due to" in status.text:
+                                option.append(status.text)
+                        if status.created_at < end_date:
+                            break
+            tweetlist.append(option)
+
+        return(tweetlist)
 
 

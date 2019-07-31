@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, jsonify
-from datetime import datetime, timedelta
+from datetime import datetime
 from get_data import *
 
 app = Flask(__name__)
@@ -28,6 +28,9 @@ def directions():
     interStops = intermediate.fin(get_goo_data)
     jsonObj = get_goo_data
     global full
+    notification = intermediate.notification_check(jsonObj)
+    print(notification)
+
     full = {"interstops": interStops, "gooData": jsonObj}
 
     return jsonify(full)

@@ -100,6 +100,7 @@ section {
     border-radius: 6px;
     margin: auto;
     margin-bottom: 8px;
+    transition: width 3s;
 }
 
 div.opbutt:hover {
@@ -189,6 +190,18 @@ div.graph {
     margin: 0;
     vertical-align: middle;
     transition: width 3s;
+}
+
+@media(max-width: 1000px) {
+    div.opbutt {
+        width: 75%;
+    }
+}
+
+@media (max-width: 750px) {
+    div.minimap, div.allsteps, div.graph {
+        width: 100%;
+    }
 }
 
 .amenities {

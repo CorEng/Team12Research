@@ -468,7 +468,17 @@ function chooseOption(num) {
     if (backAmenities) {
         drawAmenitiesMarkers();
     }
-    window.scrollTo(0, 900);
+    if (num == 0) {
+        window.scrollTo(0, 700);
+    } else if (num == 1) {
+        window.scrollTo(0, 800);
+    } else if (num == 2) {
+        window.scrollTo(0, 900);
+    } else if (num == 3) {
+        window.scrollTo(0, 1000);
+    }
+
+
 }
 
 
@@ -586,7 +596,6 @@ function drawAmenitiesMarkers() {
     } else if (count == 0) {
         var opNeeded = 0;
     }
-
 
     var infowindow = new google.maps.InfoWindow();
     for (var i = 0; i < backAmenities[opNeeded].length; i++) {

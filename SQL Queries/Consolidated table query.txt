@@ -1,0 +1,13 @@
+SQL Queries:
+Working data
+CREATE TABLE working_data
+as
+(SELECT leavetimes.`dayofservice`, SEC_TO_TIME(leavetimes.`actualtime_arr`) as hr_time,
+    leavetimes.tripid,leavetimes.progrnumber,leavetimes.stoppointid,leavetimes.actualtime_arr, weather.precipIntensity,weather.temperature,weather.humidity,trips.lineid, stops.lat, stops.lng, trips.direction 
+	FROM leavetimes, weather, trips, stops 
+	WHERE weather.time = CONCAT(leavetimes.`dayofservice`," ",CONCAT(SUBSTRING_INDEX(SEC_TO_TIME(leavetimes.`actualtime_arr`), ":", 1),":00:00"))
+	and trips.tripid = leavetimes.tripid 
+	and trips.dayofservice = leavetimes.dayofservice
+	and leavetimes.stoppointid = stops.stop_id 
+	ORDER BY leavetimes.dayofservice,leavetimes.tripid,leavetimes.progrnumber)
+

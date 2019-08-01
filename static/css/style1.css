@@ -173,6 +173,13 @@ div.allsteps p {
     vertical-align: middle;
 }
 
+.alert {
+    width:100%;
+    background-color: red;
+    color: black;
+    border-radius: 6px;
+}
+
 div.minimap:hover {
     width: 100%;
 }

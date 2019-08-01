@@ -16,6 +16,9 @@ var googleData;
 // Data of intermediate stops worked out in the back end with google data
 var intermediateStops;
 
+// Data for tweeter disruption responses
+var disruptions;
+
 // To Work out today's date and now's time for search form
 var nowDayTime;
 var htmlDepArr;
@@ -269,6 +272,7 @@ function draw_markers(intermediateStops, option) {
 // Create the html to show the different options with minimal info
 function showOptions() {
 console.log(googleData);
+console.log(disruptions);
     if (googleData) {
         var countOps = 0;
 //        Build the options buttons
@@ -352,6 +356,17 @@ console.log(googleData);
 
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
+
+                    if (disruptions[i][j]) {
+                        var alert = document.createElement("p");
+                        alert.setAttribute("class", "alert");
+                        var alertMessage = disruptions[i][j];
+                        alert.appendChild(alertMessage);
+                        allsteps.appendChild(alert);
+
+                    } else {
+                        continue;
+                    }
                 }
             }
             var timetext = document.createTextNode(allBuses.join(" / "));
@@ -524,6 +539,7 @@ function ajax() {
         function(response) {
             googleData = response['gooData'];
             intermediateStops = response['interstops'];
+            disruptions = response["disruptions"]
             showOptions();
         });
     };

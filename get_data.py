@@ -313,6 +313,7 @@ class Stops:
                         if status.created_at < end_date:
                             break
             tweetlist.append(option)
+            print(option)
 
         return(tweetlist)
 

@@ -292,7 +292,7 @@ class Stops:
         auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)
         auth_api = API(auth)
 
-        end_date = datetime.datetime.utcnow() - timedelta(days=2)
+        end_date = datetime.datetime.utcnow() - timedelta(days=1)
         tweetlist=[]
 
         for i in range(len(googData["routes"])):
@@ -304,16 +304,12 @@ class Stops:
                     route = googData["routes"][i]["legs"][0]["steps"][j]["transit_details"]["line"]["short_name"].strip()
 
                     for status in Cursor(auth_api.user_timeline, id="@dublinbusnews").items():
-
                         if "#DBSvcUpdate" in status.text:
                             if ("#DB" + route) in status.text:
-                                option.append(status.text)
-                            if "due to" in status.text:
                                 option.append(status.text)
                         if status.created_at < end_date:
                             break
             tweetlist.append(option)
-            print(option)
 
         return(tweetlist)
 

@@ -300,6 +300,9 @@ console.log(disruptions);
             chart.setAttribute("id", "mychart"+i.toString());
             opGraph.appendChild(chart);
 
+            var alert = document.createElement("div")
+            alert.setAttribute("class", "alert");
+
             var indiv1 = document.createElement("div");
             indiv1.setAttribute("class", "indivleft");
             var time = document.createElement("p");
@@ -356,19 +359,15 @@ console.log(disruptions);
 
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
-
-                    if (disruptions[i][j]) {
-                        var alert = document.createElement("p");
-                        alert.setAttribute("class", "alert");
-                        var alertMessage = disruptions[i][j];
-                        alert.appendChild(alertMessage);
-                        allsteps.appendChild(alert);
-
-                    } else {
-                        continue;
-                    }
+                }
+                if (disruptions[i][j]) {
+                    var alertMessage = document.createTextNode(disruptions[i][j]);
+                    var alertMessP = document.createElement("p");
+                    alertMessP.appendChild(alertMessage);
+                    alert.appendChild(alertMessage);
                 }
             }
+
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
             indiv3.appendChild(buses);
@@ -377,6 +376,10 @@ console.log(disruptions);
             opInfo.appendChild(miniMap);
             opInfo.appendChild(allSteps);
             opInfo.appendChild(opGraph);
+            if (disruptions[i].length > 1) {
+                opInfo.appendChild(alert);
+            }
+
 
 //            Filter the options to show the ones that use the bus number given in search form and display first on map
 //            that fits the chosen bus number

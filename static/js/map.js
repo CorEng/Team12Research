@@ -30,8 +30,12 @@ var mapChartHeight;
 
 // To take the response from the google places nearby search
 var backAmenities;
+
+// when an specific option is clicked or chosen
 var num;
 
+
+// When a map needs to be refreshed
 function refreshMap(num) {
 
     if (num === undefined) {
@@ -87,7 +91,7 @@ function displayNowTimeDate() {
     document.querySelector("#date").valueAsDate = nowDayTime;
 }
 
-
+// use geolocation from browser
 function geolocation() {
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
@@ -141,6 +145,7 @@ function initMap(num) {
     };// initMap()
 
 
+// Handle geolocation errors
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
     infoWindow.setContent(browserHasGeolocation ?
@@ -209,7 +214,6 @@ function draw_poly(googleData, option) {
     if (option === undefined) {
         option = 0;
     }
-
     for (var i = 0; i < googleData['routes'][option]['legs'][0]['steps'].length; i++) {
 //        IF its walking draw polyline with a certain color
         if (googleData['routes'][option]['legs'][0]['steps'][i]['travel_mode'] == 'WALKING') {
@@ -238,6 +242,8 @@ function draw_poly(googleData, option) {
     }
 }
 
+
+// Draw the intermediate stops
 function draw_markers(intermediateStops, option) {
     if (option === undefined) {
         option = 0;
@@ -371,7 +377,6 @@ console.log(disruptions);
                     addAlert = true;
                 }
             }
-
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
             indiv3.appendChild(buses);
@@ -383,8 +388,6 @@ console.log(disruptions);
             if (addAlert == true) {
                 opInfo.appendChild(alert);
             }
-
-
 //            Filter the options to show the ones that use the bus number given in search form and display first on map
 //            that fits the chosen bus number
             var routeNeeded = document.getElementById("route").value.toUpperCase();
@@ -422,6 +425,7 @@ console.log(disruptions);
 }
 
 
+// Check the date and time from form against now
 function checkDateAndTime() {
     formTime = document.getElementById("time").value;
     formDate = document.getElementById("date").value;
@@ -461,6 +465,7 @@ function checkDateAndTime() {
 }
 
 
+// display the selected steps and other details
 function showSteps(num) {
 
     checkDateAndTime();
@@ -475,12 +480,11 @@ function showSteps(num) {
 }
 
 
+// Choose the option number and display it
 function chooseOption(num) {
 
     createChart(num);
     initMap(num);
-
-//  Draw markers and polylines of a specific option chosen
     showSteps(num);
     draw_markers(intermediateStops, num);
     draw_poly(googleData, num);
@@ -496,11 +500,10 @@ function chooseOption(num) {
     } else if (num == 3) {
         window.scrollTo(0, 1000);
     }
-
-
 }
 
 
+// Obtain if the form wants to search by departure time or arrival time
 function getDepArr() {
     var radioButton = document.getElementsByName("deparr");
 
@@ -512,8 +515,9 @@ function getDepArr() {
     return htmlDepArr;
 }
 
+
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
-function ajax() {
+function ajaxInt() {
     $("div.options").slideUp("slow");
     $("div.amenities").slideUp("slow");
 //  Remove the previous options displayed
@@ -549,6 +553,7 @@ function ajax() {
 }
 
 
+// Create chart for each option
 function createChart(num) {
     var chart = document.getElementById("mychart"+num.toString());
     Chart.defaults.global.defaultFontColor = "white";
@@ -602,6 +607,7 @@ function createChart(num) {
 }
 
 
+// Markers for each option's amenities
 function drawAmenitiesMarkers() {
     opId = $("div.opinfo");
     var count = 0;
@@ -616,7 +622,6 @@ function drawAmenitiesMarkers() {
     } else if (count == 0) {
         var opNeeded = 0;
     }
-
     var infowindow = new google.maps.InfoWindow();
     for (var i = 0; i < backAmenities[opNeeded].length; i++) {
 
@@ -653,7 +658,8 @@ function drawAmenitiesMarkers() {
 }
 
 
-function ajax2() {
+// Get google data for each amenity for each option
+function ajaxAmen() {
     var radioButton = document.getElementsByName("amenities");
 
     for (var i = 0; i < radioButton.length; i++) {
@@ -670,14 +676,16 @@ function ajax2() {
             console.log(backAmenities);
             drawAmenitiesMarkers();
         });
-
 }
 
+
+// fix the size of the options details divs
 function opsDetailsSize() {
     var mapChartHeight = $("div.allsteps:visible").height();
     $("div.minimap:visible").height(mapChartHeight);
     $("div.graph:visible").height(mapChartHeight);
 }
+
 
 // Event listeners
 $(window).load(displayNowTimeDate);

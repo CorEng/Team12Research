@@ -174,10 +174,12 @@ div.allsteps p {
 }
 
 .alert {
-    width:100%;
-    background-color: red;
+    width:90%;
+    background-color: #ff6666;
     color: black;
     border-radius: 6px;
+    margin: auto;
+    margin-top: 10px;
 }
 
 div.minimap:hover {

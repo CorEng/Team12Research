@@ -277,6 +277,9 @@ console.log(disruptions);
         var countOps = 0;
 //        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
+
+            var addAlert = false;
+
             var opbutt = document.createElement("div");
             opbutt.setAttribute("class", "opbutt");
             opbutt.setAttribute("onClick", "chooseOption(" + i.toString() + ")");
@@ -328,6 +331,7 @@ console.log(disruptions);
 
                 var step = document.createElement("p");
                 var stepOff = document.createElement("p");
+                var alertMessP = document.createElement("p");
 
                 if (googleData['routes'][i]['legs'][0]['steps'][j]['travel_mode'] == 'WALKING' && j ==
                 googleData['routes'][i]['legs'][0]['steps'].length - 1) {
@@ -360,11 +364,11 @@ console.log(disruptions);
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
                 }
-                if (disruptions[i][j]) {
+                if (disruptions[i][j] != undefined && disruptions[i][j].length > 0) {
                     var alertMessage = document.createTextNode(disruptions[i][j]);
-                    var alertMessP = document.createElement("p");
                     alertMessP.appendChild(alertMessage);
-                    alert.appendChild(alertMessage);
+                    alert.appendChild(alertMessP);
+                    addAlert = true;
                 }
             }
 
@@ -376,7 +380,7 @@ console.log(disruptions);
             opInfo.appendChild(miniMap);
             opInfo.appendChild(allSteps);
             opInfo.appendChild(opGraph);
-            if (disruptions[i].length > 1) {
+            if (addAlert == true) {
                 opInfo.appendChild(alert);
             }
 
@@ -466,11 +470,7 @@ function showSteps(num) {
         }
     else {
     $(".opinfo").not("#opinfo"+num.toString()).slideUp("slow");
-            $("#opinfo"+num.toString()).slideDown("slow", function(){
-                mapChartHeight = $(this).height();
-                $("div#map"+num.toString()).height(mapChartHeight);
-                $("div#graph"+num.toString()).height(mapChartHeight);
-            });
+    $("#opinfo"+num.toString()).slideDown("slow", opsDetailsSize);
     }
 }
 
@@ -673,12 +673,14 @@ function ajax2() {
 
 }
 
-// Event listeners
-$(window).load(displayNowTimeDate);
-
-$(window).resize(function() {
+function opsDetailsSize() {
     var mapChartHeight = $("div.allsteps:visible").height();
     $("div.minimap:visible").height(mapChartHeight);
     $("div.graph:visible").height(mapChartHeight);
-});
+}
+
+// Event listeners
+$(window).load(displayNowTimeDate);
+
+$(window).resize(opsDetailsSize);
 

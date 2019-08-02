@@ -305,7 +305,7 @@ class Stops:
 
                     for status in Cursor(auth_api.user_timeline, id="@dublinbusnews").items():
                         if "#DBSvcUpdate" in status.text:
-                            if ("#DB" + route) in status.text:
+                            if ("#DB" + route) in status.text or ("Diversion" in status.text):
                                 option.append(status.text)
                         if status.created_at < end_date:
                             break

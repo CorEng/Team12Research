@@ -433,42 +433,47 @@ function checkDateAndTime() {
     formSeconds = new Date(formDate + " " + formTime + ":00" ).getTime() / 1000;
     nowDayTimeSeconds = nowDayTime.getTime() / 1000;
 
-    if (getDepArr() == "dep") {
-        if (formSeconds < nowDayTimeSeconds) {
-                alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
-            } else {
-                return true;
-            }
+    if (formSeconds > (nowDayTimeSeconds + 2592000)) {
+        alert("INVALID DATE - DATE HAS TO BE WITHIN 30 DAYS OF TODAY - PLEASE SEARCH AGAIN");
+        return false;
     }
-    else if (getDepArr() == "arr") {
+    else {
+        if (getDepArr() == "dep") {
+                if (formSeconds < nowDayTimeSeconds) {
+                        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+                    } else {
+                        return true;
+                    }
+            }
+            else if (getDepArr() == "arr") {
 
-        if (googleData) {
-            var delayed = 0;
-
-            for (var i = 0; i < googleData["routes"].length; i++) {
-                var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
-                if (gooDepTime < nowDayTimeSeconds) {
-                    delayed++;
-                } else {
+                if (googleData) {
+                    var delayed = 0;
+                    for (var i = 0; i < googleData["routes"].length; i++) {
+                        var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
+                        if (gooDepTime < nowDayTimeSeconds) {
+                            delayed++;
+                        } else {
+                            return true;
+                        }
+                    }
+                    if (delayed > 0) {
+                        alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
+                        return true;
+                    }
+                }
+                else {
                     return true;
                 }
             }
-            if (delayed > 0) {
-                alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
-                return true;
-            }
-        }
-        else {
-            return true;
         }
     }
-}
 
 
 // display the selected steps and other details
 function showSteps(num) {
 
-    checkDateAndTime();
+//    checkDateAndTime();    Testing the need for this function to be here - don't believe it is needed any longer
 
     if ( $("#opinfo"+num.toString()).css("display") != "none") {
             $("#opinfo"+num.toString()).slideUp("slow");

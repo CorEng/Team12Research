@@ -8,7 +8,7 @@ app = Flask(__name__)
 def index():
     todayObj = datetime.datetime.now()
     today = todayObj.strftime("%Y-%m-%d")
-    max = todayObj + timedelta(days=90)
+    max = todayObj + timedelta(days=30)
     maxDate = max.strftime("%Y-%m-%d")
 
     return render_template('index.html', today=today, maxDate=maxDate)

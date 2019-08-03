@@ -433,8 +433,8 @@ function checkDateAndTime() {
     formSeconds = new Date(formDate + " " + formTime + ":00" ).getTime() / 1000;
     nowDayTimeSeconds = nowDayTime.getTime() / 1000;
 
-    if (formSeconds > (nowDayTimeSeconds + 2592000)) {
-        alert("INVALID DATE - DATE HAS TO BE WITHIN 30 DAYS OF TODAY - PLEASE SEARCH AGAIN");
+    if (formSeconds > (nowDayTimeSeconds + 2764800)) {
+        alert("INVALID DATE - DATE HAS TO BE WITHIN 31 DAYS OF TODAY - PLEASE SEARCH AGAIN");
         return false;
     }
     else {
@@ -538,23 +538,29 @@ function ajaxInt() {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
 
-    if (checkDateAndTime() == true) {
-    //    Ajax pass variables to Flask back end
-        $.getJSON($SCRIPT_ROOT + '/directions', {
-            postA,
-            postB: document.getElementById("end").value,
-            htmlDepArr: getDepArr(),
-            htmlTime: document.getElementById("time").value,
-            htmlDate: document.getElementById("date").value,
-        },
-    //  Response from the back end
-        function(response) {
-            googleData = response['gooData'];
-            intermediateStops = response['interstops'];
-            disruptions = response["disruptions"]
-            showOptions();
-        });
-    };
+    var dest = document.getElementById("end").value;
+    console.log(dest);
+    if (dest.length < 1) {
+        alert("PLEASE INPUT A DESTINATION")
+    } else {
+        if (checkDateAndTime() == true) {
+            //    Ajax pass variables to Flask back end
+                $.getJSON($SCRIPT_ROOT + '/directions', {
+                    postA,
+                    postB: dest,
+                    htmlDepArr: getDepArr(),
+                    htmlTime: document.getElementById("time").value,
+                    htmlDate: document.getElementById("date").value,
+                },
+            //  Response from the back end
+                function(response) {
+                    googleData = response['gooData'];
+                    intermediateStops = response['interstops'];
+                    disruptions = response["disruptions"]
+                    showOptions();
+                });
+            };
+        }
 }
 
 

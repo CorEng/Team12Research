@@ -438,14 +438,14 @@ function checkDateAndTime() {
         return false;
     }
     else {
-        if (getDepArr() == "dep") {
+        if (htmlDepArr == "dep") {
                 if (formSeconds < nowDayTimeSeconds) {
                         alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
                     } else {
                         return true;
                     }
             }
-        else if (getDepArr() == "arr") {
+        else if (htmlDepArr == "arr") {
 
             if (googleData) {
                 var delayed = 0;
@@ -473,7 +473,7 @@ function checkDateAndTime() {
 // display the selected steps and other details
 function showSteps(num) {
 
-    checkDateAndTime();    //Testing the need for this function to be here - don't believe it is needed any longer
+    checkDateAndTime();
 
     if ( $("#opinfo"+num.toString()).css("display") != "none") {
             $("#opinfo"+num.toString()).slideUp("slow");
@@ -514,7 +514,7 @@ function getDepArr() {
 
     for (var i = 0; i < radioButton.length; i++) {
         if (radioButton[i].checked) {
-            var htmlDepArr = radioButton[i].value;
+            htmlDepArr = radioButton[i].value;
         }
     }
     return htmlDepArr;
@@ -523,7 +523,6 @@ function getDepArr() {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajaxInt() {
-    googleData = null;
     $("div.options").slideUp("slow");
     $("div.amenities").slideUp("slow");
 //  Remove the previous options displayed
@@ -543,23 +542,21 @@ function ajaxInt() {
     if (dest.length < 1) {
         alert("PLEASE INPUT A DESTINATION")
     } else {
-        if (checkDateAndTime() == true) {
-            //    Ajax pass variables to Flask back end
-                $.getJSON($SCRIPT_ROOT + '/directions', {
-                    postA,
-                    postB: dest,
-                    htmlDepArr: getDepArr(),
-                    htmlTime: document.getElementById("time").value,
-                    htmlDate: document.getElementById("date").value,
-                },
-            //  Response from the back end
-                function(response) {
-                    googleData = response['gooData'];
-                    intermediateStops = response['interstops'];
-                    disruptions = response["disruptions"]
-                    showOptions();
-                });
-            };
+        //    Ajax pass variables to Flask back end
+            $.getJSON($SCRIPT_ROOT + '/directions', {
+                postA,
+                postB: dest,
+                htmlDepArr: getDepArr(),
+                htmlTime: document.getElementById("time").value,
+                htmlDate: document.getElementById("date").value,
+            },
+        //  Response from the back end
+            function(response) {
+                googleData = response['gooData'];
+                intermediateStops = response['interstops'];
+                disruptions = response["disruptions"]
+                showOptions();
+            });
         }
 }
 

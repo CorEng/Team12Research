@@ -280,6 +280,29 @@ function showOptions() {
 console.log(googleData);
 console.log(disruptions);
     if (googleData) {
+        const routes = googleData['routes'];
+        const display_routes = new Set();
+
+        for (let i = 0; i < routes.length; i++) {
+            const steps = routes[i]['legs'][0]['steps'];
+
+            let lines = [];
+            for (let j = 0; j < steps.length; j++) {
+                const step = steps[j];
+
+                if (step['travel_mode'] === 'TRANSIT') {
+                    lines.push(step['transit_details']['line']['short_name']);
+                }
+            }
+
+            lines = lines.join('/');
+            display_routes.add(lines);
+        }
+
+        for (const route of display_routes) {
+            addRoute(route);
+        }
+
         var countOps = 0;
 //        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
@@ -370,12 +393,12 @@ console.log(disruptions);
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
                 }
-                if (disruptions[i][j] != undefined && disruptions[i][j].length > 0) {
-                    var alertMessage = document.createTextNode(disruptions[i][j]);
-                    alertMessP.appendChild(alertMessage);
-                    alert.appendChild(alertMessP);
-                    addAlert = true;
-                }
+                // if (disruptions[i][j] != undefined && disruptions[i][j].length > 0) {
+                //     var alertMessage = document.createTextNode(disruptions[i][j]);
+                //     alertMessP.appendChild(alertMessage);
+                //     alert.appendChild(alertMessP);
+                //     addAlert = true;
+                // }
             }
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
@@ -556,11 +579,54 @@ function ajaxInt() {
                 function(response) {
                     googleData = response['gooData'];
                     intermediateStops = response['interstops'];
-                    disruptions = response["disruptions"]
+                    disruptions = response["disruptions"];
+
                     showOptions();
                 });
             };
         }
+}
+
+// <div class="item">
+//     <div class="team-wrap text-center">
+//         <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
+//         <div class="text">
+//             <h3 class="mb-0" id="route-2">102</h3>
+//             <span class="position">bird avenue</span>
+//         </div>
+//     </div>
+// </div>
+
+function addRoute(route) {
+    let item = document.createElement('div');
+    let div1 = document.createElement('div');
+    let div2 = document.createElement('div');
+    let div3 = document.createElement('div');
+    let h3 = document.createElement('h3');
+    let span = document.createElement('span');
+
+    item.setAttribute('style', 'display: inline-block;margin:0 10px;')
+    span.classList.add('position');
+    h3.classList.add('mb-0');
+    h3.textContent = route;
+    item.classList.add('item');
+
+    div3.classList.add('text');
+    div2.classList.add('img');
+    div2.setAttribute('style', 'background-image: url(static/images/bus3.jpg);');
+
+    div1.classList.add('team-wrap');
+    div1.classList.add('text-center');
+
+    div3.appendChild(h3);
+    div3.appendChild(span);
+    div1.appendChild(div2);
+    div1.appendChild(div3);
+    item.appendChild(div1);
+
+    console.log(item);
+    let container = document.getElementById('route-container');
+    container.insertBefore(item, container.children[0]);
 }
 
 

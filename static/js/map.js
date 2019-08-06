@@ -445,35 +445,35 @@ function checkDateAndTime() {
                         return true;
                     }
             }
-            else if (getDepArr() == "arr") {
+        else if (getDepArr() == "arr") {
 
-                if (googleData) {
-                    var delayed = 0;
-                    for (var i = 0; i < googleData["routes"].length; i++) {
-                        var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
-                        if (gooDepTime < nowDayTimeSeconds) {
-                            delayed++;
-                        } else {
-                            return true;
-                        }
-                    }
-                    if (delayed > 0) {
-                        alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
-                        return true;
+            if (googleData) {
+                var delayed = 0;
+                for (var i = 0; i < googleData["routes"].length; i++) {
+                    var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
+                    if (gooDepTime < nowDayTimeSeconds) {
+                        delayed++;
                     }
                 }
-                else {
+                if (delayed > 0) {
+                    alert("BEWARE! TIME GIVEN IS TOO LATE FOR " + delayed.toString() + " OF THE OPTIONS SHOWN BELOW");
                     return true;
+                } else {
+                    return true
                 }
+            }
+            else {
+                return true;
             }
         }
     }
+}
 
 
 // display the selected steps and other details
 function showSteps(num) {
 
-//    checkDateAndTime();    Testing the need for this function to be here - don't believe it is needed any longer
+    checkDateAndTime();    //Testing the need for this function to be here - don't believe it is needed any longer
 
     if ( $("#opinfo"+num.toString()).css("display") != "none") {
             $("#opinfo"+num.toString()).slideUp("slow");
@@ -523,6 +523,7 @@ function getDepArr() {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajaxInt() {
+    googleData = null;
     $("div.options").slideUp("slow");
     $("div.amenities").slideUp("slow");
 //  Remove the previous options displayed
@@ -537,9 +538,8 @@ function ajaxInt() {
     } else if (origin.length < 1) {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
-
     var dest = document.getElementById("end").value;
-    console.log(dest);
+
     if (dest.length < 1) {
         alert("PLEASE INPUT A DESTINATION")
     } else {

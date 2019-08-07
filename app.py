@@ -26,6 +26,7 @@ def directions():
     secs = intermediate.getSeconds(frontDate, frontTime)
     get_goo_data = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     interStops = intermediate.fin(get_goo_data)
+    distances = intermediate.get_stop_distances(interStops)
     jsonObj = get_goo_data
     global full
     notifications = intermediate.notification_check(jsonObj)

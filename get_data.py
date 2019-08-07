@@ -3,10 +3,8 @@ from operator import itemgetter
 from datetime import date, time, timedelta
 from tweepy import OAuthHandler, API, Cursor
 from passw import *
-import pickle
-import numpy as np
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.svm import SVR
+from geopy.distance import geodesic
+# from geopy.distance import great_circle
 
 
 class Stops:
@@ -312,7 +310,36 @@ class Stops:
         return(tweetlist)
 
 
+    def get_stop_distances(self, data):
+        self.data = data
+
+        distances = []
+
+        for option in self.data:
+            option_list = []
+            for leg in option:
+                leg_list = []
+                for i, stop in enumerate(leg):
+                    try:
+                        stopA = (float(stop[0]), float(stop[1]))
+                        stopB = (float(leg[i + 1][0]), float(leg[i + 1][1]))
+                        stopNo = leg[i + 1][2]
+                        distance = geodesic(stopA, stopB).km * 1000
+                        leg_list.append((stopNo, distance))
+                    except:
+                        break
+
+                option_list.append(leg_list)
+            distances.append(option_list)
+        print(distances)
+
+
     def run_model(self, stoplist,holiday,precipitation,temperature,humidity,time):
+
+        import pickle
+        import numpy as np
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.svm import SVR
 
         # Load files
         tar_scaler = pickle.load(open("tar_scaler.sav", 'rb'))
@@ -322,7 +349,7 @@ class Stops:
         outputdict={}
         for i in stoplist:
             dist = i[1]
-            to_scale=np.array([holiday,dist,precipitation,temperature,humidity,time])
+            to_scale=np.array([holiday, dist, precipitation, temperature, humidity, time])
             to_scale = to_scale.reshape(1, -1)
             to_predict= feat_scaler.transform(to_scale)
             output = tar_scaler.inverse_transform(model.predict(to_predict))

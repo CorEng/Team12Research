@@ -393,12 +393,12 @@ console.log(disruptions);
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
                 }
-                // if (disruptions[i][j] != undefined && disruptions[i][j].length > 0) {
-                //     var alertMessage = document.createTextNode(disruptions[i][j]);
-                //     alertMessP.appendChild(alertMessage);
-                //     alert.appendChild(alertMessP);
-                //     addAlert = true;
-                // }
+                 if (disruptions[i][j] != undefined && disruptions[i][j].length > 0) {
+                     var alertMessage = document.createTextNode(disruptions[i][j]);
+                     alertMessP.appendChild(alertMessage);
+                     alert.appendChild(alertMessP);
+                     addAlert = true;
+                 }
             }
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
@@ -422,6 +422,9 @@ console.log(disruptions);
                     if (countOps == 1) {
                         chooseOption(i);
                     }
+                } else {
+                    document.getElementById('ops').appendChild(opbutt);
+                    document.getElementById('ops').appendChild(opInfo);
                 }
             }
 //            If no specific bus number input in search form show all options in list and display 1st on map
@@ -434,14 +437,14 @@ console.log(disruptions);
                 }
             }
         }
+        if (countOps < 1) {
+            window.alert("The Quickest Options Don't Use the Bus You Specified! - however see below for" +
+                "ALTERNATIVES to your search! Otherwise please try searching again without a specific bus number")
+            chooseOption(0);
+        }
         $("div.options").slideDown("slow");
         $("div.amenities").slideDown("slow");
 
-        if (countOps < 1) {
-            window.alert("The Quickest Options Don't Use the Bus You Specified! - PLEASE TRY SEARCHING AGAIN WITHOUT A "
-             +
-            "SPECIFIC BUS NUMBER TO SEE THE BEST OPTIONS")
-        }
     } else {
         document.getElementById('ops').style.display = 'none';
     }
@@ -562,7 +565,7 @@ function ajaxInt() {
     }
 
     var dest = document.getElementById("end").value;
-    console.log(dest);
+
     if (dest.length < 1) {
         alert("PLEASE INPUT A DESTINATION")
     } else {
@@ -624,7 +627,6 @@ function addRoute(route) {
     div1.appendChild(div3);
     item.appendChild(div1);
 
-    console.log(item);
     let container = document.getElementById('route-container');
     container.insertBefore(item, container.children[0]);
 }

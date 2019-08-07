@@ -3,6 +3,10 @@ from operator import itemgetter
 from datetime import date, time, timedelta
 from tweepy import OAuthHandler, API, Cursor
 from passw import *
+import pickle
+import numpy as np
+# from sklearn.preprocessing import StandardScaler
+# from sklearn.svm import SVR
 
 
 class Stops:
@@ -20,7 +24,6 @@ class Stops:
             depArrTime = '&departure_time='
         elif depArrTime == "arr":
             depArrTime = '&arrival_time='
-
 
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
 
@@ -299,12 +302,31 @@ class Stops:
 
                     for status in Cursor(auth_api.user_timeline, id="@dublinbusnews").items():
                         if "#DBSvcUpdate" in status.text:
-                            if ("#DB" + route) in status.text and status.text not in option:
+                            if ("#DB" + route.lower()) in status.text and status.text not in option:
                                 option.append(status.text)
                         if status.created_at < end_date:
                             break
             tweetlist.append(option)
 
         return(tweetlist)
+
+
+    def run_model(self, stoplist,holiday,precipitation,temperature,humidity,time):
+
+        #Load files
+        tar_scaler = pickle.load(open("tar_scaler.sav", 'rb'))
+        feat_scaler = pickle.load(open("feat_scaler.sav", 'rb'))
+        model = pickle.load(open("scaledmodelfortesting.pkl", 'rb'))
+
+        outputdict={}
+        for i in stoplist:
+            dist = i[1]
+            to_scale=np.array([holiday, dist, precipitation, temperature, humidity, time])
+            to_scale = to_scale.reshape(1, -1)
+            to_predict= feat_scaler.transform(to_scale)
+            output = tar_scaler.inverse_transform(model.predict(to_predict))
+            outputdict[str(i[0])] = output
+
+        return outputdict
 
 

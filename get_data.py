@@ -341,18 +341,29 @@ class Stops:
         from sklearn.preprocessing import StandardScaler
         from sklearn.svm import SVR
 
+        self.stoplist = stoplist
+
+
         # Load files
         tar_scaler = pickle.load(open("tar_scaler.sav", 'rb'))
         feat_scaler = pickle.load(open("feat_scaler.sav", 'rb'))
         model = pickle.load(open("scaledmodelfortesting.pkl", 'rb'))
 
-        outputdict={}
-        for i in stoplist:
-            dist = i[1]
-            to_scale=np.array([holiday, dist, precipitation, temperature, humidity, time])
-            to_scale = to_scale.reshape(1, -1)
-            to_predict= feat_scaler.transform(to_scale)
-            output = tar_scaler.inverse_transform(model.predict(to_predict))
-            outputdict[str(i[0])] = output
+        output_list = []
 
-        return outputdict
+        for option in self.stoplist:
+            option_list = []
+            for leg in option:
+                leg_list = []
+                for stop in leg:
+                    dist = stop[1]
+                    to_scale=np.array([holiday, dist, precipitation, temperature, humidity, time])
+                    to_scale = to_scale.reshape(1, -1)
+                    to_predict= feat_scaler.transform(to_scale)
+                    prediction = tar_scaler.inverse_transform(model.predict(to_predict))
+                    leg_list.append(prediction)
+
+                option_list.append(sum(leg_list))
+            output_list.append(option_list)
+
+        return output_list

@@ -29,7 +29,7 @@ class Stops:
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
 
         req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + depArrTime + secs
-                           +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
+                           +'&sensor=false&mode=transit&key=' + google_key) # google_key imported from
         # passw.py in local
 
         return req.json()

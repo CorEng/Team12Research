@@ -280,6 +280,29 @@ function showOptions() {
 console.log(googleData);
 console.log(disruptions);
     if (googleData) {
+        const routes = googleData['routes'];
+        const display_routes = new Set();
+
+        for (let i = 0; i < routes.length; i++) {
+            const steps = routes[i]['legs'][0]['steps'];
+
+            let lines = [];
+            for (let j = 0; j < steps.length; j++) {
+                const step = steps[j];
+
+                if (step['travel_mode'] === 'TRANSIT') {
+                    lines.push(step['transit_details']['line']['short_name']);
+                }
+            }
+
+            lines = lines.join('/');
+            display_routes.add(lines);
+        }
+
+        for (const route of display_routes) {
+            addRoute(route);
+        }
+
         var countOps = 0;
 //        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
@@ -370,12 +393,12 @@ console.log(disruptions);
                     allBuses.push(googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']['line']
                     ['short_name']);
                 }
-                if (disruptions[i][j] != undefined && disruptions[i][j].length > 0) {
-                    var alertMessage = document.createTextNode(disruptions[i][j]);
-                    alertMessP.appendChild(alertMessage);
-                    alert.appendChild(alertMessP);
-                    addAlert = true;
-                }
+                // if (disruptions[i][j] != undefined && disruptions[i][j].length > 0) {
+                //     var alertMessage = document.createTextNode(disruptions[i][j]);
+                //     alertMessP.appendChild(alertMessage);
+                //     alert.appendChild(alertMessP);
+                //     addAlert = true;
+                // }
             }
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
@@ -438,42 +461,42 @@ function checkDateAndTime() {
         return false;
     }
     else {
-        if (htmlDepArr == "dep") {
+        if (getDepArr() == "dep") {
                 if (formSeconds < nowDayTimeSeconds) {
                         alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
                     } else {
                         return true;
                     }
             }
-        else if (htmlDepArr == "arr") {
+            else if (getDepArr() == "arr") {
 
-            if (googleData) {
-                var delayed = 0;
-                for (var i = 0; i < googleData["routes"].length; i++) {
-                    var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
-                    if (gooDepTime < nowDayTimeSeconds) {
-                        delayed++;
+                if (googleData) {
+                    var delayed = 0;
+                    for (var i = 0; i < googleData["routes"].length; i++) {
+                        var gooDepTime = googleData["routes"][i]["legs"][0]["departure_time"]["value"];
+                        if (gooDepTime < nowDayTimeSeconds) {
+                            delayed++;
+                        } else {
+                            return true;
+                        }
+                    }
+                    if (delayed > 0) {
+                        alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
+                        return true;
                     }
                 }
-                if (delayed > 0) {
-                    alert("BEWARE! TIME GIVEN IS TOO LATE FOR " + delayed.toString() + " OF THE OPTIONS SHOWN BELOW");
+                else {
                     return true;
-                } else {
-                    return true
                 }
-            }
-            else {
-                return true;
             }
         }
     }
-}
 
 
 // display the selected steps and other details
 function showSteps(num) {
 
-    checkDateAndTime();
+//    checkDateAndTime();    Testing the need for this function to be here - don't believe it is needed any longer
 
     if ( $("#opinfo"+num.toString()).css("display") != "none") {
             $("#opinfo"+num.toString()).slideUp("slow");
@@ -514,7 +537,7 @@ function getDepArr() {
 
     for (var i = 0; i < radioButton.length; i++) {
         if (radioButton[i].checked) {
-            htmlDepArr = radioButton[i].value;
+            var htmlDepArr = radioButton[i].value;
         }
     }
     return htmlDepArr;
@@ -537,27 +560,73 @@ function ajaxInt() {
     } else if (origin.length < 1) {
         postA = pos['lat'].toString() + "," + pos['lng'].toString();
     }
-    var dest = document.getElementById("end").value;
 
+    var dest = document.getElementById("end").value;
+    console.log(dest);
     if (dest.length < 1) {
         alert("PLEASE INPUT A DESTINATION")
     } else {
-        //    Ajax pass variables to Flask back end
-            $.getJSON($SCRIPT_ROOT + '/directions', {
-                postA,
-                postB: dest,
-                htmlDepArr: getDepArr(),
-                htmlTime: document.getElementById("time").value,
-                htmlDate: document.getElementById("date").value,
-            },
-        //  Response from the back end
-            function(response) {
-                googleData = response['gooData'];
-                intermediateStops = response['interstops'];
-                disruptions = response["disruptions"]
-                showOptions();
-            });
+        if (checkDateAndTime() == true) {
+            //    Ajax pass variables to Flask back end
+                $.getJSON($SCRIPT_ROOT + '/directions', {
+                    postA,
+                    postB: dest,
+                    htmlDepArr: getDepArr(),
+                    htmlTime: document.getElementById("time").value,
+                    htmlDate: document.getElementById("date").value,
+                },
+            //  Response from the back end
+                function(response) {
+                    googleData = response['gooData'];
+                    intermediateStops = response['interstops'];
+                    disruptions = response["disruptions"];
+
+                    showOptions();
+                });
+            };
         }
+}
+
+// <div class="item">
+//     <div class="team-wrap text-center">
+//         <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
+//         <div class="text">
+//             <h3 class="mb-0" id="route-2">102</h3>
+//             <span class="position">bird avenue</span>
+//         </div>
+//     </div>
+// </div>
+
+function addRoute(route) {
+    let item = document.createElement('div');
+    let div1 = document.createElement('div');
+    let div2 = document.createElement('div');
+    let div3 = document.createElement('div');
+    let h3 = document.createElement('h3');
+    let span = document.createElement('span');
+
+    item.setAttribute('style', 'display: inline-block;margin:0 10px;')
+    span.classList.add('position');
+    h3.classList.add('mb-0');
+    h3.textContent = route;
+    item.classList.add('item');
+
+    div3.classList.add('text');
+    div2.classList.add('img');
+    div2.setAttribute('style', 'background-image: url(static/images/bus3.jpg);');
+
+    div1.classList.add('team-wrap');
+    div1.classList.add('text-center');
+
+    div3.appendChild(h3);
+    div3.appendChild(span);
+    div1.appendChild(div2);
+    div1.appendChild(div3);
+    item.appendChild(div1);
+
+    console.log(item);
+    let container = document.getElementById('route-container');
+    container.insertBefore(item, container.children[0]);
 }
 
 

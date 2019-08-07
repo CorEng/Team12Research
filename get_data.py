@@ -13,7 +13,7 @@ class Stops:
 
     def __init__(self):
         self.goahead = ["17", "17a", "18", "33a", "33b", "45a", "45b", "59", "63", "63a", "75", "75a", "76", "76a",
-                    "102", "104", "111", "114", "161", "175", "184", "185", "220", "236", "238", "239", "270"]
+                        "102", "104", "111", "114", "161", "175", "184", "185", "220", "236", "238", "239", "270"]
 
     def get_direct_goo(self, postA, postB, secs, depArrTime):
 
@@ -25,10 +25,11 @@ class Stops:
         elif depArrTime == "arr":
             depArrTime = '&arrival_time='
 
+
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
 
         req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + depArrTime + secs
-                         +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
+                           +'&sensor='+"false"+'&mode='+"transit"+'&key=' + google_key) # google_key imported from
         # passw.py in local
 
         return req.json()
@@ -273,7 +274,7 @@ class Stops:
                 for stop in leg:
                     location = str(stop[0])+","+str(stop[1])
                     req = requests.get(url + "location=" + location + "&radius=50&type=" + self.type
-                         + "&fields=formatted_address,geometry,name&key=" + google_key)
+                                       + "&fields=formatted_address,geometry,name&key=" + google_key)
 
                     if req.json()["status"] == "OK":
                         opList.append(req.json()["results"])
@@ -313,7 +314,7 @@ class Stops:
 
     def run_model(self, stoplist,holiday,precipitation,temperature,humidity,time):
 
-        #Load files
+        # Load files
         tar_scaler = pickle.load(open("tar_scaler.sav", 'rb'))
         feat_scaler = pickle.load(open("feat_scaler.sav", 'rb'))
         model = pickle.load(open("scaledmodelfortesting.pkl", 'rb'))
@@ -321,12 +322,10 @@ class Stops:
         outputdict={}
         for i in stoplist:
             dist = i[1]
-            to_scale=np.array([holiday, dist, precipitation, temperature, humidity, time])
+            to_scale=np.array([holiday,dist,precipitation,temperature,humidity,time])
             to_scale = to_scale.reshape(1, -1)
             to_predict= feat_scaler.transform(to_scale)
             output = tar_scaler.inverse_transform(model.predict(to_predict))
             outputdict[str(i[0])] = output
 
         return outputdict
-
-

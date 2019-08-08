@@ -310,15 +310,16 @@ class Stops:
         return(tweetlist)
 
 
-    def get_stop_distances(self, data):
-        self.data = data
+    def get_stop_distances(self, stops):
+        self.stops = stops
 
         distances = []
 
-        for option in self.data:
+        for option in self.stops:
             option_list = []
             for leg in option:
                 leg_list = []
+
                 for i, stop in enumerate(leg):
                     try:
                         stopA = (float(stop[0]), float(stop[1]))
@@ -331,7 +332,37 @@ class Stops:
 
                 option_list.append(leg_list)
             distances.append(option_list)
-        print(distances)
+        return distances
+
+
+    def get_seconds_model(self, goog_data):
+        self.goog_data = goog_data
+
+        seconds_final = []
+
+        for i, op in enumerate(self.goog_data["routes"]):
+            seconds_options = []
+            for j, leg in enumerate(self.goog_data["routes"][i]["legs"][0]["steps"]):
+
+                if "transit_details" in goog_data["routes"][i]["legs"][0]["steps"][j] and goog_data["routes"][i][
+                    "legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
+
+                    time = self.goog_data["routes"][i]["legs"][0]["steps"][j]["transit_details"][
+                        "departure_time"]["text"]
+
+                    if time[-2:] == "pm":
+                        if time[:-2].split(":")[0] != "12":
+                            hour = (int(time[:-2].split(":")[0]) + 12) * 60 * 60
+                    else:
+                        hour = int(time[:-2].split(":")[0]) * 60 * 60
+
+                    mins = int(time[:-2].split(":")[1]) * 60
+                    seconds = hour + mins
+
+                    seconds_options.append(seconds)
+
+            seconds_final.append(seconds_options)
+        print(seconds_final)
 
 
     def run_model(self, stoplist,holiday,precipitation,temperature,humidity,time):

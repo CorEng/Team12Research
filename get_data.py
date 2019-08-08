@@ -1,10 +1,11 @@
-import requests, datetime, pymysql, sys, difflib
+import requests, datetime, pymysql, sys, difflib, sys
 from operator import itemgetter
 from datetime import date, time, timedelta
 from tweepy import OAuthHandler, API, Cursor
 from passw import *
 from geopy.distance import geodesic
 # from geopy.distance import great_circle
+from darksky import forecast
 
 
 class Stops:
@@ -362,7 +363,25 @@ class Stops:
                     seconds_options.append(seconds)
 
             seconds_final.append(seconds_options)
-        print(seconds_final)
+        return seconds_final
+
+
+    def weather_get(self, date, time):
+        self.date = date
+        self.time = time + ":00"
+
+        resultdic = {}
+
+        # format - 2018-10-24T19:06:32
+        try:
+            time = self.date + "T" + self.time
+            weather = forecast("0f94f1e529d8359a54cc753b465312d7", 53.344505, -6.258602, time=time)
+            resultdic["temperature"] = weather.temperature
+            resultdic["rain"] = weather.precipIntensity
+            resultdic["humidity"] = weather.humidity
+            return resultdic
+        except IOError as e:
+            return ("ERROR_WEATHER_GET", e)
 
 
     def run_model(self, stoplist,holiday,precipitation,temperature,humidity,time):

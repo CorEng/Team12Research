@@ -499,7 +499,7 @@ function checkDateAndTime() {
 // display the selected steps and other details
 function showSteps(num) {
 
-//    checkDateAndTime();    Testing the need for this function to be here - don't believe it is needed any longer
+//    checkDateAndTime();
 
     if ( $("#opinfo"+num.toString()).css("display") != "none") {
             $("#opinfo"+num.toString()).slideUp("slow");

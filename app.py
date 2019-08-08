@@ -28,7 +28,10 @@ def directions():
     jsonObj = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     interStops = intermediate.fin(get_goo_data)
     distances = intermediate.get_stop_distances(interStops)
+    weather = intermediate.weather_get(frontDate, frontTime)
     model_seconds = intermediate.get_seconds_model(jsonObj)
+    # prediction = intermediate.run_model(distances, ?????, weather["rain"], weather[
+    #     "temperature"], weather["humidity"], model_seconds)
     global full
     notifications = intermediate.notification_check(jsonObj)
 

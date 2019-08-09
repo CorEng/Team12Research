@@ -354,6 +354,8 @@ class Stops:
                     if time[-2:] == "pm":
                         if time[:-2].split(":")[0] != "12":
                             hour = (int(time[:-2].split(":")[0]) + 12) * 60 * 60
+                        else:
+                            hour = int(time[:-2].split(":")[0]) * 60 * 60
                     else:
                         hour = int(time[:-2].split(":")[0]) * 60 * 60
 
@@ -382,6 +384,29 @@ class Stops:
             return resultdic
         except IOError as e:
             return ("ERROR_WEATHER_GET", e)
+
+
+
+    def weekend_holiday(self, date):
+
+        import holidays
+
+        #Date format - 2018-01-01 (y-m-d) - string
+        return_dic = {}
+        holidays = holidays.Ireland()
+        try:
+            if datetime.datetime.strptime(date, '%Y-%m-%d').weekday() > 4:
+                return_dic["weekend"] = 1
+            else:
+                return_dic["weekend"] = 0
+
+            if datetime.datetime.strptime(date, '%Y-%m-%d') in holidays:
+                return_dic["holiday"] = 1
+            else:
+                return_dic["holiday"] = 0
+            return return_dic
+        except ValueError as e:
+            return ("ERROR_WEEKEND_HOLIDAY",e)
 
 
     def run_model(self, stoplist,holiday,precipitation,temperature,humidity,time):

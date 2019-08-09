@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 
 /* This css file is designed for search form part*/
 h1 {
@@ -31,9 +34,6 @@ input {
     border: 2px solid #999;
     height: 50px
 }
-
-
-
 
 label {
     position: relative;

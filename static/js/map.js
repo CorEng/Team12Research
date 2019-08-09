@@ -507,7 +507,8 @@ function showSteps(num) {
     else {
     $(".opinfo").not("#opinfo"+num.toString()).slideUp("slow");
     $("#opinfo"+num.toString()).slideDown("slow", opsDetailsSize);
-    }
+    };
+    $("div#ftco-loader").removeClass('show');
 }
 
 
@@ -770,4 +771,10 @@ function opsDetailsSize() {
 $(window).load(displayNowTimeDate);
 
 $(window).resize(opsDetailsSize);
+
+$("button#search").click(function() {
+    $("div#ftco-loader").addClass('show');
+})
+
+
 

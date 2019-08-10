@@ -762,16 +762,13 @@ function ajaxAmen() {
             if (radioButton[i].checked) {
                 var htmlAmenities = radioButton[i].value;
             }
-        }
+        };
      $.getJSON($SCRIPT_ROOT + '/amenities', {
             htmlAmenities,
         },
     //  Response from the back end
         function(response) {
             backAmenities = response;
-            console.log(backAmenities);
-//            drawAmenitiesMarkers();
-
             chooseOption(opNeeded);
         });
 }

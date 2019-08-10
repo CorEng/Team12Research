@@ -508,7 +508,6 @@ function showSteps(num) {
     $(".opinfo").not("#opinfo"+num.toString()).slideUp("slow");
     $("#opinfo"+num.toString()).slideDown("slow", opsDetailsSize);
     };
-    $("div#ftco-loader").removeClass('show');
 }
 
 
@@ -522,7 +521,7 @@ function chooseOption(num) {
     draw_poly(googleData, num);
     if (backAmenities) {
         drawAmenitiesMarkers();
-    }
+    };
     if (num == 0) {
         window.scrollTo(0, 700);
     } else if (num == 1) {
@@ -531,7 +530,8 @@ function chooseOption(num) {
         window.scrollTo(0, 900);
     } else if (num == 3) {
         window.scrollTo(0, 1000);
-    }
+    };
+    $("div#ftco-loader").removeClass('show');
 }
 
 
@@ -742,6 +742,20 @@ function drawAmenitiesMarkers() {
 // Get google data for each amenity for each option
 function ajaxAmen() {
     $("div#ftco-loader").addClass('show');
+
+    opId = $("div.opinfo");
+    for (var i = 0; i < opId.length; i++) {
+        if (opId[i].style.display == 'block') {
+            var id = opId[i].getAttribute("id");
+        }
+    };
+    if (id != undefined) {
+        var opNeeded = parseInt(id.slice(-1));
+        showSteps(opNeeded);
+    } else {
+        var opNeeded = 0;
+    };
+
     var radioButton = document.getElementsByName("amenities");
 
     for (var i = 0; i < radioButton.length; i++) {
@@ -756,8 +770,9 @@ function ajaxAmen() {
         function(response) {
             backAmenities = response;
             console.log(backAmenities);
-            drawAmenitiesMarkers();
-            $("div#ftco-loader").removeClass('show');
+//            drawAmenitiesMarkers();
+
+            chooseOption(opNeeded);
         });
 }
 

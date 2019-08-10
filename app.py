@@ -3,7 +3,7 @@ from datetime import datetime
 from get_data import *
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
+
 
 @app.route('/')
 def index():

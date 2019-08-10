@@ -1,17 +1,29 @@
-var cookieCount = 0;
 
+function setCookies() {
+    console.log(document.cookie);
 
-function setCookie() {
-    if (cookieCount < 6) {
-        if (googleData === "undefined" || disruptions === "undefined") {
-            alert("No previous search to save in this session - please make a search in order to save it")
-        }
-        else {
-            document.cookie = "cookieNo=" + cookieCount.toString() + "; gooleData=" +  googleData.toString() +
-            "; disruptions=" + disruptions.toString();
-        }
+    var cookiesLength = document.cookie.length;
+    console.log(cookiesLength);
+    var variableList = [googleData, intermediateStops, backAmenities]
+
+    if (cookiesLength == 5) {
+        alert("Apologies you have already 5 saved searches saved")
     }
     else {
-        alert("Apologies you can only save 5 searches")
+        var dataCookies = document.cookie = "cookie" + (cookiesLength -1).toString() + "=" + JSON.stringify
+        (variableList);
     }
+
+
+
+
+//
+//
+//
+//    console.log(JSON.parse(dataCookies)[0]);
 }
+
+function showCookies() {
+
+}
+

@@ -439,7 +439,7 @@ console.log(disruptions);
         }
         if (countOps < 1) {
             window.alert("The Quickest Options Don't Use the Bus You Specified! - however see below for" +
-                "ALTERNATIVES to your search! Otherwise please try searching again without a specific bus number")
+                "ALTERNATIVES to your search! Otherwise please try searching again without a different bus number")
             chooseOption(0);
         }
         $("div.options").slideDown("slow");
@@ -466,7 +466,7 @@ function checkDateAndTime() {
     else {
         if (getDepArr() == "dep") {
                 if (formSeconds < nowDayTimeSeconds) {
-                        alert("INVALID DATE - DATE CANNOT BE IN THE PAST");
+                        alert("INVALID DATE OR TIME - DATE AND TIME CANNOT BE IN THE PAST");
                     } else {
                         return true;
                     }
@@ -550,9 +550,9 @@ function getDepArr() {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajaxInt() {
+    backAmenities = undefined;
     $("div.options").slideUp("slow");
     $("div.amenities").slideUp("slow");
-    $("div#ftco-loader").addClass('show');
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
@@ -572,6 +572,7 @@ function ajaxInt() {
         alert("PLEASE INPUT A DESTINATION")
     } else {
         if (checkDateAndTime() == true) {
+                $("div#ftco-loader").addClass('show');
             //    Ajax pass variables to Flask back end
                 $.getJSON($SCRIPT_ROOT + '/directions', {
                     postA,

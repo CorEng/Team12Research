@@ -1,4 +1,4 @@
-var dublin = {lat: 53.349605, lng:-6.264175 };
+avar dublin = {lat: 53.349605, lng:-6.264175 };
 
 // Geolocation variable
 var pos;
@@ -280,8 +280,7 @@ function showOptions() {
 //  Remove the previous options displayed
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
-console.log(googleData);
-console.log(disruptions);
+
     if (googleData) {
         const routes = googleData['routes'];
         const display_routes = new Set();

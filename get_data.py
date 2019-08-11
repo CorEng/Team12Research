@@ -2,10 +2,10 @@ import requests, datetime, pymysql, sys, difflib, sys
 from operator import itemgetter
 from datetime import date, time, timedelta
 from tweepy import OAuthHandler, API, Cursor
-from passw import *
-from geopy.distance import geodesic
-# from geopy.distance import great_circle
-from darksky import forecast
+# from passw import *
+#from geopy.distance import geodesic
+#from geopy.distance import great_circle
+#from darksky import forecast
 
 
 class Stops:
@@ -28,7 +28,7 @@ class Stops:
         url ='https://maps.googleapis.com/maps/api/directions/json?alternatives=true&transit_mode=bus&'
 
         req = requests.get(url + 'origin=' + self.postA +'&destination=' + self.postB + depArrTime + secs
-                           +'&sensor=false&mode=transit&key=' + google_key) # google_key imported from
+                           +'&sensor=false&mode=transit&key=' + 'AIzaSyAf6-Rcx8RSnbzJELLh1dmpoBAOHh70Ax4') # google_key imported from
         # passw.py in local
 
         return req.json()
@@ -37,7 +37,7 @@ class Stops:
     def lat_lon(self, busNo, head_sign, goolat, goolon):
 
         user = 'root'
-        password = db_key
+        password = "abc"
         host = '127.0.0.1'
         database = 'research'
 
@@ -84,7 +84,7 @@ class Stops:
     def db_query3(self, head_sign, bus_no, stop_noA, stop_noB, diff):
 
         user = 'root'
-        password = db_key
+        password = "abc"
         host = '127.0.0.1'
         database = 'research'
 
@@ -121,7 +121,7 @@ class Stops:
     def db_query4(self, bus_no, head_sign, seqA, seqB, tripid):
 
         user = 'root'
-        password = db_key
+        password = "abc"
         host = '127.0.0.1'
         database = 'research'
 
@@ -284,6 +284,10 @@ class Stops:
 
 
     def notification_check(self, googData):
+        ACCESS_TOKEN = '52064929-gZaO53w9BuQNZzp2DPNNWYhDH602wBDH5bIW0WbAi'
+        ACCESS_SECRET = 'a8aPm6uJIQq7zBZVzBUxOuyVXXlWlpqYWP5jT3aoR9MaJ'
+        CONSUMER_KEY = '1kMiypEgdzcN0klIT2HQMPyXc'
+        CONSUMER_SECRET = 'RhJNFUPrG8EOArbqlW7xhxCns8VJ0HjLJ3njMYBiPIdbI4wBNB'
 
         auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)

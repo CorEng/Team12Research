@@ -279,7 +279,7 @@ function draw_markers(intermediateStops, option) {
 function showOptions() {
 
     $.getJSON('/events', (result) => {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 9; i++) {
             addRoute(result[i], i);
         }
     });
@@ -616,6 +616,11 @@ function addRoute(route, index) {
     let img = document.createElement('img');
     img.setAttribute('src', route[1]);
 
+    let a = document.createElement('a');
+    a.setAttribute('href', route[2]);
+    a.setAttribute('target', '_blank');
+    a.appendChild(img);
+
     let div3 = document.createElement('div');
     div3.classList.add('carousel-caption');
     div3.classList.add('d-none');
@@ -623,8 +628,10 @@ function addRoute(route, index) {
 
     let h5 = document.createElement('h5');
     h5.textContent = route[0];
+    h5.setAttribute('style', 'color: white');
+
     div3.appendChild(h5);
-    div1.appendChild(img);
+    div1.appendChild(a);
     div1.appendChild(div3);
 
     let container = document.getElementById('route-container');

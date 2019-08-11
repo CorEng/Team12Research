@@ -1,4 +1,4 @@
-avar dublin = {lat: 53.349605, lng:-6.264175 };
+var dublin = {lat: 53.349605, lng:-6.264175 };
 
 // Geolocation variable
 var pos;
@@ -281,29 +281,35 @@ function showOptions() {
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
 
+    $.getJSON('/events', (result) => {
+        for (let i = 0; i < 5; i++) {
+            addRoute(result[i]);
+        }
+    });
+
     if (googleData) {
-        const routes = googleData['routes'];
-        const display_routes = new Set();
-
-        for (let i = 0; i < routes.length; i++) {
-            const steps = routes[i]['legs'][0]['steps'];
-
-            let lines = [];
-            for (let j = 0; j < steps.length; j++) {
-                const step = steps[j];
-
-                if (step['travel_mode'] === 'TRANSIT') {
-                    lines.push(step['transit_details']['line']['short_name']);
-                }
-            }
-
-            lines = lines.join('/');
-            display_routes.add(lines);
-        }
-
-        for (const route of display_routes) {
-            addRoute(route);
-        }
+    //     const routes = googleData['routes'];
+    //     const display_routes = new Set();
+    //
+    //     for (let i = 0; i < routes.length; i++) {
+    //         const steps = routes[i]['legs'][0]['steps'];
+    //
+    //         let lines = [];
+    //         for (let j = 0; j < steps.length; j++) {
+    //             const step = steps[j];
+    //
+    //             if (step['travel_mode'] === 'TRANSIT') {
+    //                 lines.push(step['transit_details']['line']['short_name']);
+    //             }
+    //         }
+    //
+    //         lines = lines.join('/');
+    //         display_routes.add(lines);
+    //     }
+    //
+    //     for (const route of display_routes) {
+    //         addRoute(route);
+    //     }
 
         var countOps = 0;
 //        Build the options buttons
@@ -603,17 +609,18 @@ function ajaxInt() {
 // </div>
 
 function addRoute(route) {
-    let item = document.createElement('div');
+    let item = document.createElement('a');
     let div1 = document.createElement('div');
     let div2 = document.createElement('div');
     let div3 = document.createElement('div');
     let h3 = document.createElement('h3');
     let span = document.createElement('span');
 
-    item.setAttribute('style', 'display: inline-block;margin:0 10px;')
+    item.setAttribute('href', route[2]);
+    item.setAttribute('style', 'display: inline-block;margin:0 10px;');
     span.classList.add('position');
     h3.classList.add('mb-0');
-    h3.textContent = route;
+    h3.textContent = route[0];
     item.classList.add('item');
 
     div3.classList.add('text');
@@ -628,6 +635,7 @@ function addRoute(route) {
     div1.appendChild(div2);
     div1.appendChild(div3);
     item.appendChild(div1);
+
 
     let container = document.getElementById('route-container');
     container.insertBefore(item, container.children[0]);

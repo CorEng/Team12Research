@@ -72,7 +72,7 @@ def events():
             cardlist.append(templist)
         except:
             cardlist.append("ERROR")
-    return dumps(cardlist)
+    return jsonify(cardlist)
 
 
 if __name__ == '__main__':

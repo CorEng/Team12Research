@@ -277,6 +277,9 @@ function draw_markers(intermediateStops, option) {
 
 // Create the html to show the different options with minimal info
 function showOptions() {
+//  Remove the previous options displayed
+    $('div').remove(".opbutt");
+    $('div').remove(".opinfo");
 console.log(googleData);
 console.log(disruptions);
     if (googleData) {
@@ -553,9 +556,6 @@ function ajaxInt() {
     backAmenities = undefined;
     $("div.options").slideUp("slow");
     $("div.amenities").slideUp("slow");
-//  Remove the previous options displayed
-    $('div').remove(".opbutt");
-    $('div').remove(".opinfo");
 
 //    Check that the user has input a value otherwise use the geolocation coordinates
     var origin = document.getElementById("start").value;

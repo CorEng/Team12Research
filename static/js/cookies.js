@@ -1,27 +1,53 @@
 
 function setCookies() {
-
-    if (document.cookie.indexOf(";") == -1) {
-        if (document.cookie.length < 1) {
-            cookiesLength = 0;
+    var count = 0
+    for (var i = 0; i < 5; i++) {
+        if (localStorage.getItem("cookie" + i.toString())) {
+            count++;
         }
-        else if (document.cookie.length > 0) {
-            cookiesLength = 1;
+    };
+    if (count < 5) {
+        var variableList = [googleData, intermediateStops, backAmenities];
+        if (variableList[0] != null) {
+            localStorage.setItem("cookie" + (count).toString(), JSON.stringify(variableList));
+            count++
+        }
+        else {
+            alert("No previous search available to save, please perform a search to save it");
         }
     }
     else {
-        cookiesLength = document.cookie.split(" ").length;
+        alert("Apologies you have reached the max of 5 saved searches");
     };
+    console.log(count);
 
 
 
 
-    console.log(document.cookie);
-    console.log(cookiesLength);
 
-    var variableList = [JSON.stringify(googleData), JSON.stringify(intermediateStops), JSON.stringify(backAmenities)];
 
-    x = document.cookie = "cookie" + (cookiesLength).toString() + "=" + JSON.stringify(variableList);
+
+
+
+
+
+
+
+//    if (document.cookie.indexOf(";") == -1) {
+//        if (document.cookie.length < 1) {
+//            cookiesLength = 0;
+//        }
+//        else if (document.cookie.length > 0) {
+//            cookiesLength = 1;
+//        }
+//    }
+//    else {
+//        cookiesLength = document.cookie.split(" ").length;
+//    };
+
+
+
+//    x = document.cookie =  "cookie" + (cookiesLength).toString() + "=" + variableList;
 
 
 

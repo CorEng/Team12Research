@@ -34,7 +34,7 @@
 
 </head>
 
-<body>
+<body id="top">
 <!--nav-->
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
@@ -47,11 +47,12 @@
 
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item cta"><a href="../templates/index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="clearAll()">CLEAR Favourites</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="showFavs()">SHOW/HIDE Favouries</a></li>
+                <li class="nav-item cta"><a href="#top" class="nav-link">Home</a></li>
+                <li class="nav-item"><a HREF="#belowops" class="nav-link" >OPTIONS</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showFavs()">FAVOURITES</a></li>
+                <li class="nav-item"><a class="nav-link">GET Favourite</a></li>
                 <li class="nav-item"><a href="#designer" class="nav-link" >Designer</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="getCookie(0)">GET Favourite</a></li>
+
             </ul>
         </div>
     </div>
@@ -116,7 +117,7 @@
 <!--MAIN PART-->
 
 <a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN"
-   data-label_2="WEATHER" data-theme="pure">DUBLIN WEATHER</a>
+   data-label_2="WEATHER" data-theme="pure" id="belowops">DUBLIN WEATHER</a>
 <script>
     !function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -150,7 +151,8 @@
     <button id="amenities" type="submit" value="Submit" class="amenbutton" onclick="ajaxAmen()">Submit</button>
 </div>
 <div class="amenities">
-    <button id="addToFavs" type="submit" value="Add to Favourites" class="amenbutton" onclick="setCookies()">Add to Favourites
+    <button id="addToFavs" type="submit" value="Add to Favourites" class="amenbutton" onclick="saveCookie()">Add to
+        Favourites
     </button>
 </div>
 

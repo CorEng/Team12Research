@@ -25,7 +25,7 @@ var htmlDepArr;
 var hrs;
 var mins;
 
-// To give a heigth to the map and the chart for each option
+// To give a height to the map and the chart for each option
 var mapChartHeight;
 
 // To take the response from the google places nearby search
@@ -78,18 +78,18 @@ function refreshMap(num) {
 function displayNowTimeDate() {
 
     nowDayTime = new Date();
-        hrs = nowDayTime.getHours().toString();
-        mins = nowDayTime.getMinutes().toString();
-        if (mins.length < 2) {
-            mins = "0" + mins;
-        }
-        if (hrs.length < 2) {
-            hrs = "0" + hrs;
-        }
-
+    hrs = nowDayTime.getHours().toString();
+    mins = nowDayTime.getMinutes().toString();
+    if (mins.length < 2) {
+        mins = "0" + mins;
+    }
+    if (hrs.length < 2) {
+        hrs = "0" + hrs;
+    }
     document.querySelector("#time").value = hrs + ":" + mins;
     document.querySelector("#date").valueAsDate = nowDayTime;
 }
+
 
 // use geolocation from browser
 function geolocation() {
@@ -459,6 +459,7 @@ function showOptions() {
 
 // Check the date and time from form against now
 function checkDateAndTime() {
+
     formTime = document.getElementById("time").value;
     formDate = document.getElementById("date").value;
 
@@ -471,14 +472,14 @@ function checkDateAndTime() {
         return false;
     }
     else {
-        if (getDepArr() == "dep") {
+        if (htmlDepArr == "dep") {
                 if (formSeconds < nowDayTimeSeconds) {
                         alert("INVALID DATE OR TIME - DATE AND TIME CANNOT BE IN THE PAST");
                     } else {
                         return true;
                     }
             }
-            else if (getDepArr() == "arr") {
+            else if (htmlDepArr == "arr") {
 
                 if (googleData) {
                     var delayed = 0;
@@ -489,7 +490,7 @@ function checkDateAndTime() {
                         } else {
                             return true;
                         }
-                    }
+                    };
                     if (delayed > 0) {
                         alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
                         return true;
@@ -530,13 +531,13 @@ function chooseOption(num) {
         drawAmenitiesMarkers();
     };
     if (num == 0) {
-        window.scrollTo(0, 700);
-    } else if (num == 1) {
-        window.scrollTo(0, 800);
-    } else if (num == 2) {
-        window.scrollTo(0, 900);
-    } else if (num == 3) {
         window.scrollTo(0, 1000);
+    } else if (num == 1) {
+        window.scrollTo(0, 1120);
+    } else if (num == 2) {
+        window.scrollTo(0, 1120);
+    } else if (num == 3) {
+        window.scrollTo(0, 1150);
     };
     $("div#ftco-loader").removeClass('show');
 }
@@ -548,7 +549,7 @@ function getDepArr() {
 
     for (var i = 0; i < radioButton.length; i++) {
         if (radioButton[i].checked) {
-            var htmlDepArr = radioButton[i].value;
+            htmlDepArr = radioButton[i].value;
         }
     }
     return htmlDepArr;
@@ -558,8 +559,7 @@ function getDepArr() {
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajaxInt() {
     backAmenities = undefined;
-    $("div.options").slideUp("slow");
-    $("div.amenities").slideUp("slow");
+
 
 //    Check that the user has input a value otherwise use the geolocation coordinates
     var origin = document.getElementById("start").value;
@@ -575,13 +575,16 @@ function ajaxInt() {
     if (dest.length < 1) {
         alert("PLEASE INPUT A DESTINATION")
     } else {
+        getDepArr();
         if (checkDateAndTime() == true) {
-                $("div#ftco-loader").addClass('show');
+            $("div.options").slideUp("slow");
+            $("div.amenities").slideUp("slow");
+            setTimeout(function() {$("div#ftco-loader").addClass('show');}, 950);
             //    Ajax pass variables to Flask back end
                 $.getJSON($SCRIPT_ROOT + '/directions', {
                     postA,
                     postB: dest,
-                    htmlDepArr: getDepArr(),
+                    htmlDepArr,
                     htmlTime: document.getElementById("time").value,
                     htmlDate: document.getElementById("date").value,
                 },
@@ -593,9 +596,9 @@ function ajaxInt() {
 
                     showOptions();
                 });
-            };
+            }
         }
-}
+    }
 
 // <div class="item">
 //     <div class="team-wrap text-center">

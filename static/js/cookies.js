@@ -9,13 +9,13 @@ function getCount() {
 };
 
 
-function setCookies() {
+function saveCookie() {
     var count = getCount();
     if (count < 4) {
-//        var variableList = [googleData, intermediateStops, disruptions, backAmenities];
         if (googleData != undefined) {
 
-            var variableList = [googleData["routes"][0]["legs"][0]["start_address"], googleData["routes"][0]["legs"][0]["end_address"]];
+            var variableList = [googleData["routes"][0]["legs"][0]["start_address"],
+            googleData["routes"][0]["legs"][0]["end_address"], htmlDepArr];
             localStorage.setItem("cookie" + (count).toString(), JSON.stringify(variableList));
             count++
             alert("This search has been ADDED to your Favourites")
@@ -29,32 +29,19 @@ function setCookies() {
     };
 }
 
-function getCookie(num) {
-    var cookie = JSON.parse(localStorage.getItem("cookie" + num.toString()));
-
-    if (cookie != undefined) {
-        console.log(cookie);
-    }
-    else {
-        alert("No previous search available to show, please perform a search and save it");
-    };
-}
 
 function removeCookie(num) {
     localStorage.removeItem("cookie" + num.toString());
     showFavs();
     setTimeout(function() {
-            if (getCount > 0) {
-                $("div.favourites").slideDown("slow");
-            }
-            else {
-                alert("Favourites list is empty");
-            }},
-            950);
-}
-
-function clearAll() {
-    localStorage.clear();
+        if (getCount() > 0) {
+            $("div.favourites").slideDown("slow");
+        }
+        else {
+            alert("Favourites list is empty");
+            window.scrollTo(0,0);
+        }},
+        950);
 }
 
 
@@ -124,3 +111,60 @@ function showFavs() {
     };
 }
 
+
+function loadFav(num) {
+
+    backAmenities = undefined;
+    $("div.options").slideUp("slow");
+    $("div.amenities").slideUp("slow");
+
+    var cookie = JSON.parse(localStorage.getItem("cookie" + num.toString()));
+    console.log(cookie);
+
+    displayNowTimeDate();
+
+    $.getJSON($SCRIPT_ROOT + '/directions', {
+            postA: cookie[0],
+            postB: cookie[1],
+            htmlDepArr,
+            htmlTime: document.getElementById("time").value,
+            htmlDate: document.getElementById("date").value,
+        },
+    //  Response from the back end
+        function(response) {
+            googleData = response['gooData'];
+            intermediateStops = response['interstops'];
+            disruptions = response["disruptions"];
+
+            showOptions();
+        })
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//function clearAll() {
+//    localStorage.clear();
+//}
+
+//function getCookie(num) {
+//    var cookie = JSON.parse(localStorage.getItem("cookie" + num.toString()));
+//
+//    if (cookie != undefined) {
+//        console.log(cookie);
+//    }
+//    else {
+//        alert("No previous search available to show, please perform a search and save it");
+//    };
+//}

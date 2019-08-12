@@ -24,7 +24,7 @@ function setCookies() {
         }
     }
     else {
-        alert("Apologies you have reached the max of 5 saved searches");
+        alert("Apologies you have reached the max of 4 saved searches");
     };
 }
 
@@ -49,22 +49,35 @@ function clearAll() {
 
 
 function showFavs() {
+
+    $('div').remove(".favButt");
+
     for (var i = 0; i < 5; i++) {
         if (localStorage.getItem("cookie" + i.toString())) {
 
-            var item = JSON.parse(localStorage.getItem("cookie" + i.toString()));
-            console.log(item);
+            var favData = JSON.parse(localStorage.getItem("cookie" + i.toString()));
+            console.log(favData);
 
             var favButt = document.createElement("div");
             favButt.setAttribute("class", "favButt");
+            favButt.setAttribute("onclick", "loadFav(" + i.toString() + ")");
 
             var favOri = document.createElement("div");
-            indiv1.setAttribute("class", "favOri");
+            favOri.setAttribute("class", "favOri");
             var ori = document.createElement("p");
-            var oriText = document.createTextNode(item[0]);
+            var oriText = document.createTextNode(favData[0]);
             ori.appendChild(oriText);
             favOri.appendChild(ori);
             favButt.appendChild(favOri);
+
+            var favDest = document.createElement("div");
+            favDest.setAttribute("class", "favDest");
+            var dest = document.createElement("p");
+            var destText = document.createTextNode(favData[1]);
+            dest.appendChild(destText);
+            favDest.appendChild(dest);
+            favButt.appendChild(favDest);
+
 
             document.getElementById("favs").appendChild(favButt);
 

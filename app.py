@@ -1,8 +1,7 @@
-from json import dumps
-
 from flask import Flask, redirect, render_template, request, jsonify
 from datetime import datetime
 from get_data import *
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -52,10 +51,9 @@ def Amenities():
     return jsonify(amenitiesList)
 
 
-@app.route('/events')
+@app.route('/events', methods=["GET", "POST"])
 def events():
-    from bs4 import BeautifulSoup
-    import requests
+
     cardlist = []
     site = requests.get('https://dublin.ie/whats-on/').text
     soupsite = BeautifulSoup(site, 'lxml')

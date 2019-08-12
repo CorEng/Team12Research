@@ -278,11 +278,12 @@ function draw_markers(intermediateStops, option) {
 // Create the html to show the different options with minimal info
 function showOptions() {
 
-    $.getJSON('/events', (result) => {
-        for (let i = 0; i < 9; i++) {
-            addRoute(result[i], i);
-        }
-    });
+//    $.getJSON('/events', (result) => {
+//        console.log(result);
+//        for (let i = 0; i < 9; i++) {
+//            addRoute(result[i], i);
+//        }
+//    });
 
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
@@ -302,15 +303,12 @@ function showOptions() {
                      lines.push(step['transit_details']['line']['short_name']);
                  }
              }
-
              lines = lines.join('/');
              display_routes.add(lines);
          }
-
          for (const route of display_routes) {
              addRoute(route);
          }
-
         var countOps = 0;
 //        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
@@ -465,6 +463,7 @@ function checkDateAndTime() {
     formDate = document.getElementById("date").value;
 
     formSeconds = (new Date(formDate + " " + formTime + ":00" ).getTime() / 1000) + 60;
+    nowDayTime = new Date();
     nowDayTimeSeconds = nowDayTime.getTime() / 1000;
 
     if (formSeconds > (nowDayTimeSeconds + 2764800)) {

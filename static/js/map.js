@@ -459,7 +459,7 @@ function checkDateAndTime() {
     formTime = document.getElementById("time").value;
     formDate = document.getElementById("date").value;
 
-    formSeconds = new Date(formDate + " " + formTime + ":00" ).getTime() / 1000;
+    formSeconds = (new Date(formDate + " " + formTime + ":00" ).getTime() / 1000) + 60;
     nowDayTimeSeconds = nowDayTime.getTime() / 1000;
 
     if (formSeconds > (nowDayTimeSeconds + 2764800)) {

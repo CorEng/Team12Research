@@ -247,6 +247,37 @@ div.graph {
     border-radius: 6px;
 }
 
+/*
 html {
   scroll-behavior: smooth;
+}
+*/
+
+.favourites {
+    //display: none;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.favButt {
+    width: 37%;
+    background-color: black;
+    border-radius: 6px;
+    margin: auto;
+    margin-bottom: 8px;
+    transition: width 3s;
+}
+
+.favOri {
+    display: inline-block;
+    width: 49%;
+}
+
+.favDest {
+    display: inline-block;
+    width: 49%;
+    margin-left:
 }

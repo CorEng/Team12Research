@@ -4,7 +4,6 @@ from get_data import *
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def index():
     todayObj = datetime.datetime.now()

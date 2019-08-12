@@ -19,6 +19,7 @@ function saveCookie() {
             localStorage.setItem("cookie" + (count).toString(), JSON.stringify(variableList));
             count++
             alert("This search has been ADDED to your Favourites")
+            showFavs();
         }
         else {
             alert("No previous search available to save, please perform a search to save it");
@@ -56,10 +57,10 @@ function showFavs() {
 
             var favButt = document.createElement("div");
             favButt.setAttribute("class", "favButt");
-            favButt.setAttribute("onclick", "loadFav(" + i.toString() + ")");
 
             var favOri = document.createElement("div");
             favOri.setAttribute("class", "favOri");
+            favOri.setAttribute("onclick", "loadFav(" + i.toString() + ")");
             var ori = document.createElement("p");
             var oriText = document.createTextNode(favData[0]);
             ori.appendChild(oriText);
@@ -68,6 +69,7 @@ function showFavs() {
 
             var favDest = document.createElement("div");
             favDest.setAttribute("class", "favDest");
+            favDest.setAttribute("onclick", "loadFav(" + i.toString() + ")");
             var dest = document.createElement("p");
             var destText = document.createTextNode(favData[1]);
             dest.appendChild(destText);
@@ -117,16 +119,16 @@ function loadFav(num) {
     backAmenities = undefined;
     $("div.options").slideUp("slow");
     $("div.amenities").slideUp("slow");
+    $("div#ftco-loader").addClass('show');
 
     var cookie = JSON.parse(localStorage.getItem("cookie" + num.toString()));
-    console.log(cookie);
 
     displayNowTimeDate();
 
     $.getJSON($SCRIPT_ROOT + '/directions', {
             postA: cookie[0],
             postB: cookie[1],
-            htmlDepArr,
+            htmlDepArr: cookie[2],
             htmlTime: document.getElementById("time").value,
             htmlDate: document.getElementById("date").value,
         },
@@ -138,18 +140,7 @@ function loadFav(num) {
 
             showOptions();
         })
-
-
-
 }
-
-
-
-
-
-
-
-
 
 
 

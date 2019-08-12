@@ -291,6 +291,11 @@ div.favButt:hover {
     width: 40%;
 }
 
+.favOri:hover,
+.favDest:hover {
+    color: green;
+}
+
 .favDest p {
     border-left: 2px solid white;
     border-right: 2px solid white;

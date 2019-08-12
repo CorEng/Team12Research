@@ -1,3 +1,5 @@
+from json import dumps
+
 from flask import Flask, redirect, render_template, request, jsonify
 from datetime import datetime
 from get_data import *
@@ -48,6 +50,28 @@ def Amenities():
     amenitiesList = interAmenities.getAmenities(frontAmenities, full["interstops"])
 
     return jsonify(amenitiesList)
+
+
+@app.route('/events')
+def events():
+    import re
+    from bs4 import BeautifulSoup
+    import requests
+    cardlist = []
+    site = requests.get('https://dublin.ie/whats-on/').text
+    soupsite = BeautifulSoup(site, 'lxml')
+    cards = soupsite.findAll("article", {"class": "event card"})
+    for i in cards:
+        templist = []
+        try:
+            templist.append(i.find("h2").text)  # Name
+            templist.append(
+                re.search("url\(\'(.*)\'\)", i.find("div", {"class": "img"})["style"]).group(1))  # Image URL
+            templist.append(i.find("a", {"class": "read-more"})["href"])  # Link to more info
+            cardlist.append(templist)
+        except:
+            cardlist.append("ERROR")
+    return jsonify(cardlist)
 
 
 if __name__ == '__main__':

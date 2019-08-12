@@ -277,34 +277,36 @@ function draw_markers(intermediateStops, option) {
 
 // Create the html to show the different options with minimal info
 function showOptions() {
-//  Remove the previous options displayed
-    $('div').remove(".opbutt");
-    $('div').remove(".opinfo");
-console.log(googleData);
-console.log(disruptions);
+
+    $.getJSON('/events', (result) => {
+        for (let i = 0; i < 9; i++) {
+            addRoute(result[i], i);
+        }
+    });
+
     if (googleData) {
-        const routes = googleData['routes'];
-        const display_routes = new Set();
-
-        for (let i = 0; i < routes.length; i++) {
-            const steps = routes[i]['legs'][0]['steps'];
-
-            let lines = [];
-            for (let j = 0; j < steps.length; j++) {
-                const step = steps[j];
-
-                if (step['travel_mode'] === 'TRANSIT') {
-                    lines.push(step['transit_details']['line']['short_name']);
-                }
-            }
-
-            lines = lines.join('/');
-            display_routes.add(lines);
-        }
-
-        for (const route of display_routes) {
-            addRoute(route);
-        }
+    //     const routes = googleData['routes'];
+    //     const display_routes = new Set();
+    //
+    //     for (let i = 0; i < routes.length; i++) {
+    //         const steps = routes[i]['legs'][0]['steps'];
+    //
+    //         let lines = [];
+    //         for (let j = 0; j < steps.length; j++) {
+    //             const step = steps[j];
+    //
+    //             if (step['travel_mode'] === 'TRANSIT') {
+    //                 lines.push(step['transit_details']['line']['short_name']);
+    //             }
+    //         }
+    //
+    //         lines = lines.join('/');
+    //         display_routes.add(lines);
+    //     }
+    //
+    //     for (const route of display_routes) {
+    //         addRoute(route);
+    //     }
 
         var countOps = 0;
 //        Build the options buttons
@@ -603,35 +605,37 @@ function ajaxInt() {
 //     </div>
 // </div>
 
-function addRoute(route) {
-    let item = document.createElement('div');
+function addRoute(route, index) {
     let div1 = document.createElement('div');
-    let div2 = document.createElement('div');
+    div1.classList.add('carousel-item');
+
+    if (index === 0) {
+        div1.classList.add('active')
+    }
+
+    let img = document.createElement('img');
+    img.setAttribute('src', route[1]);
+
+    let a = document.createElement('a');
+    a.setAttribute('href', route[2]);
+    a.setAttribute('target', '_blank');
+    a.appendChild(img);
+
     let div3 = document.createElement('div');
-    let h3 = document.createElement('h3');
-    let span = document.createElement('span');
+    div3.classList.add('carousel-caption');
+    div3.classList.add('d-none');
+    div3.classList.add('d-md-block');
 
-    item.setAttribute('style', 'display: inline-block;margin:0 10px;')
-    span.classList.add('position');
-    h3.classList.add('mb-0');
-    h3.textContent = route;
-    item.classList.add('item');
+    let h5 = document.createElement('h5');
+    h5.textContent = route[0];
+    h5.setAttribute('style', 'color: white');
 
-    div3.classList.add('text');
-    div2.classList.add('img');
-    div2.setAttribute('style', 'background-image: url(static/images/bus3.jpg);');
-
-    div1.classList.add('team-wrap');
-    div1.classList.add('text-center');
-
-    div3.appendChild(h3);
-    div3.appendChild(span);
-    div1.appendChild(div2);
+    div3.appendChild(h5);
+    div1.appendChild(a);
     div1.appendChild(div3);
-    item.appendChild(div1);
 
     let container = document.getElementById('route-container');
-    container.insertBefore(item, container.children[0]);
+    container.insertBefore(div1, container.children[0]);
 }
 
 

@@ -49,8 +49,8 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item cta"><a href="../templates/index.html" class="nav-link">Home</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="clearAll()">CLEAR Favourites</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="showFavs()">SHOW Favouries</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="setCookies()">SAVE Favourite</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showFavs()">SHOW/HIDE Favouries</a></li>
+                <li class="nav-item"><a href="#designer" class="nav-link" >Designer</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="getCookie(0)">GET Favourite</a></li>
             </ul>
         </div>
@@ -148,6 +148,10 @@
     <input class="radioAmen" type="radio" name="amenities" value="supermarket">
     <p class="amenops">Supermarket</p>
     <button id="amenities" type="submit" value="Submit" class="amenbutton" onclick="ajaxAmen()">Submit</button>
+</div>
+<div class="amenities">
+    <button id="addToFavs" type="submit" value="Add to Favourites" class="amenbutton" onclick="setCookies()">Add to Favourites
+    </button>
 </div>
 
 <section class="ftco-section ftco-game-schedule" id="result">

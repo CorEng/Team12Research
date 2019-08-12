@@ -284,29 +284,32 @@ function showOptions() {
         }
     });
 
+    $('div').remove(".opbutt");
+    $('div').remove(".opinfo");
+
     if (googleData) {
-    //     const routes = googleData['routes'];
-    //     const display_routes = new Set();
-    //
-    //     for (let i = 0; i < routes.length; i++) {
-    //         const steps = routes[i]['legs'][0]['steps'];
-    //
-    //         let lines = [];
-    //         for (let j = 0; j < steps.length; j++) {
-    //             const step = steps[j];
-    //
-    //             if (step['travel_mode'] === 'TRANSIT') {
-    //                 lines.push(step['transit_details']['line']['short_name']);
-    //             }
-    //         }
-    //
-    //         lines = lines.join('/');
-    //         display_routes.add(lines);
-    //     }
-    //
-    //     for (const route of display_routes) {
-    //         addRoute(route);
-    //     }
+         const routes = googleData['routes'];
+         const display_routes = new Set();
+
+         for (let i = 0; i < routes.length; i++) {
+             const steps = routes[i]['legs'][0]['steps'];
+
+             let lines = [];
+             for (let j = 0; j < steps.length; j++) {
+                 const step = steps[j];
+
+                 if (step['travel_mode'] === 'TRANSIT') {
+                     lines.push(step['transit_details']['line']['short_name']);
+                 }
+             }
+
+             lines = lines.join('/');
+             display_routes.add(lines);
+         }
+
+         for (const route of display_routes) {
+             addRoute(route);
+         }
 
         var countOps = 0;
 //        Build the options buttons

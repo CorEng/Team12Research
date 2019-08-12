@@ -54,7 +54,6 @@ def Amenities():
 
 @app.route('/events')
 def events():
-    import re
     from bs4 import BeautifulSoup
     import requests
     cardlist = []

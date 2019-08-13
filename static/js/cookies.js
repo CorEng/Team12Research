@@ -20,6 +20,15 @@ function saveCookie() {
             count++
             alert("This search has been ADDED to your Favourites")
             showFavs();
+            setTimeout(function() {
+                if (getCount() > 0) {
+                    $("div.favourites").slideDown("slow");
+                }
+                else {
+                    alert("Favourites list is empty");
+                    window.scrollTo(0,0);
+                }},
+                950);
         }
         else {
             alert("No previous search available to save, please perform a search to save it");

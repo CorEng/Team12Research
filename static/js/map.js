@@ -530,10 +530,19 @@ function chooseOption(num) {
     if (backAmenities) {
         drawAmenitiesMarkers();
     };
+
+
+
     if (num == 0) {
-        window.scrollTo(0, 1000);
+//        window.scrollTo(0, 800);
+        $('html, body').animate({
+            scrollTop: ($('#belowops').offset().top)
+            },500);
     } else if (num == 1) {
-        window.scrollTo(0, 1120);
+//        window.scrollTo(0, 1120);
+        $('html, body').animate({
+            scrollTop: ($('#belowops').offset().top)
+            },500);
     } else if (num == 2) {
         window.scrollTo(0, 1120);
     } else if (num == 3) {
@@ -558,8 +567,8 @@ function getDepArr() {
 
 // Send the directions from/to to the back end to obtain the intermediate stops for each option
 function ajaxInt() {
-    backAmenities = undefined;
 
+    backAmenities = undefined;
 
 //    Check that the user has input a value otherwise use the geolocation coordinates
     var origin = document.getElementById("start").value;
@@ -579,7 +588,7 @@ function ajaxInt() {
         if (checkDateAndTime() == true) {
             $("div.options").slideUp("slow");
             $("div.amenities").slideUp("slow");
-            setTimeout(function() {$("div#ftco-loader").addClass('show');}, 950);
+            setTimeout(function() {$("div#ftco-loader").addClass('show');}, 500);
             //    Ajax pass variables to Flask back end
                 $.getJSON($SCRIPT_ROOT + '/directions', {
                     postA,
@@ -751,7 +760,6 @@ function drawAmenitiesMarkers() {
 
 // Get google data for each amenity for each option
 function ajaxAmen() {
-    $("div#ftco-loader").addClass('show');
 
     opId = $("div.opinfo");
     for (var i = 0; i < opId.length; i++) {
@@ -765,7 +773,6 @@ function ajaxAmen() {
     } else {
         var opNeeded = 0;
     };
-
     var radioButton = document.getElementsByName("amenities");
 
     for (var i = 0; i < radioButton.length; i++) {
@@ -773,14 +780,25 @@ function ajaxAmen() {
                 var htmlAmenities = radioButton[i].value;
             }
         };
-     $.getJSON($SCRIPT_ROOT + '/amenities', {
+    console.log(googleData.length);
+
+    if (googleData.length < 1) {
+        $("div#ftco-loader").addClass('show');
+        $.getJSON($SCRIPT_ROOT + '/amenities', {
             htmlAmenities,
         },
-    //  Response from the back end
+        //  Response from the back end
         function(response) {
             backAmenities = response;
             chooseOption(opNeeded);
         });
+    }
+    else {
+        alert("No intermediate stops - Buses used may not be from GoAhead rather than Dublin Bus");
+        $('html, body').animate({
+            scrollTop: ($('#belowops').offset().top)
+        },500);
+    }
 }
 
 

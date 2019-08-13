@@ -1,3 +1,5 @@
+import re
+
 from flask import Flask, redirect, render_template, request, jsonify
 from datetime import datetime
 from get_data import *

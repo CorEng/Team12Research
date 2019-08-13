@@ -278,12 +278,12 @@ function draw_markers(intermediateStops, option) {
 // Create the html to show the different options with minimal info
 function showOptions() {
 
-//    $.getJSON('/events', (result) => {
-//        console.log(result);
-//        for (let i = 0; i < 9; i++) {
-//            addRoute(result[i], i);
-//        }
-//    });
+   $.getJSON('/events', (result) => {
+       console.log(result);
+       for (let i = 0; i < 9; i++) {
+           addRoute(result[i], i);
+       }
+   });
 
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
@@ -620,6 +620,7 @@ function ajaxInt() {
 // </div>
 
 function addRoute(route, index) {
+    console.log(route);
     let div1 = document.createElement('div');
     div1.classList.add('carousel-item');
 

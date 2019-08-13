@@ -16,6 +16,7 @@ function saveCookie() {
 
             var variableList = [googleData["routes"][0]["legs"][0]["start_address"],
             googleData["routes"][0]["legs"][0]["end_address"], htmlDepArr];
+            console.log(variableList);
             localStorage.setItem("cookie" + (count).toString(), JSON.stringify(variableList));
             count++
             alert("This search has been ADDED to your Favourites")
@@ -23,6 +24,8 @@ function saveCookie() {
             setTimeout(function() {
                 if (getCount() > 0) {
                     $("div.favourites").slideDown("slow");
+                    var elemPos = $("div#favs").position();
+                    window.scrollTo(elemPos.left, elemPos.top - 75);
                 }
                 else {
                     alert("Favourites list is empty");
@@ -98,15 +101,6 @@ function showFavs() {
             document.getElementById("favs").appendChild(favButt);
         }
     };
-    var elem = document.getElementById("ops");
-    var pixelsElem = window.getComputedStyle(elem, null).getPropertyValue("height");
-    if (pixelsElem == "auto") {
-        var pixels = 0;
-    }
-    else {
-        var pixels = parseInt(pixelsElem.slice(0, -2))
-    };
-    window.scrollTo(0, 1125 + pixels);
 
     if ($("div.favourites").css("display") != "none") {
         $("div.favourites").slideUp("slow");
@@ -118,6 +112,8 @@ function showFavs() {
         }
         else {
             $("div.favourites").slideDown("slow");
+            var elemPos = $("#result").position();
+            window.scrollTo(elemPos.left, elemPos.top);
         }
     };
 }

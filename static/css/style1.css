@@ -282,6 +282,13 @@ div.favButt:hover {
     margin-top: 10px;
     display: inline-block;
     width: 40%;
+    padding-right: 3px;
+    padding-left: 3px;
+    vertical-align: middle;
+}
+
+.favOri p {
+    border-right: 2px solid white;
 }
 
 .favDest {
@@ -289,6 +296,9 @@ div.favButt:hover {
     margin-top: 10px;
     display: inline-block;
     width: 40%;
+    padding-right: 3px;
+    padding-left: 3px;
+    vertical-align: middle;
 }
 
 .favOri:hover,
@@ -297,7 +307,6 @@ div.favButt:hover {
 }
 
 .favDest p {
-    border-left: 2px solid white;
     border-right: 2px solid white;
 }
 
@@ -307,8 +316,17 @@ div.favButt:hover {
     display: inline-block;
     width: 16%;
     vertical-align: top;
+    padding-right: 3px;
+    padding-left: 3px;
+    vertical-align: middle;
 }
 
 .favRem p:hover {
    color: red;
+}
+
+@media(max-width: 1000px) {
+     div.favButt {
+        width: 95%;
+    }
 }

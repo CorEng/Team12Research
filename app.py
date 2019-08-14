@@ -29,16 +29,18 @@ def directions():
     get_goo_data = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     jsonObj = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     interStops = intermediate.fin(get_goo_data)
-    # distances = intermediate.get_stop_distances(interStops)
-    # weather = intermediate.weather_get(frontDate, frontTime)
-    # model_seconds = intermediate.get_seconds_model(jsonObj)
-    # holiday = intermediate.weekend_holiday(frontDate)
-    # prediction = intermediate.run_model(distances, holiday["holiday"], weather["rain"], weather[
-    #     "temperature"], weather["humidity"], model_seconds)
+    distances = intermediate.get_stop_distances(interStops)
+    weather = intermediate.weather_get(frontDate, frontTime)
+    model_seconds = intermediate.get_seconds_model(jsonObj)
+    holiday = intermediate.weekend_holiday(frontDate)
+    # prediction = intermediate.run_model(distances, model_seconds, weather["rain"], weather["temperature"],
+    # weather["humidity"], holiday["weekend"], holiday["holiday"])
     global full
     notifications = intermediate.notification_check(jsonObj)
+
     # With Prediction
     # full = {"interstops": interStops, "gooData": jsonObj, "prediction": prediction, "disruptions": notifications}
+
     # Without Prediction
     full = {"interstops": interStops, "gooData": jsonObj, "disruptions": notifications}
 

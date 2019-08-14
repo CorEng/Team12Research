@@ -449,7 +449,7 @@ class Stops:
                     model = pickle.load(open(model, 'rb'))
 
                     dist = stop[1]
-                    to_scale=np.array([time,precipitation,temperature,humidity,dist,holiday,weekend])
+                    to_scale=np.array([time, precipitation, temperature, humidity, dist, holiday, weekend])
                     to_scale = to_scale.reshape(1, -1)
                     to_predict= feat_scaler.transform(to_scale)
                     prediction = abs(tar_scaler.inverse_transform(model.predict(to_predict)))

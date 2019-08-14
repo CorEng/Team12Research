@@ -346,7 +346,7 @@ function showOptions() {
             var indiv1 = document.createElement("div");
             indiv1.setAttribute("class", "indivleft");
             var time = document.createElement("p");
-            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['duration']['text']);
+            var timetext = document.createTextNode(prediction[i]);
             time.appendChild(timetext);
             indiv1.appendChild(time);
             opbutt.appendChild(indiv1);

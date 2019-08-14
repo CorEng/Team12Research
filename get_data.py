@@ -378,7 +378,7 @@ class Stops:
         try:
             time = self.date + "T" + self.time
             weather = forecast("0f94f1e529d8359a54cc753b465312d7", 53.344505, -6.258602, time=time)
-            resultdic["temperature"] = weather.temperature
+            resultdic["temperature"] = ((weather.temperature - 32)*5)/9
             resultdic["rain"] = weather.precipIntensity
             resultdic["humidity"] = weather.humidity
             return resultdic
@@ -431,9 +431,13 @@ class Stops:
 
         for i,option in enumerate(self.stoplist):
             option_list = []
+            
             for p,leg in enumerate(option):
                 leg_list = []
+                
+                
                 for j,stop in enumerate(leg):
+                    
                     try:
                         zone = zonedict[str(stop[0])]
                     except:
@@ -448,13 +452,18 @@ class Stops:
                     model = pickle.load(open(model, 'rb'))
 
                     dist = stop[1]
+            
                     to_scale=np.array([time[i][p], precipitation, temperature, humidity, dist, holiday, weekend])
+                   
                     to_scale = to_scale.reshape(1, -1)
                     to_predict= feat_scaler.transform(to_scale)
+                    
                     prediction = abs(tar_scaler.inverse_transform(model.predict(to_predict)))
+                    
                     leg_list.append(prediction)
 
-                option_list.append(sum(leg_list))
-            output_list.append(option_list)
+                option_list.append(int(sum(leg_list)/100))
+            output_list.append(int(sum(option_list)))
+        
         return output_list
 

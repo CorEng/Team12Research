@@ -327,7 +327,7 @@ class Stops:
                         stopB = (float(leg[i + 1][0]), float(leg[i + 1][1]))
                         stopNo = leg[i + 1][2]
                         distance = geodesic(stopA, stopB).km * 1000
-                        leg_list.append((stopNo, distance))
+                        leg_list.append((stopNo[-5:].lstrip("0"), distance))
                     except:
                         break
 
@@ -429,19 +429,18 @@ class Stops:
 
         output_list = []
 
-        for option in self.stoplist:
+        for i,option in enumerate(self.stoplist):
             option_list = []
-            for leg in option:
+            for p,leg in enumerate(option):
                 leg_list = []
-                for stop in leg:
-
+                for j,stop in enumerate(leg):
                     try:
                         zone = zonedict[str(stop[0])]
                     except:
                         zone = 6
-                        target_scaler = 'tar_scaler_{0}.sav'.format(zone)
-                        feature_scaler = 'feat_scaler_{0}.sav'.format(zone)
-                        model = "model_zone_{0}.sav".format(zone)
+                    target_scaler = 'tar_scaler_{0}.sav'.format(zone)
+                    feature_scaler = 'feat_scaler_{0}.sav'.format(zone)
+                    model = "model_zone_{0}.sav".format(zone)
 
                     #Load files
                     tar_scaler = pickle.load(open(target_scaler, 'rb'))
@@ -449,7 +448,7 @@ class Stops:
                     model = pickle.load(open(model, 'rb'))
 
                     dist = stop[1]
-                    to_scale=np.array([time, precipitation, temperature, humidity, dist, holiday, weekend])
+                    to_scale=np.array([time[i][p], precipitation, temperature, humidity, dist, holiday, weekend])
                     to_scale = to_scale.reshape(1, -1)
                     to_predict= feat_scaler.transform(to_scale)
                     prediction = abs(tar_scaler.inverse_transform(model.predict(to_predict)))
@@ -457,6 +456,5 @@ class Stops:
 
                 option_list.append(sum(leg_list))
             output_list.append(option_list)
-
         return output_list
 

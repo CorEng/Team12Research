@@ -33,8 +33,8 @@ def directions():
     weather = intermediate.weather_get(frontDate, frontTime)
     model_seconds = intermediate.get_seconds_model(jsonObj)
     holiday = intermediate.weekend_holiday(frontDate)
-    # prediction = intermediate.run_model(distances, model_seconds, weather["rain"], weather["temperature"],
-    # weather["humidity"], holiday["weekend"], holiday["holiday"])
+    prediction = intermediate.run_model(distances, model_seconds, weather["rain"], weather["temperature"], weather["humidity"], holiday["weekend"], holiday["holiday"])
+    print(prediction)
     global full
     notifications = intermediate.notification_check(jsonObj)
 

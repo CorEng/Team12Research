@@ -1,0 +1,25 @@
+localhost
+root
+Danger3390
+team12dublinbus
+3306
+
+
+
+
+
+
+
+
+
+
+
+localhost
+student
+team12dublinbus
+team12db
+3306
+
+
+FOR UCD: LINE 1 - csi420-01-vm1.ucd.ie, LINE 5 - 3306
+FOR HOME: LINE 1 - localhost, LINE 5 - 5000

@@ -409,20 +409,23 @@ class Stops:
             return ("ERROR_WEEKEND_HOLIDAY",e)
 
 
-    def run_model(self, stoplist, time, holiday, precipitation, temperature, humidity, ):
+    def run_model(self, stoplist, time, precipitation, temperature, humidity, holiday, weekend):
 
         import pickle
         import numpy as np
+        import csv
         from sklearn.preprocessing import StandardScaler
         from sklearn.svm import SVR
 
         self.stoplist = stoplist
 
 
-        # Load files
-        tar_scaler = pickle.load(open("tar_scaler.sav", 'rb'))
-        feat_scaler = pickle.load(open("feat_scaler.sav", 'rb'))
-        model = pickle.load(open("scaledmodelfortesting.pkl", 'rb'))
+        #Import model and scalers
+        zonedict = {}
+        with open('stopzones.csv') as zone_csv:
+            csv_reader = csv.reader(zone_csv, delimiter=',')
+            for row in csv_reader:
+                zonedict[str(row[0])] = str(row[1])
 
         output_list = []
 
@@ -431,14 +434,29 @@ class Stops:
             for leg in option:
                 leg_list = []
                 for stop in leg:
+
+                    try:
+                        zone = zonedict[str(stop[0])]
+                    except:
+                        zone = 6
+                        target_scaler = 'tar_scaler_{0}.sav'.format(zone)
+                        feature_scaler = 'feat_scaler_{0}.sav'.format(zone)
+                        model = "model_zone_{0}.sav".format(zone)
+
+                    #Load files
+                    tar_scaler = pickle.load(open(target_scaler, 'rb'))
+                    feat_scaler = pickle.load(open(feature_scaler, 'rb'))
+                    model = pickle.load(open(model, 'rb'))
+
                     dist = stop[1]
-                    to_scale=np.array([holiday, dist, precipitation, temperature, humidity, time])
+                    to_scale=np.array([time,precipitation,temperature,humidity,dist,holiday,weekend])
                     to_scale = to_scale.reshape(1, -1)
                     to_predict= feat_scaler.transform(to_scale)
-                    prediction = tar_scaler.inverse_transform(model.predict(to_predict))
+                    prediction = abs(tar_scaler.inverse_transform(model.predict(to_predict)))
                     leg_list.append(prediction)
 
                 option_list.append(sum(leg_list))
             output_list.append(option_list)
 
         return output_list
+

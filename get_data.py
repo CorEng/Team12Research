@@ -409,7 +409,7 @@ class Stops:
             return ("ERROR_WEEKEND_HOLIDAY",e)
 
 
-    def run_model(self, stoplist,holiday,precipitation,temperature,humidity,time):
+    def run_model(self, stoplist, time, holiday, precipitation, temperature, humidity, ):
 
         import pickle
         import numpy as np

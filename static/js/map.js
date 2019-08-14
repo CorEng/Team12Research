@@ -16,6 +16,9 @@ var googleData;
 // Data of intermediate stops worked out in the back end with google data
 var intermediateStops;
 
+// Time prediction data
+var prediction;
+
 // Data for tweeter disruption responses
 var disruptions;
 
@@ -279,7 +282,6 @@ function draw_markers(intermediateStops, option) {
 function showOptions() {
 
    $.getJSON('/events', (result) => {
-       console.log(result);
        for (let i = 0; i < 9; i++) {
            addRoute(result[i], i);
        }
@@ -531,8 +533,6 @@ function chooseOption(num) {
         drawAmenitiesMarkers();
     };
 
-
-
     if (num == 0) {
 //        window.scrollTo(0, 800);
         $('html, body').animate({
@@ -601,6 +601,7 @@ function ajaxInt() {
                 function(response) {
                     googleData = response['gooData'];
                     intermediateStops = response['interstops'];
+                    prediction = response['prediction'];
                     disruptions = response["disruptions"];
 
                     showOptions();
@@ -620,7 +621,6 @@ function ajaxInt() {
 // </div>
 
 function addRoute(route, index) {
-    console.log(route);
     let div1 = document.createElement('div');
     div1.classList.add('carousel-item');
 
@@ -781,9 +781,8 @@ function ajaxAmen() {
                 var htmlAmenities = radioButton[i].value;
             }
         };
-    console.log(googleData.length);
 
-    if (googleData.length < 1) {
+    if (intermediateStops.length > 1) {
         $("div#ftco-loader").addClass('show');
         $.getJSON($SCRIPT_ROOT + '/amenities', {
             htmlAmenities,

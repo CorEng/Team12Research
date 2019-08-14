@@ -11,27 +11,42 @@ function getCount() {
 
 function saveCookie() {
     var count = getCount();
+
     if (count < 4) {
         if (googleData != undefined) {
 
             var variableList = [googleData["routes"][0]["legs"][0]["start_address"],
-            googleData["routes"][0]["legs"][0]["end_address"], htmlDepArr];
-            console.log(variableList);
-            localStorage.setItem("cookie" + (count).toString(), JSON.stringify(variableList));
-            count++
-            alert("This search has been ADDED to your Favourites")
-            showFavs();
-            setTimeout(function() {
-                if (getCount() > 0) {
-                    $("div.favourites").slideDown("slow");
-                    var elemPos = $("div#favs").position();
-                    window.scrollTo(elemPos.left, elemPos.top - 75);
+                googleData["routes"][0]["legs"][0]["end_address"], htmlDepArr];
+
+            var flag = false;
+            for (var i = 0; i < count; i++) {
+                var cookieCheck = JSON.parse(localStorage.getItem("cookie" + i.toString()));
+
+                if (cookieCheck[0] === variableList[0] && cookieCheck[1] === variableList[1] && cookieCheck[2] ===
+                variableList[2]) {
+                    flag = true;
                 }
-                else {
-                    alert("Favourites list is empty");
-                    window.scrollTo(0,0);
-                }},
-                950);
+            };
+            if (flag == false) {
+                localStorage.setItem("cookie" + count.toString(), JSON.stringify(variableList));
+                count++;
+                alert("This search has been ADDED to your Favourites");
+                showFavs();
+                setTimeout(function() {
+                    if (getCount() > 0) {
+                        $("div.favourites").slideDown("slow");
+                        var elemPos = $("div#favs").position();
+                        window.scrollTo(elemPos.left, elemPos.top - 75);
+                    }
+                    else {
+                        alert("Favourites list is empty");
+                        window.scrollTo(0,0);
+                    }},
+                    950);
+            }
+            else {
+                alert("This specific trip is already in your favourites");
+            }
         }
         else {
             alert("No previous search available to save, please perform a search to save it");
@@ -154,13 +169,13 @@ function loadFav(num) {
 //    localStorage.clear();
 //}
 
-//function getCookie(num) {
-//    var cookie = JSON.parse(localStorage.getItem("cookie" + num.toString()));
-//
-//    if (cookie != undefined) {
-//        console.log(cookie);
-//    }
-//    else {
-//        alert("No previous search available to show, please perform a search and save it");
-//    };
-//}
+function getCookie(num) {
+    var cookie = JSON.parse(localStorage.getItem("cookie" + num.toString()));
+
+    if (cookie != undefined) {
+        console.log(cookie);
+    }
+    else {
+        alert("error");
+    }
+}

@@ -1,5 +1,4 @@
-import re
-
+# import re
 from flask import Flask, redirect, render_template, request, jsonify
 from datetime import datetime
 from get_data import *
@@ -38,7 +37,9 @@ def directions():
     #     "temperature"], weather["humidity"], model_seconds)
     global full
     notifications = intermediate.notification_check(jsonObj)
-
+    # With Prediction
+    # full = {"interstops": interStops, "gooData": jsonObj, "prediction": prediction, "disruptions": notifications}
+    # Without Prediction
     full = {"interstops": interStops, "gooData": jsonObj, "disruptions": notifications}
 
     return jsonify(full)
@@ -60,6 +61,7 @@ def events():
     site = requests.get('https://dublin.ie/whats-on/').text
     soupsite = BeautifulSoup(site, 'lxml')
     cards = soupsite.findAll("article", {"class": "event card"})
+    print(cards)
     for i in cards:
         templist = []
         try:

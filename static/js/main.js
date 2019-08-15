@@ -359,3 +359,39 @@ setInterval(function() { makeTimer(); }, 1000);
 
 })(jQuery);
 
+
+
+function fill_carousel(){
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+
+      // reading in json response from backend.
+      var data = JSON.parse(this.responseText);
+        var i = 1;
+        $('.item').each(function(i, obj) {
+            val = $(obj).attr('data-index');
+            item = $(obj)[0];
+            child = 
+            $($($(item).children().children()[0])[0]).css("background-image", "url('".concat(data[val][1],"')"));
+            $($($(item).children().children()[1]).children()[0]).text(data[val][3])
+            $($($(item).children().children()[1]).children()[1]).text(data[val][0])
+            
+            var event_link = document.createElement("a");
+            event_link.href = data[val][2];
+            event_link.target = '_blank';
+            event_link.innerHTML = "EVENT LINK";
+            console.log(event_link)
+            $($($($(item).children().children()[1]).children()[2])[0])[0].append(event_link)
+            
+
+        });
+      
+    }
+    };
+
+    // send request for information to backend. 
+    xmlhttp.open("GET", "/events");
+    xmlhttp.send();
+}
+fill_carousel()

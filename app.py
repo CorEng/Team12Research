@@ -1,4 +1,4 @@
-# import re
+import re
 from flask import Flask, redirect, render_template, request, jsonify
 from datetime import datetime
 from get_data import *
@@ -58,6 +58,7 @@ def Amenities():
 
 @app.route('/events', methods=["GET", "POST"])
 def events():
+    
 
     cardlist = []
     site = requests.get('https://dublin.ie/whats-on/').text
@@ -71,6 +72,7 @@ def events():
             templist.append(
                 re.search("url\(\'(.*)\'\)", i.find("div", {"class": "img"})["style"]).group(1))  # Image URL
             templist.append(i.find("a", {"class": "read-more"})["href"])  # Link to more info
+            templist.append(i.find("div", {"class": "summary"}).find("p").text.split(".")[0] )
             cardlist.append(templist)
         except:
             cardlist.append("ERROR")

@@ -281,11 +281,6 @@ function draw_markers(intermediateStops, option) {
 // Create the html to show the different options with minimal info
 function showOptions() {
 
-   $.getJSON('/events', (result) => {
-       for (let i = 0; i < 9; i++) {
-           addRoute(result[i], i);
-       }
-   });
 
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
@@ -308,9 +303,8 @@ function showOptions() {
              lines = lines.join('/');
              display_routes.add(lines);
          }
-         for (const route of display_routes) {
-             addRoute(route);
-         }
+         
+         
         var countOps = 0;
 //        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
@@ -620,38 +614,38 @@ function ajaxInt() {
 //     </div>
 // </div>
 
-function addRoute(route, index) {
-    let div1 = document.createElement('div');
-    div1.classList.add('carousel-item');
-
-    if (index === 0) {
-        div1.classList.add('active')
-    }
-
-    let img = document.createElement('img');
-    img.setAttribute('src', route[1]);
-
-    let a = document.createElement('a');
-    a.setAttribute('href', route[2]);
-    a.setAttribute('target', '_blank');
-    a.appendChild(img);
-
-    let div3 = document.createElement('div');
-    div3.classList.add('carousel-caption');
-    div3.classList.add('d-none');
-    div3.classList.add('d-md-block');
-
-    let h5 = document.createElement('h5');
-    h5.textContent = route[0];
-    h5.setAttribute('style', 'color: white');
-
-    div3.appendChild(h5);
-    div1.appendChild(a);
-    div1.appendChild(div3);
-
-    let container = document.getElementById('route-container');
-    container.insertBefore(div1, container.children[0]);
-}
+//function addRoute(route, index) {
+//    let div1 = document.createElement('div');
+//    div1.classList.add('carousel-item');
+//
+//    if (index === 0) {
+//        div1.classList.add('active')
+//    }
+//
+//    let img = document.createElement('img');
+//    img.setAttribute('src', route[1]);
+//
+//    let a = document.createElement('a');
+//    a.setAttribute('href', route[2]);
+//    a.setAttribute('target', '_blank');
+//    a.appendChild(img);
+//
+//    let div3 = document.createElement('div');
+//    div3.classList.add('carousel-caption');
+//    div3.classList.add('d-none');
+//    div3.classList.add('d-md-block');
+//
+//    let h5 = document.createElement('h5');
+//    h5.textContent = route[0];
+//    h5.setAttribute('style', 'color: white');
+//
+//    div3.appendChild(h5);
+//    div1.appendChild(a);
+//    div1.appendChild(div3);
+//
+//    let container = document.getElementById('route-container');
+//    container.insertBefore(div1, container.children[0]);
+//}
 
 
 // Create chart for each option

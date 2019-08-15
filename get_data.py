@@ -36,7 +36,7 @@ class Stops:
 
     def lat_lon(self, busNo, head_sign, goolat, goolon):
 
-        user = 'student'
+        user = 'root'
         password = db_key
         host = '127.0.0.1'
         database = 'research'
@@ -83,7 +83,7 @@ class Stops:
 
     def db_query3(self, head_sign, bus_no, stop_noA, stop_noB, diff):
 
-        user = 'student'
+        user = 'root'
         password = db_key
         host = '127.0.0.1'
         database = 'research'
@@ -120,7 +120,7 @@ class Stops:
 
     def db_query4(self, bus_no, head_sign, seqA, seqB, tripid):
 
-        user = 'student'
+        user = 'root'
         password = db_key
         host = '127.0.0.1'
         database = 'research'

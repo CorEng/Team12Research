@@ -156,7 +156,9 @@ div.opbutt:hover {
 
 .allsteps {
     width: 32%;
-    background-color: grey;
+    background-color: white;
+    border: 2px solid #3366ff;
+    color: black;
     height: auto;
     min-height: 350px;
     margin: auto;
@@ -164,11 +166,28 @@ div.opbutt:hover {
     display: inline-block;
     vertical-align: middle;
     transition: width 3s;
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 div.allsteps p {
     vertical-align: middle;
 }
+
+.topAllSteps {
+    width: 100%;
+    background-color: #3366ff;
+    color: white;
+    height: auto;
+    font-weight: bolder;
+    margin: auto;
+    vertical-align: middle;
+}
+
+.topAllSteps p {
+    padding-bottom: 5px;
+}
+
 
 .alert {
     width:90%;
@@ -247,6 +266,11 @@ div.graph {
     color: white;
     border-radius: 6px;
 }
+
+.amenities button {
+    margin-bottom: 8px;
+}
+
 
 /*
 html {

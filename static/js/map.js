@@ -323,6 +323,24 @@ function showOptions() {
             allSteps.setAttribute("class", "allsteps");
             allSteps.setAttribute("id", "allSteps"+i.toString())
 
+	    var topAllSteps = document.createElement("div");
+            topAllSteps.setAttribute("class", "topAllSteps");
+
+            var from = document.createElement("p");
+            var fromText = document.createTextNode("FROM: " + googleData['routes'][i]['legs'][0]["start_address"]);
+            from.appendChild(fromText);
+
+            var to = document.createElement("p");
+            var toText = document.createTextNode("TO: " + googleData['routes'][i]['legs'][0]["end_address"]);
+            to.appendChild(toText);
+
+            topAllSteps.appendChild(from);
+            topAllSteps.appendChild(to);
+
+            allSteps.appendChild(topAllSteps);
+
+
+
             var miniMap = document.createElement("div");
             miniMap.setAttribute("class", "minimap");
             miniMap.setAttribute("id", "map"+i.toString());

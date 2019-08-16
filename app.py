@@ -58,7 +58,7 @@ def Amenities():
 
 @app.route('/events', methods=["GET", "POST"])
 def events():
-    
+    print(request)
 
     cardlist = []
     site = requests.get('https://dublin.ie/whats-on/').text

@@ -117,7 +117,10 @@ function showFavs() {
         }
     };
 
+    var elemPos = $("#belowops").position();
+
     if ($("div.favourites").css("display") != "none") {
+        window.scrollTo(elemPos.left, elemPos.top -50);
         $("div.favourites").slideUp("slow");
     }
     else if ($("div.favourites").css("display") == "none") {
@@ -127,7 +130,6 @@ function showFavs() {
         }
         else {
             $("div.favourites").slideDown("slow");
-            var elemPos = $("#designer").position();
             window.scrollTo(elemPos.left, elemPos.top -50);
         }
     };

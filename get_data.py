@@ -422,7 +422,7 @@ class Stops:
 
         #Import model and scalers
         zonedict = {}
-        with open('stopzones.csv') as zone_csv:
+        with open('Model_Files/stopzones.csv') as zone_csv:
             csv_reader = csv.reader(zone_csv, delimiter=',')
             for row in csv_reader:
                 zonedict[str(row[0])] = str(row[1])
@@ -442,9 +442,9 @@ class Stops:
                         zone = zonedict[str(stop[0])]
                     except:
                         zone = 6
-                    target_scaler = 'tar_scaler_{0}.sav'.format(zone)
-                    feature_scaler = 'feat_scaler_{0}.sav'.format(zone)
-                    model = "model_zone_{0}.sav".format(zone)
+                    target_scaler = 'Model_Files/tar_scaler_{0}.sav'.format(zone)
+                    feature_scaler = 'Model_Files/feat_scaler_{0}.sav'.format(zone)
+                    model = "Model_Files/model_zone_{0}.sav".format(zone)
 
                     #Load files
                     tar_scaler = pickle.load(open(target_scaler, 'rb'))

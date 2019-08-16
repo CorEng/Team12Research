@@ -280,7 +280,7 @@ function draw_markers(intermediateStops, option) {
 
 // Create the html to show the different options with minimal info
 function showOptions() {
-
+	console.log(googleData);
 
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
@@ -359,6 +359,7 @@ function showOptions() {
             var time = document.createElement("p");
 
 	    var predTime = prediction[i];
+
 	    if (predTime > 59) {
 		var hours = Math.floor(predTime / 60);
 		var mins = predTime % 60;
@@ -380,8 +381,17 @@ function showOptions() {
             var indiv2 = document.createElement("div");
             indiv2.setAttribute("class", "indivmid");
             var time = document.createElement("p");
-            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to "
-            + googleData['routes'][i]['legs'][0]['arrival_time']['text']);
+	    var arrTime = googleData['routes'][i]['legs'][0]['departure_time']['value'] + (prediction[i]*60);
+	    var arrTimeNew = new Date((arrTime*1000));
+	    var arrHour = arrTimeNew.getHours();
+	    if (arrHour > 12) {
+		arrHour -= 12;
+	        var amPm = "pm";
+	    }
+	    else {
+		var amPm = "am";
+	    }
+            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to " + arrHour.toString() + ":" + arrTimeNew.getMinutes().toString() + amPm);
             time.appendChild(timetext);
             indiv2.appendChild(time);
             opbutt.appendChild(indiv2);
@@ -413,7 +423,7 @@ function showOptions() {
                     var instruction = document.createTextNode
                     ("Get On Bus " +  googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
                     ['line']['short_name'] + googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']
-                    .substring(3));
+                    .substring(3))
 
                     var off = document.createTextNode
                     ("Get Off At " + googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
@@ -433,7 +443,21 @@ function showOptions() {
                      alert.appendChild(alertMessP);
                      addAlert = true;
                  }
-            }
+            };
+//	    var startSeconds = googleData['routes'][i]['legs'][0]['departure_time']['value'];
+//	    for (var i = 0; i < addedSeconds.length; i++) {
+//		startSeconds += addedSeconds[i];
+//	    };
+//	    var arrTime = new Date(startSeconds);
+//          var arrHour = arrTime.getHours();
+//	    if (arrHour > 12) {
+//		arrHour -= 12;
+//	    };
+//	    var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to " + arrHour.toString() + ":" + arrTime.getMinutes().toString());
+//	    time2.appendChild(timetext);
+//	    indiv2.appendChild(time2);
+//	    opbutt.appendChild(indiv2);
+
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
             indiv3.appendChild(buses);

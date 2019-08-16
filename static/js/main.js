@@ -381,7 +381,6 @@ function fill_carousel(){
             event_link.href = data[val][2];
             event_link.target = '_blank';
             event_link.innerHTML = "EVENT LINK";
-            console.log(event_link)
             $($($($(item).children().children()[1]).children()[2])[0])[0].append(event_link)
             
 

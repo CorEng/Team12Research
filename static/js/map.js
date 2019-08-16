@@ -116,6 +116,8 @@ function geolocation() {
 
 // Initialize and add the map
 function initMap(num) {
+    $('.navbar-toggler').collapse('toggle');
+
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer();
 

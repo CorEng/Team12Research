@@ -26,10 +26,22 @@
     </script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="../static/js/map.js"></script>
 
     <script type=text/javascript>
         // Set-up connection variable between JS and Flask server application
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
+    <script>
+        function toggle(event) {
+            const expanded = $(this).attr('aria-expanded');
+            if (expanded === 'true') {
+                $(this).collapse('hide');
+            } else {
+                $(this).collapse('show');
+            }
+        }
     </script>
 
 </head>
@@ -40,17 +52,17 @@
     <div class="container">
         <a class="navbar-brand"
            href="../templates/index.html"><i class="flaticon-bus-stop"></i><span>Whose Bus</span></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" role="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation" onclick='toggle()'>
             <span class="oi oi-menu"></span> Menu
         </button>
 
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item cta"><a href="#top" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="#belowops" class="nav-link" >OPTIONS</a></li>
+                <li class="nav-item"><a href="#belowops" class="nav-link">OPTIONS</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="showFavs()">FAVOURITES</a></li>
-                <li class="nav-item"><a href="#designer" class="nav-link" >Events</a></li>
+                <li class="nav-item"><a href="#designer" class="nav-link">Events</a></li>
 
             </ul>
         </div>
@@ -156,7 +168,6 @@
 </div>
 
 
-
 <div class="favourites" id="favs">
     <h1>Favourites</h1>
 </div>
@@ -255,7 +266,8 @@
                     <div class="icon"><span class="flaticon-bus-2"></span></div>
                     <div class="media-body">
                         <h3 class="heading mb-3">Dublin Bus</h3>
-                        <p>Dublin Bus is the biggest public transport operator in the Greater Dublin Area (GDA) operating over 136 routes.</p>
+                        <p>Dublin Bus is the biggest public transport operator in the Greater Dublin Area (GDA)
+                            operating over 136 routes.</p>
                     </div>
                 </div>
             </div>
@@ -282,7 +294,8 @@
                     <div class="icon"><span class="flaticon-bus-1"></span></div>
                     <div class="media-body">
                         <h3 class="heading mb-3">Dublin Bus</h3>
-                        <p>At Dublin Bus we want to provide a friendly, efficient and safe service to all our customers.</p>
+                        <p>At Dublin Bus we want to provide a friendly, efficient and safe service to all our
+                            customers.</p>
                     </div>
                 </div>
             </div>
@@ -318,7 +331,6 @@ loader
 <script src="../static/js/bootstrap-datepicker.js"></script>
 <script src="../static/js/scrollax.min.js"></script>
 <script src="../static/js/main.js"></script>
-<script src="../static/js/map.js"></script>
 <script src="../static/js/cookies.js"></script>
 <script>geolocation();</script>
 

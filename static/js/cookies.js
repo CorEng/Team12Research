@@ -127,8 +127,8 @@ function showFavs() {
         }
         else {
             $("div.favourites").slideDown("slow");
-            var elemPos = $("#result").position();
-            window.scrollTo(elemPos.left, elemPos.top);
+            var elemPos = $("#designer").position();
+            window.scrollTo(elemPos.left, elemPos.top -50);
         }
     };
 }

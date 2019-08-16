@@ -357,6 +357,8 @@ setInterval(function() { makeTimer(); }, 1000);
 
 
 
+})(jQuery);
+
 
 
 function fill_carousel(){

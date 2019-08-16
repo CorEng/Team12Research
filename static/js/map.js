@@ -340,7 +340,6 @@ function showOptions() {
             allSteps.appendChild(topAllSteps);
 
 
-
             var miniMap = document.createElement("div");
             miniMap.setAttribute("class", "minimap");
             miniMap.setAttribute("id", "map"+i.toString());
@@ -358,7 +357,23 @@ function showOptions() {
             var indiv1 = document.createElement("div");
             indiv1.setAttribute("class", "indivleft");
             var time = document.createElement("p");
-            var timetext = document.createTextNode(prediction[i]);
+	    var predTime = prediction[i];
+	    console.log(predTime);
+	    if (predTime > 59) {
+		var hours = Math.floor(predTime / 60);
+		var mins = predTime % 60;
+			if (hours == 1) {
+				predTime = hours.toString() + " hour" + mins.toString() + " minutes";
+			}
+			else if (hours > 1) {
+				predTime = hours.toString() + " hours" + mins.toString() + " minutes";
+			}
+	    }
+	    else {
+		predTime = prediction[i].toString() + " minutes";
+	    };
+
+            var timetext = document.createTextNode(predTime);
             time.appendChild(timetext);
             indiv1.appendChild(time);
             opbutt.appendChild(indiv1);

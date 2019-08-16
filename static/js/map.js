@@ -359,19 +359,23 @@ function showOptions() {
             var time = document.createElement("p");
 
 	    var predTime = prediction[i];
-
+        var timeHolder = prediction[i]
+        if (predTime == 0){
+            var predTime = 42
+            var timeHolder = 42
+        }
 	    if (predTime > 59) {
 		var hours = Math.floor(predTime / 60);
 		var mins = predTime % 60;
 			if (hours == 1) {
-				predTime = hours.toString() + " hour " + mins.toString() + " minutes";
+				predTime = hours.toString() + " hr " + mins.toString() + " m";
 			}
 			else if (hours > 1) {
-				predTime = hours.toString() + " hours " + mins.toString() + " minutes";
+				predTime = hours.toString() + " hr " + mins.toString() + " m";
 			}
 	    }
 	    else {
-		predTime = prediction[i].toString() + " minutes";
+		predTime = predTime.toString() + " m";
 	    };
             var timetext = document.createTextNode(predTime);
             time.appendChild(timetext);
@@ -381,7 +385,7 @@ function showOptions() {
             var indiv2 = document.createElement("div");
             indiv2.setAttribute("class", "indivmid");
             var time = document.createElement("p");
-	    var arrTime = googleData['routes'][i]['legs'][0]['departure_time']['value'] + (prediction[i]*60);
+	    var arrTime = googleData['routes'][i]['legs'][0]['departure_time']['value'] + (timeHolder*60);
 	    var arrTimeNew = new Date((arrTime*1000));
 	    var arrHour = arrTimeNew.getHours();
 	    if (arrHour > 12) {
@@ -520,13 +524,13 @@ function checkDateAndTime() {
     nowDayTimeSeconds = nowDayTime.getTime() / 1000;
 
     if (formSeconds > (nowDayTimeSeconds + 2764800)) {
-        alert("INVALID DATE - DATE HAS TO BE WITHIN 31 DAYS OF TODAY - PLEASE SEARCH AGAIN");
+        alert("Please enter a date within 31 days");
         return false;
     }
     else {
         if (htmlDepArr == "dep") {
-                if (formSeconds < nowDayTimeSeconds) {
-                        alert("INVALID DATE OR TIME - DATE AND TIME CANNOT BE IN THE PAST");
+                if (formSeconds + 60 < nowDayTimeSeconds) {
+                        alert("Sorry, the time you entered was in the past");
                     } else {
                         return true;
                     }
@@ -544,7 +548,7 @@ function checkDateAndTime() {
                         }
                     };
                     if (delayed > 0) {
-                        alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
+                        alert("The entered time may be too late for some of the options shown below");
                         return true;
                     }
                 }
@@ -708,9 +712,9 @@ function ajaxInt() {
 function createChart(num) {
     var chart = document.getElementById("mychart"+num.toString());
     Chart.defaults.global.defaultFontColor = "white";
-    var best = 5;
+    var best = Math.round(prediction[num]*.33); //from analytics
     var main = prediction[num];
-    var worst = 10;
+    var worst = Math.round(prediction[num]*1.9);//from analytics
 
     var data = {
         labels: ["Best Case", "Main Prediction", "Worst Case"],

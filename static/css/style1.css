@@ -217,7 +217,7 @@ div.graph {
     width:32%;
     height: auto;
     display: inline-block;
-    background-color: black;
+    background-color: #00bd56;;
     border-radius: 6px;
     margin: 0;
     vertical-align: middle;
@@ -229,10 +229,11 @@ div.graph {
         width: 100%;
     }
     div.allsteps {
-        width: 75%;
+        width: 98%;
         min-height: auto;
     }
 }
+
 
 .amenities {
     width: 100%;

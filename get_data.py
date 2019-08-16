@@ -3,6 +3,7 @@ from operator import itemgetter
 from datetime import date, time, timedelta
 from tweepy import OAuthHandler, API, Cursor
 from passw import *
+import re
 from geopy.distance import geodesic
 # from geopy.distance import great_circle
 from darksky import forecast
@@ -302,7 +303,7 @@ class Stops:
 
                     for status in Cursor(auth_api.user_timeline, id="@dublinbusnews").items():
                         if "#DBSvcUpdate" in status.text:
-                            if ("#DB" + route.lower()) in status.text and status.text not in option:
+                            if (("#DB" + route.lower()) or ("#DB" + re.sub("\D", "",route.lower())) or "due to" or "Temporary") in status.text and status.text not in option:
                                 option.append(status.text)
                         if status.created_at < end_date:
                             break

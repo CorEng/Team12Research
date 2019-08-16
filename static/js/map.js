@@ -530,7 +530,7 @@ function checkDateAndTime() {
     else {
         if (htmlDepArr == "dep") {
                 if (formSeconds + 60 < nowDayTimeSeconds) {
-                        alert("Sorry, the time you entered was in the past");
+                        alert("Sorry, the time you entered is in the past!");
                     } else {
                         return true;
                     }

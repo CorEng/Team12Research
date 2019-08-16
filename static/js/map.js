@@ -709,7 +709,7 @@ function createChart(num) {
     var chart = document.getElementById("mychart"+num.toString());
     Chart.defaults.global.defaultFontColor = "white";
     var best = 5;
-    var main = 8;
+    var main = prediction[num];
     var worst = 10;
 
     var data = {

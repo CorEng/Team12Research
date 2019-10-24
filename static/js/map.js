@@ -323,7 +323,7 @@ function showOptions() {
             allSteps.setAttribute("class", "allsteps");
             allSteps.setAttribute("id", "allSteps"+i.toString())
 
-	    var topAllSteps = document.createElement("div");
+            var topAllSteps = document.createElement("div");
             topAllSteps.setAttribute("class", "topAllSteps");
 
             var from = document.createElement("p");
@@ -357,45 +357,15 @@ function showOptions() {
             var indiv1 = document.createElement("div");
             indiv1.setAttribute("class", "indivleft");
             var time = document.createElement("p");
-
-	    var predTime = prediction[i];
-        var timeHolder = prediction[i]
-        if (predTime == 0){
-            var predTime = 42
-            var timeHolder = 42
-        }
-	    if (predTime > 59) {
-		var hours = Math.floor(predTime / 60);
-		var mins = predTime % 60;
-			if (hours == 1) {
-				predTime = hours.toString() + " hr " + mins.toString() + " m";
-			}
-			else if (hours > 1) {
-				predTime = hours.toString() + " hr " + mins.toString() + " m";
-			}
-	    }
-	    else {
-		predTime = predTime.toString() + " m";
-	    };
-            var timetext = document.createTextNode(predTime);
+            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['duration']['text']);
             time.appendChild(timetext);
             indiv1.appendChild(time);
             opbutt.appendChild(indiv1);
-
+	    
             var indiv2 = document.createElement("div");
             indiv2.setAttribute("class", "indivmid");
             var time = document.createElement("p");
-	    var arrTime = googleData['routes'][i]['legs'][0]['departure_time']['value'] + (timeHolder*60);
-	    var arrTimeNew = new Date((arrTime*1000));
-	    var arrHour = arrTimeNew.getHours();
-	    if (arrHour > 12) {
-		arrHour -= 12;
-	        var amPm = "pm";
-	    }
-	    else {
-		var amPm = "am";
-	    }
-            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to " + arrHour.toString() + ":" + arrTimeNew.getMinutes().toString() + amPm);
+            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to " + googleData['routes'][i]['legs'][0]['arrival_time']['text']);
             time.appendChild(timetext);
             indiv2.appendChild(time);
             opbutt.appendChild(indiv2);
@@ -448,20 +418,6 @@ function showOptions() {
                      addAlert = true;
                  }
             };
-//	    var startSeconds = googleData['routes'][i]['legs'][0]['departure_time']['value'];
-//	    for (var i = 0; i < addedSeconds.length; i++) {
-//		startSeconds += addedSeconds[i];
-//	    };
-//	    var arrTime = new Date(startSeconds);
-//          var arrHour = arrTime.getHours();
-//	    if (arrHour > 12) {
-//		arrHour -= 12;
-//	    };
-//	    var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to " + arrHour.toString() + ":" + arrTime.getMinutes().toString());
-//	    time2.appendChild(timetext);
-//	    indiv2.appendChild(time2);
-//	    opbutt.appendChild(indiv2);
-
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
             indiv3.appendChild(buses);
@@ -657,64 +613,20 @@ function ajaxInt() {
                     intermediateStops = response['interstops'];
                     prediction = response['prediction'];
                     disruptions = response["disruptions"];
-
                     showOptions();
                 });
             }
         }
     }
 
-// <div class="item">
-//     <div class="team-wrap text-center">
-//         <div class="img" style="background-image: url(static/images/bus3.jpg);"></div>
-//         <div class="text">
-//             <h3 class="mb-0" id="route-2">102</h3>
-//             <span class="position">bird avenue</span>
-//         </div>
-//     </div>
-// </div>
-
-//function addRoute(route, index) {
-//    let div1 = document.createElement('div');
-//    div1.classList.add('carousel-item');
-//
-//    if (index === 0) {
-//        div1.classList.add('active')
-//    }
-//
-//    let img = document.createElement('img');
-//    img.setAttribute('src', route[1]);
-//
-//    let a = document.createElement('a');
-//    a.setAttribute('href', route[2]);
-//    a.setAttribute('target', '_blank');
-//    a.appendChild(img);
-//
-//    let div3 = document.createElement('div');
-//    div3.classList.add('carousel-caption');
-//    div3.classList.add('d-none');
-//    div3.classList.add('d-md-block');
-//
-//    let h5 = document.createElement('h5');
-//    h5.textContent = route[0];
-//    h5.setAttribute('style', 'color: white');
-//
-//    div3.appendChild(h5);
-//    div1.appendChild(a);
-//    div1.appendChild(div3);
-//
-//    let container = document.getElementById('route-container');
-//    container.insertBefore(div1, container.children[0]);
-//}
-
 
 // Create chart for each option
 function createChart(num) {
     var chart = document.getElementById("mychart"+num.toString());
     Chart.defaults.global.defaultFontColor = "white";
-    var best = Math.round(prediction[num]*.33); //from analytics
-    var main = prediction[num];
-    var worst = Math.round(prediction[num]*1.9);//from analytics
+    var best = 8;
+    var main = 9;
+    var worst = 10;
 
     var data = {
         labels: ["Best Case", "Main Prediction", "Worst Case"],

@@ -5,8 +5,7 @@ from tweepy import OAuthHandler, API, Cursor
 from passw import *
 import re
 from geopy.distance import geodesic
-# from geopy.distance import great_circle
-from darksky import forecast
+# from darksky import forecast
 
 
 class Stops:

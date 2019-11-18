@@ -534,7 +534,7 @@ function showSteps(num) {
 // Choose the option number and display it
 function chooseOption(num) {
 
-    createChart(num);
+	createChart(num);
     initMap(num);
     showSteps(num);
     draw_markers(intermediateStops, num);
@@ -624,9 +624,10 @@ function ajaxInt() {
 function createChart(num) {
     var chart = document.getElementById("mychart"+num.toString());
     Chart.defaults.global.defaultFontColor = "white";
-    var best = 8;
-    var main = 9;
-    var worst = 10;
+    var time = googleData['routes'][num]['legs'][0]['duration']['value'] / 60
+    var best = time - 8;
+    var main = time;
+    var worst = time + 15;
 
     var data = {
         labels: ["Best Case", "Main Prediction", "Worst Case"],

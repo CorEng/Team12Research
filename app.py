@@ -27,12 +27,11 @@ def directions():
     intermediate = Stops()
     secs = intermediate.getSeconds(frontDate, frontTime)
     get_goo_data = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
-    jsonObj = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
+#     jsonObj = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     interStops = intermediate.fin(get_goo_data)
     global full
-    notifications = intermediate.notification_check(jsonObj)
-
-    full = {"interstops": interStops, "gooData": jsonObj, "disruptions": notifications}
+    notifications = intermediate.notification_check(get_goo_data)
+    full = {"interstops": interStops, "gooData": get_goo_data, "disruptions": notifications}
 
     return jsonify(full)
 
